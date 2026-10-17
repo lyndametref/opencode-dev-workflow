@@ -2,7 +2,7 @@
 
 ## Purpose
 
-This file defines how coding and documentation agents should operate in this repository.
+This file list available agents and give general rules for the agents.
 
 ## Available Agents
 
@@ -33,45 +33,16 @@ This file defines how coding and documentation agents should operate in this rep
 - `lilypond-piano`: Use for creating and editing LilyPond piano scores. Handles multi-staff layout with right and left hands, master .ly file with includes, measure numbering synchronization, breaks in right hand only, and piano-specific score block with optional layout (staff size) and MIDI.
 - `lilypond-single-voice`: Use for creating and editing single-voice LilyPond scores (e.g. recorder, flute, violin, clarinet, trumpet, harp, etc.). Simple single-file layout (no split, no master, no .ily includes), one measure per line with measure number comments, and appropriate score/MIDI/layout setup.
 - `markdown-move`: Move a markdown file to a new location and update all relative links within it to reflect the new path.
-- `non-functional-requirements-management`: Create, update, reorganize and check consistency of non-functional requirements under docs/requirements/non-functional/.
+- `non-functional-requirements-management`: Create, update, reorganize and check consistency of non-functional     requirements under docs/requirements/non-functional/.
 - `reverse-engineering`: Read existing source code and produce the business (REQ) and non-functional (NFR) requirements that correspond to the implemented behavior.
 - `state-diagram-creation`: Create Mermaid state diagrams for domain objects with lifecycle states, statuses, and transitions. Each diagram is stored in docs/domain-model/ and shows valid states, transitions, and the conditions that trigger them.
 - `task-refinement`: Audit, clarify, and complete a single backlog ticket by removing ambiguity, filling missing structure, and aligning it with specifications. Uses the backlog CLI for all ticket modifications.
 
-## Working Rules For Agents
-
-1. **Read Before Action**
-   
-   - Review relevant files in `docs/` and `backlog/tasks/` before proposing or applying edits.
-2. **Backlog Management (CRITICAL)**
-   
-   - **NEVER edit files in `backlog/tasks/`, `backlog/docs/`, or `backlog/decisions/` directly.**
-   
-   - All task operations (create, edit, status, AC) MUST use the `backlog` CLI tool.
-   
-   - Refer to `GEMINI.md` for specific command usage and instructions.
-   
-   - Always use the `--plain` flag for AI-friendly output when reading tasks.
-3. **Task Workflow**
-   
-   - **Start**: Immediately set the task to "In Progress" and assign it to yourself using `backlog task edit <id> -s "In Progress" -a @agent`.
-   
-   - **Plan**: Always update the task's implementation plan (`--plan`) before coding.
-   
-   - **Progress**: Check off Acceptance Criteria (AC) and Definition of Done (DoD) items via CLI as you complete them.
-   
-   - **Complete**: Add implementation notes and a final summary via CLI before closing a task.
-4. **Explicit Assumptions**
-   
-   - If information is missing, list assumptions instead of inventing silent details.
-
-## Quality Bar
+## Instructions
 
 - Always be concise. Use as few words as possible.
 - Clear headings and concise bullets.
 - No ambiguous status language (use explicit states like planned, in-progress, blocked, completed).
-
-## Coding rules
-
+- If information is missing, list assumptions instead of inventing silent details.
 - never use timestamps without timezone. 
 
