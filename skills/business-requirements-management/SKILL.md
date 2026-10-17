@@ -1,0 +1,125 @@
+---
+name: business-requirements-management
+description: 'Create, update, reorganize and check consistency of business requirements under docs/requirements/.'
+argument-hint: 'Examples: create a new requirement for recording sheep color patterns; validate all requirements for consistency; reorganize requirements structure; update REQ-01.002'
+user-invocable: true
+disable-model-invocation: false
+---
+
+# Business Requirements Management
+
+## Outcome
+
+Maintain a consistent, traceable business requirements corpus under `docs/requirements/business/` following strict REQ-XX/REQ-XX.XXX naming and structure.
+
+## When To Use
+
+- Create a new requirement or requirement group
+- Update, reorganize, or rename existing requirements
+- Validate all requirements for structure, naming, and content compliance
+- Reorganize requirements structure
+
+Do not use this skill for implementation logic (no Kotlin, SQL, Java, etc.), technical specs, or domain model definitions.
+
+## Canonical Format
+
+Business requirements live in `docs/requirements/business/` following this structure:
+
+### Group Files (REQ-XX.md)
+
+```markdown
+# REQ-XX Group Name
+
+## User Story
+As a..., I want to... so that...
+
+## Description
+A few sentences describing the requirement group.
+```
+
+### Atomic Requirement Files (REQ-XX.XXX.md)
+
+```markdown
+# REQ-XX.XXX Requirement Title
+
+## User Story
+As a..., I want to... so that...
+
+## Group
+REQ-XX Group Name
+
+## Criticality
+Must have / Should have / Could have / Won't have
+
+## Description
+A few sentences describing the requirement.
+
+## Acceptance Criteria
+- Criterion one
+- Criterion two
+- Criterion three
+```
+
+### Naming Rules
+
+- Group files: `REQ-XX.md` where XX is the group number (01, 02, 03, etc.)
+- Atomic files: `REQ-XX.XXX.md` where XXX is the atomic requirement number within the group
+- Numbering must be consistent: REQ-01.001, REQ-01.002, REQ-01.003, etc.
+- All files stored in: `docs/requirements/business/`
+
+### Index
+
+The index is at `docs/requirements/business/INDEX.md` containing an overview table with columns: `REQ ID | Title | Group | Criticality`. The index MUST be updated when adding, removing, or changing requirement files. Requirement files are the source of truth — the index is derived from them.
+
+## Procedure
+
+1. **Classify request** — Determine whether the request is: `create`, `update`, `validate`, or `reorganize`.
+
+2. **Read baseline** — Read the current structure under `docs/requirements/business/` including the INDEX.md to understand existing requirements and grouping.
+
+3. **Identify required changes** — Determine what needs to be created, updated, or reorganized based on the request.
+
+4. **For creation/update** — Assign next REQ-XX or REQ-XX.XXX number by finding the highest existing number in the index and incrementing.
+
+5. **For consistency check** — Check if the requirement creates an incoherence with other requirements.
+
+6. **Make corrections** — Edit files as needed. Validate consistency of numbering, naming, and structure after changes.
+
+7. **Update INDEX.md** — Add or update the row in the index table at `docs/requirements/business/INDEX.md` to reflect the change.
+
+8. **Report outcome** — Summarize the action, files changed, and any risks.
+
+## Example
+
+See `references/example-REQ-01-individual-management.md` for a well-formed requirement group example.
+See `references/example-REQ-01.001-sheep-identification.md` for a well-formed atomic requirement example.
+
+## Completion Checks
+
+- All files follow REQ-XX and REQ-XX.XXX naming pattern
+- Group numbering is consistent and sequential
+- Atomic numbering aligns with parent groups
+- Each atomic file has: title, user story, group reference, priority, description, acceptance criteria
+- Each group file has: title, user story, description
+- Files are in the correct location: `docs/requirements/business/`
+- INDEX.md at `docs/requirements/business/INDEX.md` is updated with the new/updated entry
+- No implementation code (Kotlin, SQL, Java, etc.) in requirements files
+
+## Decision Rules
+
+- If the user's request is ambiguous, ask clarifying questions before proceeding.
+- If a requirement number already exists, propose an update rather than creating a duplicate.
+- Numbering gaps exist as the numbering is immutable.
+- If a change would break cross-references (e.g., from business rules), flag the impact before updating.
+- If a requirement file exists but is missing from the INDEX.md, add it to the index rather than removing the file.
+
+## Output Template
+
+Use this summary after updates:
+
+- **Action**: create/update/reorganize/check consistency
+- **Target**: <list of requirement files>
+- **Updated files**: <list>
+- **Cross-reference updates**: <list>
+- **Validation results**: <pass/fail with details>
+- **Residual risks**: <if any>
