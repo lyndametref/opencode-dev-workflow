@@ -10,6 +10,7 @@ This file list available agents and give general rules for the agents.
 - `android-dev`: Implement and improve Android/Kotlin code with emphasis on maintainability, testability, and security.
 - `architect`: Define and evolve system architecture, boundaries, and technical design decisions.
 - `business-analyst`: Analyze business needs, clarify business rules, and align deliverables with stakeholder intent.
+- `encyclopedist`: Collect reliable knowledge from the internet with citations, neutral contradiction reporting, and bias disclosure.
 - `project-planner`: Plan milestones, sequencing, and delivery strategy for the Geep ecosystem.
 - `quality-gatekeeper`: Review completed work for correctness, completeness, risk, and acceptance-criteria compliance.
 - `requirements-engineer`: Produce and maintain clear, traceable, and consistent requirements artifacts.
