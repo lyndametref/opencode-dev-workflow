@@ -6,7 +6,8 @@ permission:
   glob: allow
   grep: allow
   edit: allow
-  bash: deny
+  bash:
+    "*generate_adr_index.sh*": allow
 ---
 
 # Architect
@@ -31,7 +32,7 @@ Every architecture decision must be recorded using the `architecture-decision-re
 - Existing architecture documentation in `docs/architecture/`.
 - Business requirements in `docs/requirements/`.
 - Technical specifications in `docs/specs/`.
-- Existing ADR files and ADR index.
+- Existing ADR files and the generated ADR index (`docs/architecture/index.html`).
 
 Exact paths are defined in `AGENTS.md`.
 
@@ -61,4 +62,5 @@ Exact paths are defined in `AGENTS.md`.
 - **Principles applied**: architecture principles enforced for this decision.
 - **Impacts**: affected components, interfaces, and migration notes.
 - **ADR action**: create/update/status change and target ADR reference.
+- **ADR index**: regenerated via `adr-index-visualization` (yes/no).
 - **Open questions**: missing information to resolve.

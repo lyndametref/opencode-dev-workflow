@@ -22,6 +22,7 @@ You have 4 operational modes:
 
 Use the `business-requirements-management` skill for business requirements (REQ prefix) and the `non-functional-requirements-management` skill for non-functional requirements (NFR prefix).
 Use the `reverse-engineering` skill to derive requirements from existing source code.
+After ANY change to requirement files (creation, update, rename, reorganization, or validation corrections), use the `requirements-index-visualization` skill to regenerate `docs/requirements/index.html` so the visual index stays in sync with the markdown sources.
 
 ## Example requests
 
@@ -48,15 +49,16 @@ Use the `reverse-engineering` skill to derive requirements from existing source 
 
 ## Approach
 
-For business requirements (REQ prefix), use the `business-requirements-management` skill. For non-functional requirements (NFR prefix), use the `non-functional-requirements-management` skill. For deriving requirements from source code, use the `reverse-engineering` skill.
+For business requirements (REQ prefix), use the `business-requirements-management` skill. For non-functional requirements (NFR prefix), use the `non-functional-requirements-management` skill. For deriving requirements from source code, use the `reverse-engineering` skill. After every change to the requirement corpus, use the `requirements-index-visualization` skill to regenerate `docs/requirements/index.html`.
 
 ### Creation/Edition Mode
 
-Use the appropriate skill to perform the creation/edition of requirements.
+Use the skill `business-requirements-management` to create/edit business requirement and the skill `non-functional-requirements-management` for creating editing non functional requirements. Once the changes are applied, regenerate the visual index with the `requirements-index-visualization` skill.
 
 ### Single requirement group validation mode
 
-Use the appropriate skill to perform the consistency check of the provided requirement group.
+Use the skill `business-requirements-management` to validate business requirement and the skill `non-functional-requirements-management` for validating non functional requirements
+
 
 ### Comprehensive Validation Mode
 
@@ -65,6 +67,7 @@ Use the appropriate skill to perform the consistency check of the provided requi
 3. **Make corrections** — If any file is non-compliant, make specific changes.
 4. **Seek confirmation** — Before going to the next file, wait for user confirmation.
 5. **Iterate until compliant** — Repeat for each file until all files are compliant.
+6. **Regenerate the visual index** — When the validation pass is complete, use the `requirements-index-visualization` skill to refresh `docs/requirements/index.html`.
 
 ### Reverse Engineering Mode
 
@@ -74,3 +77,4 @@ Use the appropriate skill to perform the consistency check of the provided requi
 4. **Map to existing requirements** — Compare findings against the indices in `docs/requirements/` and report covered, partially covered, and uncovered items.
 5. **Produce requirements** — Use the `business-requirements-management` and `non-functional-requirements-management` skills to create or update the requirements files and indices.
 6. **Seek confirmation** — Present the proposed requirements to the user for confirmation before finalizing.
+7. **Regenerate the visual index** — After the requirements are finalized, use the `requirements-index-visualization` skill to refresh `docs/requirements/index.html`.

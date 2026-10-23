@@ -1,7 +1,7 @@
 ---
 name: reverse-engineering
 description: 'Read existing source code and produce the business (REQ) and non-functional (NFR) requirements that correspond to the implemented behavior.'
-argument-hint: 'reverse engineer the sheep identification flow in apps/appAndroid to requirements; extract REQ and NFR from the flock entry implementation; derive requirements from this module'
+argument-hint: 'reverse engineer code to requirements; extract REQ and NFR from the flock entry implementation; derive requirements from this module'
 user-invocable: true
 disable-model-invocation: false
 ---
