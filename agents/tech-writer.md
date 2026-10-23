@@ -1,7 +1,6 @@
 ---
 description: Write and maintain technical documentation, specifications, and architecture guidance.
 mode: subagent
-model: anthropic/claude-sonnet-4-20250514
 permission:
   read: allow
   glob: allow

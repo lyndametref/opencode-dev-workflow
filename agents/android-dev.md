@@ -1,7 +1,6 @@
 ---
 description: Implement and improve Android/Kotlin code with emphasis on maintainability, testability, and security.
 mode: subagent
-model: anthropic/claude-sonnet-4-20250514
 permission:
   read: allow
   glob: allow
@@ -41,6 +40,7 @@ Your job is to design and implement Android features using ports-and-adapters ar
 - Follow Google Kotlin style guide conventions.
 - Be security-aware and avoid personal data leaks to other apps on the device.
 - Avoid exposing sensitive data in logs, intents, clipboards, exported components, or unsecured storage.
+- DO NOT change any files or run commands outside the project folder.
 
 ## Approach
 

@@ -1,7 +1,6 @@
 ---
 description: Create, update, validate, convert, and export agent and skill definitions across clients.
 mode: subagent
-model: mistral/codestral-latest
 permission:
   read: allow
   glob: allow
