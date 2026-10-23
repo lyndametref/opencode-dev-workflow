@@ -2,9 +2,10 @@
 # Generate index.html visualizing a requirements corpus.
 #
 # Reads group and atomic files under <requirements-dir>/business/ and
-# <requirements-dir>/non-functional/ (files are the source of truth), verifies
-# they match INDEX.md, and emits a self-contained <requirements-dir>/index.html
-# with the data embedded as JSON.
+# <requirements-dir>/non-functional/ (files are the source of truth), then
+# emits only a self-contained <requirements-dir>/index.html with the data
+# embedded as JSON. Requirement files are the sole input; this script does not
+# read or generate Markdown index files.
 # Shell + awk only; no temp files outside the requirements directory;
 # deterministic output.
 #
@@ -50,7 +51,7 @@ for g in "$base"/non-functional/NFR-[0-9][0-9].md; do
 	done
 done
 
-# --- INDEX.md sync guard ---------------------------------------------------
+# --- collect IDs for output validation -------------------------------------
 disk_ids=$(
 	for f in "$base"/business/REQ-[0-9][0-9].[0-9][0-9][0-9].md \
 		"$base"/non-functional/NFR-[0-9][0-9].[0-9][0-9][0-9].md; do
@@ -59,16 +60,6 @@ disk_ids=$(
 		printf '%s\n' "${b%.md}"
 	done | sort
 )
-index_ids=$(grep -ohE '(REQ|NFR)-[0-9]{2}\.[0-9]{3}' \
-	"$base"/business/INDEX.md "$base"/non-functional/INDEX.md | sort -u || true)
-if [ "$disk_ids" != "$index_ids" ]; then
-	echo "INDEX.md out of sync with files:" >&2
-	echo "-- only on disk:" >&2
-	printf '%s\n' "$disk_ids" >&2
-	echo "-- only in index:" >&2
-	printf '%s\n' "$index_ids" >&2
-	exit 1
-fi
 
 # --- generate --------------------------------------------------------------
 tmp="$base/.index.html.tmp"

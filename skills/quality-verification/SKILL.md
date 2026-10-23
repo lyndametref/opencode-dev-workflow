@@ -22,7 +22,7 @@ Do not use this skill for:
 
 - Verifying multiple tickets in one pass — focus on one ticket at a time.
 - Producing implementation, code, or configuration changes.
-- Editing files other than the ticket itself (and only via the backlog CLI).
+- Editing files other than the ticket itself (and only via the backlog CLI), except temporary verification artifacts in project-local `./.tmp/` when necessary; remove these before finishing.
 
 ## Prerequisites
 
@@ -37,14 +37,15 @@ Do not use this skill for:
 
 - DO NOT invent requirements or acceptance criteria not traceable to the target ticket.
 - DO NOT produce any implementation, code, or configuration.
-- DO NOT modify any file outside the ticket explicitly provided by the user.
+- DO NOT modify any file outside the target ticket, except temporary verification artifacts in project-local `./.tmp/` when necessary; remove these before finishing.
 - DO NOT edit ticket files directly — use the backlog CLI only.
 - **Scope creep detection**: Flag any feature, component, or code change that goes beyond what is documented in the ticket's implementation plan, acceptance criteria, and Definition of Done.
+- Do not create persistent review reports or other long-lived files; provide the report in the response. If a temporary artifact is necessary, use only project-local `./.tmp/` and delete it before finishing, including when verification is blocked.
 
 ## Procedure
 
 1. **Read the target ticket** — Use the backlog CLI to read the full ticket. Extract scope, acceptance criteria, dependencies, definition of done, and the implementation plan.
-2. **Gather evidence** — Search the repository for the files, features, and configuration the ticket's changes should have produced.
+2. **Gather evidence** — Search the repository for the files, features, and configuration the ticket's changes should have produced. Cross-map the ticket's acceptance criteria and implementation to relevant linked requirement and feature-specification behavior. The ticket's acceptance criteria remain the closure criteria; if a linked source requires behavior absent from the ticket, report the mismatch and mark verification incomplete for business-analyst alignment. Do not silently expand scope or invent acceptance criteria.
 3. **Scope creep check** — Cross-reference the implementation plan against the actual changes. Verify that every file, feature, component, and configuration change is traceable to a documented AC, DoD item, or implementation-plan entry. Flag any additions not justified by the plan.
 4. **Validate each acceptance criterion** — Mark each AC pass/fail/inconclusive with evidence references. If a criterion cannot be assessed unambiguously, ask the user.
 5. **Validate definition of done** — Mark each DoD item pass/fail/inconclusive with evidence references. If a point cannot be assessed unambiguously, ask the user.

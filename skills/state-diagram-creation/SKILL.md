@@ -82,11 +82,11 @@ stateDiagram-v2
    - What conditions/guards must hold?
 5. **Draft the diagram** — Write the Mermaid `stateDiagram-v2` block following the format above.
 6. **Present the draft** — Show the proposed diagram to the user for review.
-7. **Save the file** — Write to `docs/specs/object-model/<entity-name>-state-diagram.md`.
+7. **Save the file** — Write to `docs/domain-model/object-model/<entity-name>-state-diagram.md`.
 
 ## Completion Checks
 
-- [ ] File exists at `docs/specs/object-model/<entity-name>-state-diagram.md`.
+- [ ] File exists at `docs/domain-model/object-model/<entity-name>-state-diagram.md`.
 - [ ] All states from the domain model and specs are represented.
 - [ ] All transitions are labeled with a trigger event.
 - [ ] Transitions with conditions include guard expressions.
@@ -99,7 +99,7 @@ stateDiagram-v2
 After creation, summarize:
 
 - **Entity**: <entity name>
-- **File**: `docs/specs/object-model/<entity-name>-state-diagram.md`
+- **File**: `docs/domain-model/object-model/<entity-name>-state-diagram.md`
 - **States**: <list of states>
 - **Transitions**: <list of transitions>
 - **Source references**: <REQs and BRs used>

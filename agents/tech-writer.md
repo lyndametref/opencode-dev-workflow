@@ -29,7 +29,7 @@ Your job is to ensure project documentation is complete, accurate, and reflects 
 - Existing documentation in:
   - `docs/architecture/`
   - `docs/domain-model/`
-  - `docs/specs/`
+  - `docs/specifications/`
   - `docs/business-rules/`
   - `docs/requirements/`
 

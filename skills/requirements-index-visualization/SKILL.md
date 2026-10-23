@@ -10,7 +10,7 @@ disable-model-invocation: false
 
 ## Outcome
 
-`docs/requirements/index.html` is regenerated from the current REQ/NFR markdown corpus and its timestamp is newer than the requirement files it visualizes.
+`docs/requirements/index.html` is the only generated index. It is regenerated from the current REQ/NFR Markdown corpus and its timestamp is newer than the requirement files it visualizes. The Markdown files are source inputs; the skill does not generate or maintain a Markdown index.
 
 ## When To Use
 
@@ -18,12 +18,12 @@ disable-model-invocation: false
 - After validation corrections that changed requirement content.
 - On explicit request to regenerate or refresh the requirements index.
 
-Do not use for projects whose requirements do not use the canonical atomic structure (group files `REQ-XX.md`/`NFR-XX.md`, atomic files `REQ-XX.XXX.md`/`NFR-XX.XXX.md`, plus `INDEX.md` per directory).
+Do not use for projects whose requirements do not use the canonical atomic structure (group files `REQ-XX.md`/`NFR-XX.md` and atomic files `REQ-XX.XXX.md`/`NFR-XX.XXX.md`).
 
 ## Prerequisites
 
 - This skill bundles its generator at `scripts/generate_index.sh` (POSIX sh + awk; no other dependencies, no network). It is the single source of truth — there is no project-local copy.
-- The target project has `<requirements-dir>/business/` and `<requirements-dir>/non-functional/` with their `INDEX.md` files.
+- The target project has `<requirements-dir>/business/` and `<requirements-dir>/non-functional/` directories containing group and atomic requirement files. Markdown `INDEX.md` files are not required or generated.
 
 If the bundled script is missing, stop and report it — do not create a replacement silently.
 
@@ -47,9 +47,8 @@ If the bundled script is missing, stop and report it — do not create a replace
 
 ## What the Script Does
 
-- Parses every group and atomic requirement file (files are the source of truth; `INDEX.md` is only cross-checked).
-- Verifies `INDEX.md` lists exactly the atomic files present in the directory.
-- Emits a self-contained `index.html`: left pane = collapsible tree (Business REQ groups → requirements, Non-Functional NFR groups → requirements) with a filter box; right pane = full requirement detail (criticality, user story, description, acceptance criteria for REQ; description, rationale, verification method for NFR).
+- Parses every group and atomic requirement file; these files are the sole source of truth.
+- Emits only a self-contained `index.html`: left pane = collapsible tree (Business REQ groups → requirements, Non-Functional NFR groups → requirements) with a filter box; right pane = full requirement detail (criticality, user story, description, acceptance criteria for REQ; description, rationale, verification method for NFR). Markdown files are read-only inputs and no Markdown index is generated.
 - Output has no external resources (works offline via `file://`), uses no temp files outside the requirements directory, and is deterministic.
 
 ## Failure Modes
@@ -57,7 +56,6 @@ If the bundled script is missing, stop and report it — do not create a replace
 | Message | Cause | Fix |
 |---|---|---|
 | `requirements directory not found: <dir>` | No `docs/requirements` in the current directory and no directory argument given | Run from the project root or pass the directory explicitly |
-| `INDEX.md out of sync with files` | An atomic file was added/removed/renamed but `INDEX.md` was not updated (or vice versa) | Update `INDEX.md` (use the business/non-functional requirements management skills) and rerun |
 | `group <ID> not seen before <atomic-ID>` | An atomic file exists whose group file is missing or not named `REQ-XX.md`/`NFR-XX.md` | Create or rename the group file, then rerun |
 | `bad title: ...` | An `# ` heading does not match `REQ-XX[.XXX] Title` / `NFR-XX[.XXX] Title` | Fix the heading, then rerun |
 | `placeholder not replaced` / `expected N id entries` / `id ... missing from output` | Script or template problem | Report the details; do not edit `index.html` by hand |

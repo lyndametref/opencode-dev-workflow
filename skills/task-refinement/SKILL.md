@@ -20,6 +20,7 @@ A single backlog ticket becomes execution-ready with a clear description, explic
 
 - A ticket is vague, ambiguous, or missing key sections (description, AC, assumptions, dependencies, DoD).
 - A ticket needs to be checked for alignment with `docs/` specifications before implementation.
+- A feature needs an implementation specification and an execution-ready ticket that link the applicable requirements and specifications.
 - You need to make a single ticket execution-ready without decomposing it into sub-tasks.
 
 Do not use this skill for:
@@ -34,9 +35,11 @@ Do not use this skill for:
 
 2. **Cross-check relevant requirements** — Review `docs/` files and any linked backlog artifacts referenced by the ticket. Note any specifications the ticket must conform to.
 
+   For feature work, use `docs/specifications/` as the canonical location for the feature specification. Link relevant business rules and domain attribute lists/state diagrams in their canonical documentation locations.
+
 3. **Check definition of done** — Determine whether the standard DoD applies or if the ticket needs a customized DoD. If the latter, clarify and define specific done criteria. If unsure, ask the user.
 
-4. **Interact with the user** — Present findings and ask targeted questions to clarify intent, assumptions, and any ambiguous wording. Do not proceed until the following are clear:
+4. **Interact with the user** — Present findings and ask targeted questions to clarify intent, assumptions, and ambiguous wording. Do not mark the ticket execution-ready until material behavior and verification questions are answered:
    - What exactly needs to be built or done?
    - What are the boundaries (in scope / out of scope)?
    - What dependencies exist?
@@ -48,6 +51,8 @@ Do not use this skill for:
    - Tracked dependencies (if applicable)
    - Concrete, testable acceptance criteria
    - A clear definition of done
+   - All implementation-critical scope and behavior in the ticket itself; links to requirements and specifications explain context and rationale and are not substitutes for ticket content
+   - Direct references to the relevant requirement IDs and specification artifacts
 
 6. **Return a summary** — Provide a summary of changes made, any assumptions that were documented, open questions that remain, and suggested next actions.
 
@@ -67,6 +72,7 @@ See `references/` for a before/after refinement demonstration:
 - All changes were made via the backlog CLI — no direct file edits.
 - The `backlog-md` skill was loaded (step 0) and used for all backlog operations.
 - Any requirements invented without traceable documentation sources are flagged as open questions.
+- No material ambiguity remains that would force a developer to seek product clarification before beginning implementation.
 
 ## Decision Rules
 

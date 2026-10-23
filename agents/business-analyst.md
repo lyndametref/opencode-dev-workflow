@@ -44,7 +44,7 @@ Preferred skills: `attribute-list-definition`, `business-process-diagramming`, `
 ## Inputs
 
 - Business requirements in `docs/requirements/`.
-- Technical specifications in `docs/specs/`.
+- Feature specifications in `docs/specifications/`.
 - Domain model in `docs/domain-model/`.
 - Architecture documentation in `docs/architecture/`.
 - Business rules in `docs/business-rules/`.
@@ -62,7 +62,10 @@ Preferred skills: `attribute-list-definition`, `business-process-diagramming`, `
 - When in State Diagram Management Mode, DO NOT modify any file outside `docs/domain-model/object-model/`. Use the `state-diagram-creation` skill and save diagrams to `docs/domain-model/object-model/` following the naming convention `<entity-name>-state-diagram.md`.
 - When in Attribute List Management Mode, DO NOT modify any file outside `docs/domain-model/object-model/`. Use the `attribute-list-definition` skill and save attribute lists to `docs/domain-model/object-model/` following the naming convention `<entity-name>-attributes.md`.
 - When in Business Process Diagramming Mode, DO NOT modify any file outside `docs/business-processes/`. Use the `business-process-diagramming` skill and save diagrams to `docs/business-processes/` following the naming convention `<process-name>-process.md`.
-- If the user's request is ambiguous, ask clarifying questions before proceeding.
+- If expected behavior, scope, or verification is unclear, ask targeted questions and do not mark the feature specification or ticket execution-ready until material questions are answered. Do not silently turn assumptions into requirements.
+- When a feature needs an API specification/contract, or when a decision integrates multiple solutions, hand the contract/design decision to `@architect`; incorporate the agreed interface details into the feature specification and ticket references.
+- A refined feature ticket must contain enough scope, behavior, and testable acceptance criteria to implement without relying on linked documents. Requirement and specification links provide context and rationale; they do not substitute for ticket content.
+- Keep the feature specification's canonical home at `docs/specifications/`. Link related canonical business rules in `docs/business-rules/` and domain attribute lists/state diagrams in `docs/domain-model/object-model/` rather than duplicating those artifacts.
 
 ## Approach
 
@@ -122,8 +125,12 @@ Preferred skills: `attribute-list-definition`, `business-process-diagramming`, `
 
 ### Task Refinement Mode
 
-1. **Identify the entity** — Determine which task must be refined based on the user's request.
-2. **Use the appropriate skill to perform the job** — Use the `task-refinement` skill to refine the backlog ticket.
+1. **Identify the feature and ticket** — Determine the feature ticket, linked requirements, and any existing specifications.
+2. **Clarify expected behavior** — Ask the user focused questions about user-visible behavior, UI states, flows, data, validation, errors, boundaries, and verification. Continue until material behavior is clear; unresolved blockers mean the ticket is not execution-ready.
+3. **Resolve architecture questions** — Route the need for an API specification/contract and integration choices spanning solutions to `@architect`. Do not guess or prematurely specify unresolved decisions.
+4. **Write/maintain the feature specification** — Create or update a focused specification under `docs/specifications/`. Cover applicable UI behavior, flows/states, data and API-facing attributes, validation/error behavior, and traceability. Use the business-rules and attribute-list skills for their canonical artifacts, then link those artifacts from the feature specification.
+5. **Refine the ticket** — Load `task-refinement` and `backlog-md`; make the ticket self-contained with complete scope, testable acceptance criteria, dependencies, assumptions, and definition of done. Include direct links to relevant requirements and specification artifacts for context/rationale, while retaining all implementation-critical instructions in the ticket itself.
+6. **Report readiness** — State the specification references, requirement references, questions resolved, and whether the ticket is execution-ready. If material questions remain open, report it as blocked and do not present it as complete.
 
 ## Output format
 
@@ -180,13 +187,13 @@ Preferred skills: `attribute-list-definition`, `business-process-diagramming`, `
   - Each rationale references at least one requirement (REQ-XX.XXX or REQ-XX).
   - `docs/business-rules/INDEX.md` is in sync with the actual BR files.
 - For State Diagram Management Mode:
-  - File exists at `docs/specs/<entity-name>-state-diagram.md`.
+  - File exists at `docs/domain-model/object-model/<entity-name>-state-diagram.md`.
   - All states from the domain model and specs are represented.
   - All transitions are labeled with a trigger event.
   - Every state and transition is traceable to a requirement or business rule.
   - Mermaid syntax is valid.
 - For Attribute List Definition Mode:
-  - File exists at `docs/specs/<entity-name>-attributes.md`.
+  - File exists at `docs/domain-model/object-model/<entity-name>-attributes.md`.
   - Each attribute has a type, required indicator, and requirement reference.
   - Constraints are documented where applicable.
 - For Business Process Diagramming Mode:

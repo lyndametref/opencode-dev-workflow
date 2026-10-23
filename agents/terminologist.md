@@ -32,7 +32,7 @@ Preferred skills: `business-glossary-management`, `business-terminology-consiste
   - `docs/requirements/`
   - `docs/domain-model/`
   - `docs/architecture/`
-  - `docs/specs/`
+  - `docs/specifications/`
   - `backlog/`
 
 ## Constraints

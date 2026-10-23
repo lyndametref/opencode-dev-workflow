@@ -30,6 +30,7 @@ This file list available agents and give general rules for the agents.
 - `business-process-diagramming`
 - `business-requirements-management`: Create, update, reorganize and check consistency of business requirements under docs/requirements/.
 - `business-rules-management`: Create, update, and validate business rules in the canonical format. Each business rule is a self-contained file under docs/business-rules/BR-XXX-short-name.md with unique BR-XXX ID, description, rationale grounded in requirements, and applicability statement.
+- `business-rules-index-visualization`: Regenerate docs/business-rules/index.html — a searchable list and detail view of business rules — from BR-XXX Markdown files after rule changes.
 - `business-terminology-consistency-check`: Check docs and backlog for non-canonical business terms, conflicting term variants, and missing glossary alignment. Use when validating wording consistency before or after glossary changes.
 - `domain-modeling`: Create and maintain the semantic domain model of the project: Business Object Models, context maps, and business object documentation.
 - `lilypond-piano`: Use for creating and editing LilyPond piano scores. Handles multi-staff layout with right and left hands, master .ly file with includes, measure numbering synchronization, breaks in right hand only, and piano-specific score block with optional layout (staff size) and MIDI.
@@ -48,5 +49,4 @@ This file list available agents and give general rules for the agents.
 - No ambiguous status language (use explicit states like planned, in-progress, blocked, completed).
 - If information is missing, list assumptions instead of inventing silent details.
 - never use timestamps without timezone. 
-- Never write anything to `/tmp`. Always write temporary files to `~/.tmp` instead.
-
+- Never write anything to `/tmp`. Temporary files belong in `~/.tmp`, except the quality gatekeeper may use a project-local `./.tmp/` for temporary verification artifacts and must remove them before finishing.
