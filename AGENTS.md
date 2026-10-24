@@ -51,4 +51,4 @@ This file list available agents and give general rules for the agents.
 - No ambiguous status language (use explicit states like planned, in-progress, blocked, completed).
 - If information is missing, list assumptions instead of inventing silent details.
 - never use timestamps without timezone. 
-- Never write anything to `/tmp`. Temporary files belong in `~/.tmp`, except the quality gatekeeper may use a project-local `./.tmp/` for temporary verification artifacts and must remove them before finishing.
+- Never write anything to `/tmp`. If a temporary file must be created, it MUST be placed in `./.tmp` (the `.tmp` directory in the folder where the agent is running) and MUST always be cleaned up/removed at the end of the task.
