@@ -52,4 +52,11 @@ This file list available agents and give general rules for the agents.
 - No ambiguous status language (use explicit states like planned, in-progress, blocked, completed).
 - If information is missing, list assumptions instead of inventing silent details.
 - never use timestamps without timezone. 
-- Never write anything to `/tmp`. If a temporary file must be created, it MUST be placed in `./.tmp` (the `.tmp` directory in the folder where the agent is running) and MUST always be cleaned up/removed at the end of the task.
+- Never write anything to `/tmp`, `/var/tmp`, or any system temporary directory. All temporary files and scratchpads MUST be created in the project-local `./.tmp/` directory (the `.tmp` folder in the folder where the agent is running), and MUST always be cleaned up/removed before the task ends, including on failure or when blocked.
+
+## Temporary Files and Scratchpads
+
+- Scope: any intermediate, scratch, or temporary file produced while working, including scratchpads, drafts, dumps, and working notes.
+- Location: MUST be written only under `./.tmp/` relative to the folder where the agent is running. Never use `/tmp`, `/var/tmp`, or other system temp locations.
+- Cleanup: remove all such files from `./.tmp/` before finishing, even if the task fails or is blocked; do not leave artifacts behind.
+- Agents and skills must interpret `./.tmp/` as the sole permitted temporary/scratchpad location.

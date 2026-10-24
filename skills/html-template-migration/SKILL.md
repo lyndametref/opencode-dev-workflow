@@ -34,7 +34,7 @@ The renderer rejects missing, unrecognized, or unresolved placeholders, requires
 
 - Keep each visualization's template beside its skill under `templates/`.
 - Keep source parsing, corpus validation, data schema, and success summary in the visualization skill's generator.
-- Have generators write their compact JSON payload to a temporary file in the corpus directory, pass it and the page labels to the shared renderer, and remove the temporary file on all exit paths.
+- Have generators write their compact JSON payload to a temporary file in the project-local `./.tmp/` directory (create it if missing), pass it and the page labels to the shared renderer, and remove the temporary file on all exit paths.
 - Keep Markdown as the source of truth; generated HTML remains an output artifact.
 - Escape values according to their template context; never interpolate source text directly into HTML or JavaScript.
 - Update the visualization skill instructions when changing its template or renderer usage.
