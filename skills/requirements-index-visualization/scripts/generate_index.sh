@@ -20,6 +20,26 @@ base=${1:-docs/requirements}
 
 fail() { echo "error: $*" >&2; exit 1; }
 
+# --- derive project title from the requirements location ---------------------
+base_abs=$(cd "$base" && pwd) || fail "requirements directory not found: $base"
+base_name=$(basename "$base_abs")
+parent=$(dirname "$base_abs")
+parent_name=$(basename "$parent")
+if [ "$base_name" = "requirements" ] && [ "$parent_name" = "docs" ]; then
+	project_root=$(dirname "$parent")
+else
+	project_root=$parent
+fi
+raw_title=$(basename "$project_root")
+raw_title=$(printf '%s' "$raw_title" | sed 's/[_-]/ /g')
+project_title=$(printf '%s' "$raw_title" | awk '{ for (i=1;i<=NF;i++) $i=toupper(substr($i,1,1)) tolower(substr($i,2)); print }')
+[ -n "$project_title" ] || project_title="Requirements"
+if [ "$project_title" = "Requirements" ]; then
+	full_title="Requirements"
+else
+	full_title="$project_title - Requirements"
+fi
+
 # --- collect files (group first, then its atoms) ---------------------------
 set --
 group_count=0
@@ -65,7 +85,7 @@ disk_ids=$(
 tmp="$base/.index.html.tmp"
 trap 'rm -f "$tmp"' EXIT HUP INT TERM
 
-awk '
+awk -v ptitle="$full_title" '
 function jesc(s,   out, i, c, n) {
 	out = ""; n = length(s)
 	for (i = 1; i <= n; i++) {
@@ -153,7 +173,7 @@ function build_payload(   out, i, first) {
 	gsub(/<\//, "<\\/", out)
 	return out
 }
-BEGIN { ngroup = 0; nleaf = 0; prevfile = ""; done_flush = 0; payload = "" }
+BEGIN { ngroup = 0; nleaf = 0; prevfile = ""; done_flush = 0; payload = ""; ptitle_esc = ptitle; gsub(/&/, "\\&", ptitle_esc) }
 
 FILENAME == "-" || FILENAME == "" {
 	if (!done_flush) {
@@ -162,11 +182,13 @@ FILENAME == "-" || FILENAME == "" {
 		done_flush = 1
 		payload = build_payload()
 	}
-	i = index($0, "__DATA__")
+	line = $0
+	gsub(/__TITLE__/, ptitle_esc, line)
+	i = index(line, "__DATA__")
 	if (i > 0)
-		print substr($0, 1, i - 1) payload substr($0, i + 8)
+		print substr(line, 1, i - 1) payload substr(line, i + 8)
 	else
-		print
+		print line
 	next
 }
 
@@ -198,7 +220,7 @@ FILENAME == "-" || FILENAME == "" {
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>KindleKeeper — Requirements</title>
+<title>__TITLE__</title>
 <style>
   :root {
     --bg: #f4f4f2; --panel: #ffffff; --border: #e2e2df;
@@ -291,7 +313,7 @@ FILENAME == "-" || FILENAME == "" {
 <body>
 <div class="app">
   <header>
-    <h1>KindleKeeper — Requirements</h1>
+    <h1>__TITLE__</h1>
     <span class="sub" id="counts"></span>
   </header>
   <div class="panes">

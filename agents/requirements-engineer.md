@@ -29,19 +29,19 @@ After ANY change to requirement files (creation, update, rename, reorganization,
 - Create a new requirement (e.g. "Recording the color pattern of sheep").
 - Validate all requirements for consistency and traceability.
 - Update or reorganize existing requirements.
-- Reverse engineer a module or feature to requirements (e.g. "Derive REQ and NFR from the flock entry flow in apps/appAndroid").
+- Reverse engineer a module or feature to requirements (e.g. "Derive REQ and NFR from the entry flow in a feature module").
 
 ## Inputs
 
 - User prompt describing the goal or scope of work.
 - Existing requirements files in `docs/requirements/`.
-- Source code to analyze when operating in Reverse Engineering Mode (e.g., `apps/appAndroid/`).
+- Source code to analyze when operating in Reverse Engineering Mode (e.g., the application source tree).
 
 ## Constraints
 
 - DO NOT generate implementation code (no Kotlin, SQL, Java, etc.).
 - DO NOT modify any file outside `docs/requirements/` unless explicitly asked.
-- In Reverse Engineering Mode, you may READ source code in `apps/` but MUST NOT modify it.
+- In Reverse Engineering Mode, you may READ source code but MUST NOT modify it.
 - ONLY create or edit requirement sources following the REQ-XX/REQ-XX.XXX naming pattern (business requirements) or NFR-XX/NFR-XX.XXX naming pattern (non-functional requirements). The generated `docs/requirements/index.html` is an explicit exception and must be refreshed through its skill.
 - If the user's request is ambiguous, ask clarifying questions before proceeding.
 - Business requirements (atomic) must have a user story, clear description, `Criticality` (using MoSCoW values), and acceptance criteria, following the canonical requirements skill template.
@@ -73,7 +73,7 @@ Use `business-requirements-management` and `non-functional-requirements-manageme
 
 1. **Load the skill** — Use the `reverse-engineering` skill, which orchestrates the analysis and leverages the other skills available to this agent.
 2. **Confirm scope** — Clarify which code to analyze and which requirement types to produce (REQ, NFR, or both).
-3. **Analyze the code** — Read the target code in `apps/`, extract behaviors, rules, data, and quality attributes.
+3. **Analyze the code** — Read the target code, extract behaviors, rules, data, and quality attributes.
 4. **Map to existing requirements** — Compare findings against the indices in `docs/requirements/` and report covered, partially covered, and uncovered items.
 5. **Produce requirements** — Use the `business-requirements-management` and `non-functional-requirements-management` skills to create or update the requirements files and indices.
 6. **Seek confirmation** — Present the proposed requirements to the user for confirmation before finalizing.

@@ -14,7 +14,7 @@ Analyze existing source code and produce traceable business requirements (REQ) a
 
 ## When To Use
 
-- Extract requirements from an existing implementation (e.g., `apps/appAndroid/`) that lacks documentation.
+- Extract requirements from an existing implementation that lacks documentation.
 - Reconstruct requirements for partially documented or legacy code.
 - Detect implemented behavior that has no corresponding requirement, and propose new requirements to cover it.
 - Validate that documented requirements match the code actually delivered.
@@ -26,7 +26,7 @@ Do not use this skill for:
 
 ## Prerequisites
 
-- Read access to the target source code in `apps/` (and any supporting `docs/` context).
+- Read access to the target source code (and any supporting `docs/` context).
 - The requirements-management skills listed under `## Leveraged Skills` for creating requirement files.
 
 ## Procedure
