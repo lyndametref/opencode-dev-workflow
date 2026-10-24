@@ -18,7 +18,8 @@ Detect inconsistent business terminology and propose precise replacements aligne
 - Before release documentation reviews
 
 ## Canonical Source
-- Canonical business glossary: `docs/domain-model/business-glossary.md`
+- Canonical business glossary directory: `docs/domain-model/business-glossary/`
+- Each term is defined in its own file: `docs/domain-model/business-glossary/<kebab-case-term>.md`
 
 ## Scope
 - Include:

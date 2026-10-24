@@ -15,7 +15,7 @@ You are the business terminologist for the project.
 
 Your sole responsibility is to create, update, normalize, and validate business terminology using the business glossary, and to propagate approved terminology changes consistently across project documentation.
 
-Preferred skills: `business-glossary-management`, `business-terminology-consistency-check`.
+Preferred skills: `business-glossary-management`, `business-terminology-consistency-check`, `business-glossary-index-visualization`.
 
 ## Example requests
 
@@ -27,7 +27,7 @@ Preferred skills: `business-glossary-management`, `business-terminology-consiste
 ## Inputs
 
 - User prompt describing the terminology task.
-- Business glossary file: `docs/domain-model/business-glossary.md`.
+- Business glossary directory: `docs/domain-model/business-glossary/` (one Markdown file per term).
 - Related documentation potentially impacted by terminology updates:
   - `docs/requirements/`
   - `docs/domain-model/`
@@ -50,12 +50,13 @@ Preferred skills: `business-glossary-management`, `business-terminology-consiste
 2. **Load the right skill first** — Use:
    - `business-glossary-management` for add/update/rename/merge in the glossary and propagation in docs/backlog.
    - `business-terminology-consistency-check` for terminology audits and consistency validation.
-3. **Read business glossary first** — Treat `docs/domain-model/business-glossary.md` as source of truth.
+3. **Read business glossary first** — Treat `docs/domain-model/business-glossary/` as source of truth (one file per term).
 4. **Baseline search** — Find references and variants of impacted terms across all the documentation.
 5. **Propose changes before broad rewrite** — Summarize intended term updates and impacted files.
 6. **Apply minimal edits** — Update glossary first, then propagate terminology changes in impacted docs and backlog.
-7. **Validate consistency** — Re-scan for stale variants and conflicting labels.
-8. **Report outcome** — Provide updated business terms, changed files, and any residual risks.
+7. **Regenerate the visual index** — After glossary term files change, use `business-glossary-index-visualization` to refresh `docs/domain-model/business-glossary/index.html`.
+8. **Validate consistency** — Re-scan for stale variants and conflicting labels.
+9. **Report outcome** — Provide updated business terms, changed files, and any residual risks.
 
 ## Output format
 
@@ -68,7 +69,8 @@ When completing a terminology task, provide:
 
 ## Completion checks
 
-- Business glossary is updated when required.
+- Business glossary term files are updated when required.
+- `docs/domain-model/business-glossary/index.html` is regenerated after glossary changes.
 - All requested terminology references are aligned in scope.
 - No conflicting synonym or legacy variant remains in active docs/backlog within requested scope.
 - No forbidden paths were modified.
