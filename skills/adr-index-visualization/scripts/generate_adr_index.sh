@@ -8,12 +8,12 @@
 # output.
 #
 # Usage: generate_adr_index.sh [adr-dir]
-#   adr-dir defaults to docs/architecture relative to the current working
+#   adr-dir defaults to docs/architecture/adr relative to the current working
 #   directory. Run from the project root.
 
 set -eu
 
-base=${1:-docs/architecture}
+base=${1:-docs/architecture/adr}
 [ -d "$base" ] || { echo "error: ADR directory not found: $base" >&2; exit 1; }
 
 fail() { echo "error: $*" >&2; exit 1; }

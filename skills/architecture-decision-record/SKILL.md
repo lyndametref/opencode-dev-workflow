@@ -9,7 +9,7 @@ disable-model-invocation: false
 # Architecture Decision Record (ADR) Management
 
 ## Outcome
-Create, revise, and manage Architecture Decision Records (ADRs), stored in `docs/architecture/`. Once an ADR reaches a final status (Accepted, Refused), its body becomes immutable — only status transitions to Deprecated or Superseded are permitted. After every ADR change, the visual ADR index (`docs/architecture/index.html`) is regenerated via the `adr-index-visualization` skill.
+Create, revise, and manage Architecture Decision Records (ADRs), stored in `docs/architecture/adr/`. Once an ADR reaches a final status (Accepted, Refused), its body becomes immutable — only status transitions to Deprecated or Superseded are permitted. After every ADR change, the visual ADR index (`docs/architecture/adr/index.html`) is regenerated via the `adr-index-visualization` skill.
 
 ## When To Use
 - Record a significant architectural decision with rationale
@@ -23,10 +23,15 @@ Do not use this skill for:
 - Casual discussions that do not impact architecture
 
 ## ADR Location
-- All ADRs live in `docs/architecture/`
+- All ADRs live in `docs/architecture/adr/`
 - File naming convention: `ADR-<NNNN>-<kebab-case-title>.md`
-  - Example: `ADR-0001-use-neo4j-for-genealogy.md`
-- The browsable index is the generated artifact `docs/architecture/index.html`. It is owned by the `adr-index-visualization` skill — never create or hand-edit a markdown ADR index, and never hand-edit `index.html`.
+  - Example: `docs/architecture/adr/ADR-0001-use-neo4j-for-genealogy.md`
+- The browsable index is the generated artifact `docs/architecture/adr/index.html`. It is owned by the `adr-index-visualization` skill — never create or hand-edit a markdown ADR index, and never hand-edit `index.html`.
+
+## ADR Discovery and Path Handling (Decision Rules)
+- The canonical ADR directory is `docs/architecture/adr/`. All reads, writes, numbering, and index generation operate on that directory.
+- If ADR files are found in a different path (e.g. `docs/architecture/` root or another directory), do not move them automatically. Stop and ask the user to move them into `docs/architecture/adr/` before proceeding.
+- Never relocate, rename, or delete ADR files without explicit user instruction.
 
 ## ADR Format (Mandatory Template)
 Every ADR MUST follow this structure. See [the example](references/example-ADR-0001-use-neo4j-for-genealogy.md) for a complete worked example.
@@ -70,10 +75,10 @@ Every procedure below ends with the same mandatory step: **regenerate the visual
 
 ### 1. Create a new ADR (Proposed)
 
-1. **Determine the next ADR number** — find the highest existing `ADR-NNNN-` prefix in `docs/architecture/`, increment by 1.
+1. **Determine the next ADR number** — find the highest existing `ADR-NNNN-` prefix in `docs/architecture/adr/`, increment by 1.
 2. **Define the title** — short, descriptive noun phrase (e.g., "Use Neo4j for Genealogy").
 3. **Write the ADR** using the template above with status `Proposed`.
-4. **Save** to `docs/architecture/ADR-<NNNN>-<kebab-case-title>.md`.
+4. **Save** to `docs/architecture/adr/ADR-<NNNN>-<kebab-case-title>.md`.
 5. **Regenerate the visual index** via the `adr-index-visualization` skill.
 
 ### 2. Accept or Refuse a Proposed ADR
@@ -118,10 +123,10 @@ Every procedure below ends with the same mandatory step: **regenerate the visual
 - The `# Title` line is editable only while status is `Proposed`.
 
 ## Completion Checks
-- [ ] ADR file exists at `docs/architecture/ADR-<NNNN>-<kebab-case-title>.md`
+- [ ] ADR file exists at `docs/architecture/adr/ADR-<NNNN>-<kebab-case-title>.md`
 - [ ] Template follows the defined format with all required sections
 - [ ] Status is valid and transitions are legal
-- [ ] Visual index regenerated via `adr-index-visualization` (`docs/architecture/index.html` is newer than the edited ADR files)
+- [ ] Visual index regenerated via `adr-index-visualization` (`docs/architecture/adr/index.html` is newer than the edited ADR files)
 - [ ] No markdown ADR index file was created or updated
 - [ ] If superseding, the old ADR links to the new one and vice versa
 
@@ -131,6 +136,6 @@ After any operation, summarize:
 - **Action**: create / accept / refuse / deprecate / supersede
 - **ADR**: `ADR-NNNN` – Title
 - **Status**: OldStatus → NewStatus
-- **File**: `docs/architecture/ADR-NNNN-title.md`
+- **File**: `docs/architecture/adr/ADR-NNNN-title.md`
 - **Transitions validated**: yes/no
-- **Visual index regenerated**: yes/no (`docs/architecture/index.html`)
+- **Visual index regenerated**: yes/no (`docs/architecture/adr/index.html`)
