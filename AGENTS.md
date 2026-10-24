@@ -40,7 +40,7 @@ This file list available agents and give general rules for the agents.
 - `markdown-move`: Move a markdown file to a new location and update all relative links within it to reflect the new path.
 - `non-functional-requirements-management`: Create, update, reorganize and check consistency of non-functional     requirements under docs/requirements/non-functional/.
 - `project-initialization`: Used only by `project-planner` to gather specialist intake needs, scaffold approved documentation folders and indexes, and verify Backlog.md readiness.
-- `requirements-index-visualization`: Regenerate index.html — the tree + detail visualization of the requirements corpus — by running the skill's bundled scripts/generate_index.sh against the project docs/requirements. Use after any change to REQ/NFR files to keep the visual index in sync.
+- `requirements-index-visualization`: Regenerate index.html files — the tree + detail visualization of the requirements corpus — by running the skill's bundled scripts/generate_index.sh against the project docs/requirements. Use after any change to REQ/NFR files to keep the visual indexes in sync.
 - `reverse-engineering`: Read existing source code and produce the business (REQ) and non-functional (NFR) requirements that correspond to the implemented behavior.
 - `state-diagram-creation`: Create Mermaid state diagrams for domain objects with lifecycle states, statuses, and transitions. Each diagram is stored in docs/domain-model/ and shows valid states, transitions, and the conditions that trigger them.
 - `task-refinement`: Audit, clarify, and complete a single backlog ticket by removing ambiguity, filling missing structure, and aligning it with specifications. Uses the backlog CLI for all ticket modifications.

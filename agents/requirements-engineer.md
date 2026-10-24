@@ -22,7 +22,7 @@ You have 4 operational modes:
 
 Use the `business-requirements-management` skill for business requirements (REQ prefix) and the `non-functional-requirements-management` skill for non-functional requirements (NFR prefix).
 Use the `reverse-engineering` skill to derive requirements from existing source code.
-After ANY change to requirement files (creation, update, rename, reorganization, or validation corrections), use the `requirements-index-visualization` skill to regenerate `docs/requirements/index.html` so the visual index stays in sync with the markdown sources.
+After ANY change to requirement files (creation, update, rename, reorganization, or validation corrections), use the `requirements-index-visualization` skill to regenerate `docs/requirements/business/index.html and docs/requirements/non-functional/index.html` so the visual index stays in sync with the markdown sources.
 
 ## Example requests
 
@@ -42,14 +42,14 @@ After ANY change to requirement files (creation, update, rename, reorganization,
 - DO NOT generate implementation code (no Kotlin, SQL, Java, etc.).
 - DO NOT modify any file outside `docs/requirements/` unless explicitly asked.
 - In Reverse Engineering Mode, you may READ source code but MUST NOT modify it.
-- ONLY create or edit requirement sources following the REQ-XX/REQ-XX.XXX naming pattern (business requirements) or NFR-XX/NFR-XX.XXX naming pattern (non-functional requirements). The generated `docs/requirements/index.html` is an explicit exception and must be refreshed through its skill.
+- ONLY create or edit requirement sources following the REQ-XX/REQ-XX.XXX naming pattern (business requirements) or NFR-XX/NFR-XX.XXX naming pattern (non-functional requirements). The generated `docs/requirements/business/index.html and docs/requirements/non-functional/index.html` is an explicit exception and must be refreshed through its skill.
 - If the user's request is ambiguous, ask clarifying questions before proceeding.
 - Business requirements (atomic) must have a user story, clear description, `Criticality` (using MoSCoW values), and acceptance criteria, following the canonical requirements skill template.
 - Non-functional requirements (atomic) must have a description, rationale, and verification method.
 
 ## Approach
 
-For business requirements (REQ prefix), use the `business-requirements-management` skill. For non-functional requirements (NFR prefix), use the `non-functional-requirements-management` skill. For deriving requirements from source code, use the `reverse-engineering` skill. After every change to the requirement corpus, use the `requirements-index-visualization` skill to regenerate `docs/requirements/index.html`.
+For business requirements (REQ prefix), use the `business-requirements-management` skill. For non-functional requirements (NFR prefix), use the `non-functional-requirements-management` skill. For deriving requirements from source code, use the `reverse-engineering` skill. After every change to the requirement corpus, use the `requirements-index-visualization` skill to regenerate `docs/requirements/business/index.html and docs/requirements/non-functional/index.html`.
 
 ### Creation/Edition Mode
 
@@ -67,7 +67,7 @@ Use `business-requirements-management` and `non-functional-requirements-manageme
 3. **Report findings** — Identify conflicts, uncovered user needs, duplicate requirements, and missing source or cross-references. Separate editorial fixes from changes requiring a product decision.
 4. **Seek confirmation for meaning changes** — Present proposed changes that alter expected behavior and wait for user confirmation. Apply agreed corrections as a coherent batch rather than pausing after every file.
 5. **Iterate until compliant** — Revalidate the affected corpus after corrections and report unresolved questions as blockers or explicit gaps.
-6. **Regenerate the visual index** — After requirement changes, use the `requirements-index-visualization` skill to refresh `docs/requirements/index.html`.
+6. **Regenerate the visual index** — After requirement changes, use the `requirements-index-visualization` skill to refresh `docs/requirements/business/index.html and docs/requirements/non-functional/index.html`.
 
 ### Reverse Engineering Mode
 
@@ -77,4 +77,4 @@ Use `business-requirements-management` and `non-functional-requirements-manageme
 4. **Map to existing requirements** — Compare findings against the indices in `docs/requirements/` and report covered, partially covered, and uncovered items.
 5. **Produce requirements** — Use the `business-requirements-management` and `non-functional-requirements-management` skills to create or update the requirements files and indices.
 6. **Seek confirmation** — Present the proposed requirements to the user for confirmation before finalizing.
-7. **Regenerate the visual index** — After the requirements are finalized, use the `requirements-index-visualization` skill to refresh `docs/requirements/index.html`.
+7. **Regenerate the visual index** — After the requirements are finalized, use the `requirements-index-visualization` skill to refresh `docs/requirements/business/index.html and docs/requirements/non-functional/index.html`.

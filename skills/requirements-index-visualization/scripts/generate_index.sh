@@ -1,52 +1,80 @@
 #!/bin/sh
 # Parse REQ/NFR Markdown, validate records, then render the HTML template.
-# Usage: generate_index.sh [requirements-dir [output.html]]
+# Usage:
+#   generate_index.sh [requirements-or-corpus-dir [output.html]]
+#
+# If the given directory contains business/ or non-functional/ subdirectories,
+# both corpus indexes are generated in their respective folders. Otherwise the
+# directory itself is treated as one corpus (business or non-functional).
 
 set -eu
 
 base=${1:-docs/requirements}
-output=${2:-$base/index.html}
+output=${2:-}
 [ -d "$base" ] || { echo "error: requirements directory not found: $base" >&2; exit 1; }
 fail() { echo "error: $*" >&2; exit 1; }
 
 base_abs=$(CDPATH= cd "$base" && pwd) || fail "requirements directory not found: $base"
-base_name=$(basename "$base_abs")
-parent=$(dirname "$base_abs")
-parent_name=$(basename "$parent")
-if [ "$base_name" = "requirements" ] && [ "$parent_name" = "docs" ]; then project_root=$(dirname "$parent"); else project_root=$parent; fi
-raw_title=$(basename "$project_root")
-raw_title=$(printf '%s' "$raw_title" | sed 's/[_-]/ /g')
-project_title=$(printf '%s' "$raw_title" | awk '{ for (i=1;i<=NF;i++) $i=toupper(substr($i,1,1)) tolower(substr($i,2)); print }')
-[ -n "$project_title" ] || project_title="Requirements"
-if [ "$project_title" = "Requirements" ]; then full_title="Requirements"; else full_title="$project_title - Requirements"; fi
+
+# Root mode: generate one index per corpus subdirectory.
+if [ -d "$base_abs/business" ] || [ -d "$base_abs/non-functional" ]; then
+	if [ -d "$base_abs/business" ]; then
+		if [ -n "$output" ]; then :; fi
+		"$0" "$base_abs/business" "$base_abs/business/index.html"
+	fi
+	if [ -d "$base_abs/non-functional" ]; then
+		"$0" "$base_abs/non-functional" "$base_abs/non-functional/index.html"
+	fi
+	exit 0
+fi
+
+output=${output:-$base_abs/index.html}
+
+# Determine corpus kind from its contents (or directory name when empty).
+has_req=0; has_nfr=0
+for f in "$base_abs"/REQ-[0-9][0-9].md "$base_abs"/REQ-[0-9][0-9].[0-9][0-9][0-9].md; do [ -f "$f" ] && has_req=1; done
+for f in "$base_abs"/NFR-[0-9][0-9].md "$base_abs"/NFR-[0-9][0-9].[0-9][0-9][0-9].md; do [ -f "$f" ] && has_nfr=1; done
+[ "$has_req" -eq 0 ] || [ "$has_nfr" -eq 0 ] || fail "mixed REQ and NFR files in $base_abs"
+if [ "$has_req" -eq 1 ]; then
+	kind=business
+	prefix=REQ
+elif [ "$has_nfr" -eq 1 ]; then
+	kind=nfr
+	prefix=NFR
+else
+	case "$(basename "$base_abs")" in
+		*non*|*nfr*|*NFR*) kind=nfr; prefix=NFR ;;
+		*) kind=business; prefix=REQ ;;
+	esac
+fi
+
+if [ "$kind" = "business" ]; then
+	page_title="Business Requirements"
+	page_heading="Business Requirements"
+else
+	page_title="Non-Functional Requirements"
+	page_heading="Non-Functional Requirements"
+fi
 
 set --
 group_count=0
 leaf_count=0
-for g in "$base"/business/REQ-[0-9][0-9].md; do
-	[ -f "$g" ] || fail "no business group files"
+for g in "$base_abs"/$prefix-[0-9][0-9].md; do
+	[ -f "$g" ] || continue
 	set -- "$@" "$g"
 	group_count=$((group_count + 1))
 	stem=${g##*/}; stem=${stem%.md}
-	for a in "$base/business/$stem".[0-9][0-9][0-9].md; do [ -f "$a" ] || continue; set -- "$@" "$a"; leaf_count=$((leaf_count + 1)); done
-done
-for g in "$base"/non-functional/NFR-[0-9][0-9].md; do
-	[ -f "$g" ] || fail "no non-functional group files"
-	set -- "$@" "$g"
-	group_count=$((group_count + 1))
-	stem=${g##*/}; stem=${stem%.md}
-	for a in "$base/non-functional/$stem".[0-9][0-9][0-9].md; do [ -f "$a" ] || continue; set -- "$@" "$a"; leaf_count=$((leaf_count + 1)); done
+	for a in "$base_abs/$stem".[0-9][0-9][0-9].md; do [ -f "$a" ] || continue; set -- "$@" "$a"; leaf_count=$((leaf_count + 1)); done
 done
 
-disk_ids=$(for f in "$base"/business/REQ-[0-9][0-9].[0-9][0-9][0-9].md "$base"/non-functional/NFR-[0-9][0-9].[0-9][0-9][0-9].md; do [ -f "$f" ] || continue; b=${f##*/}; printf '%s\n' "${b%.md}"; done | sort)
+disk_ids=$(for f in "$base_abs"/$prefix-[0-9][0-9].[0-9][0-9][0-9].md; do [ -f "$f" ] || continue; b=${f##*/}; printf '%s\n' "${b%.md}"; done | sort)
 script_dir=$(CDPATH= cd "$(dirname "$0")" && pwd)
 template="$script_dir/../templates/index.html"
 renderer="$script_dir/../../html-template-migration/scripts/render_html_template.sh"
 [ -f "$template" ] || fail "requirements HTML template not found: $template"
 [ -f "$renderer" ] || fail "shared HTML template renderer not found: $renderer"
-page_title=$full_title
-page_heading=$full_title
-data_tmp="$base/.index.data.$$"
+
+data_tmp="$base_abs/.index.data.$$"
 trap 'rm -f "$data_tmp"' EXIT HUP INT TERM
 
 awk '
@@ -91,10 +119,9 @@ function group_json(i) {
 	return "{\"id\":\"" jesc(gids[i]) "\",\"title\":\"" jesc(gtitle[i]) "\",\"userStory\":\"" jesc(gstory[i]) "\",\"description\":\"" jesc(gdesc[i]) "\",\"children\":[" gchild[i] "]}"
 }
 function build_payload(   out, i, first) {
-	out = "{\"business\":["; first = 1
-	for (i = 1; i <= ngroup; i++) if (gids[i] ~ /^REQ-/) { out = out (first ? "" : ",") group_json(i); first = 0 }
-	out = out "],\"nfr\":["; first = 1
-	for (i = 1; i <= ngroup; i++) if (gids[i] ~ /^NFR-/) { out = out (first ? "" : ",") group_json(i); first = 0 }
+	out = "{\"groups\":["
+	first = 1
+	for (i = 1; i <= ngroup; i++) { out = out (first ? "" : ",") group_json(i); first = 0 }
 	return out "]}"
 }
 BEGIN { ngroup = 0; nleaf = 0; prevfile = ""; done = 0 }

@@ -10,7 +10,7 @@ disable-model-invocation: false
 
 ## Outcome
 
-`docs/requirements/index.html` is the only generated index. It is regenerated from the current REQ/NFR Markdown corpus and its timestamp is newer than the requirement files it visualizes. The Markdown files are source inputs; the skill does not generate or maintain a Markdown index.
+Two generated indexes are produced: `docs/requirements/business/index.html` for business requirements and `docs/requirements/non-functional/index.html` for non-functional requirements. They are regenerated from the current REQ/NFR Markdown corpus and their timestamps are newer than the requirement files they visualize. The Markdown files are source inputs; the skill does not generate or maintain a Markdown index.
 
 ## When To Use
 
@@ -32,15 +32,16 @@ If the bundled script is missing, stop and report it — do not create a replace
 
 1. From the target project root, run the bundled script:
 
-   ```
-   ~/.config/opencode/skills/requirements-index-visualization/scripts/generate_index.sh
-   ```
+    ```
+    ~/.config/opencode/skills/requirements-index-visualization/scripts/generate_index.sh
+    ```
 
-    It defaults to `docs/requirements` relative to the current directory. Pass a directory to override; an optional second argument selects a different output path:
+     It defaults to `docs/requirements` relative to the current directory and generates both `business/index.html` and `non-functional/index.html`. Pass a corpus directory (for example `docs/requirements/business`) to regenerate one index; an optional second argument selects a different output path:
 
-   ```
-    ~/.config/opencode/skills/requirements-index-visualization/scripts/generate_index.sh path/to/requirements path/to/index.html
-   ```
+    ```
+     ~/.config/opencode/skills/requirements-index-visualization/scripts/generate_index.sh docs/requirements/business docs/requirements/business/index.html
+    ```
+
 
 2. On success the script prints `wrote <output>: N requirements (M groups)` and exits 0. Report that summary.
 3. On failure the script exits non-zero, removes its temporary data file, and leaves the destination unchanged. Read stderr and fix the reported cause before retrying (see Failure Modes).
@@ -49,8 +50,8 @@ If the bundled script is missing, stop and report it — do not create a replace
 ## What the Script Does
 
 - Parses every group and atomic requirement file; these files are the sole source of truth.
-- Builds a JSON payload and renders it through `templates/index.html`: left pane = collapsible tree (Business REQ groups → requirements, Non-Functional NFR groups → requirements) with a filter box; right pane = full requirement detail (criticality, user story, description, acceptance criteria for REQ; description, rationale, verification method for NFR). Markdown files are read-only inputs and no Markdown index is generated.
-- Output has no external resources (works offline via `file://`) and is deterministic. The parser's temporary data file is created in the requirements directory; the renderer writes atomically beside the selected output.
+- Builds a JSON payload and renders it through `templates/index.html`: collapsible tree (requirement groups → requirements) with a filter box; right pane = full requirement detail (criticality, user story, description, acceptance criteria for REQ; description, rationale, verification method for NFR). Markdown files are read-only inputs and no Markdown index is generated.
+- Output has no external resources (works offline via `file://`) and is deterministic. The parser's temporary data file is created in the corpus directory; the renderer writes atomically beside the selected output.
 
 ## Failure Modes
 
@@ -66,5 +67,4 @@ If the bundled script is missing, stop and report it — do not create a replace
 
 - Script exited 0 and printed the `wrote <output>: N requirements (M groups)` summary.
 - `N` equals the number of atomic REQ files plus atomic NFR files.
-- `<requirements-dir>/index.html` exists and is newer than the requirement files.
-- No manual edits were made to `index.html`.
+- `docs/requirements/business/index.html` and `docs/requirements/non-functional/index.html` exist and are newer than the requirement files.- No manual edits were made to `index.html`.

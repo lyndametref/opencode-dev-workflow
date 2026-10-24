@@ -81,7 +81,7 @@ docs/
     └── adr/
 ```
 
-The documentation entry points initialized by this skill are `docs/index.html`, `docs/architecture/adr/index.html`, `docs/requirements/index.html`, `docs/business-rules/index.html`, and `docs/domain-model/business-glossary/index.html`.
+The documentation entry points initialized by this skill are `docs/index.html`, `docs/architecture/adr/index.html`, `docs/requirements/business/index.html`, `docs/requirements/non-functional/index.html`, `docs/business-rules/index.html`, and `docs/domain-model/business-glossary/index.html`.
 
 The Backlog.md CLI owns its own folder and configuration structure. Do not create those paths manually. Propose stack-specific source folders only after platform choices are confirmed.
 
@@ -93,7 +93,7 @@ After approval, create only the missing folders the user approved. Recheck each 
 ~/.config/opencode/skills/project-initialization/scripts/initialize_docs_indexes.sh <project-root>
 ```
 
-The initializer creates a `docs/index.html` landing page linking to the four corpus indexes above. For each missing corpus index, it renders the visualization template with an empty data payload if that corpus has no records; if canonical records already exist, it calls that corpus's generator to create a populated index. Existing regular `index.html` files are preserved. Symlinks, non-directory path components, and other unexpected path collisions stop initialization for review. The initialization helper requires the approved base directories to exist and does not create folders itself. The visualization skills own all subsequent index regeneration after corpus changes.
+The initializer creates a `docs/index.html` landing page linking to the corpus indexes above (including separate business and non-functional requirement indexes). For each missing corpus index, it renders the visualization template with an empty data payload if that corpus has no records; if canonical records already exist, it calls that corpus's generator to create a populated index. Existing regular `index.html` files are preserved. Symlinks, non-directory path components, and other unexpected path collisions stop initialization for review. The initialization helper requires the approved base directories to exist and does not create folders itself. The visualization skills own all subsequent index regeneration after corpus changes.
 
 ### 5. Check and prepare Backlog.md
 
@@ -110,7 +110,7 @@ Report readiness accurately: distinguish **ready** (CLI available and both proje
 
 ### 6. Handoff and report
 
-After scaffolding, re-check every planned path and confirm that only the intended missing folders and index files were added. Verify that a newly created `docs/index.html` links to all four corpus indexes, that each missing empty-corpus index embeds its expected empty data shape, and that existing index files remain unchanged. If a pre-existing docs landing page lacks a link, report that without modifying it. If using Git, compare `git status --short` and ignored entries under the planned paths with the pre-initialization state. Investigate any unexpected changes; preserve pre-existing untracked, ignored, and modified files. Do not try to revert unexpected changes automatically.
+After scaffolding, re-check every planned path and confirm that only the intended missing folders and index files were added. Verify that a newly created `docs/index.html` links to all corpus indexes, that each missing empty-corpus index embeds its expected empty data shape, and that existing index files remain unchanged. If a pre-existing docs landing page lacks a link, report that without modifying it. If using Git, compare `git status --short` and ignored entries under the planned paths with the pre-initialization state. Investigate any unexpected changes; preserve pre-existing untracked, ignored, and modified files. Do not try to revert unexpected changes automatically.
 
 Report:
 
@@ -128,6 +128,6 @@ Report:
 - Existing project content and conventions were inspected and preserved.
 - Each documentation owner was consulted for its intake needs.
 - The user approved the proposed structure before implementation; only approved, missing shared folders and indexes were created, with no specialist-owned substantive documents invented by the planner.
-- A newly created `docs/index.html` links to all four corpus indexes; each missing corpus index is rendered empty when its corpus is empty, or populated from existing canonical records. Pre-existing indexes are preserved.
+- A newly created `docs/index.html` links to all corpus indexes; each missing corpus index is rendered empty when its corpus is empty, or populated from existing canonical records. Pre-existing indexes are preserved.
 - Backlog.md was verified through successful project-scoped read commands, or clearly reported as blocked/unverified.
 - Any planned milestones or feature tickets are deferred unless separately requested and supported by validated requirements.

@@ -56,10 +56,6 @@ const DATA = JSON.parse(document.getElementById("data").textContent);
 const treeEl = document.getElementById("tree");
 const detailEl = document.getElementById("detail");
 const filterEl = document.getElementById("filter");
-const SECTIONS = [
-  { key:"business", label:"Business Requirements" },
-  { key:"nfr", label:"Non-Functional Requirements" }
-];
 const nodes = {};
 
 function leafButton(leaf) {
@@ -80,35 +76,28 @@ function leafButton(leaf) {
 
 function renderTree() {
   const fragment = document.createDocumentFragment();
-  for (const section of SECTIONS) {
-    const root = document.createElement("div");
-    root.className = "root-title";
-    root.textContent = section.label;
-    root.dataset.root = section.key;
-    fragment.appendChild(root);
-    for (const group of DATA[section.key]) {
-      const wrapper = document.createElement("div");
-      wrapper.className = "group";
-      wrapper.dataset.group = group.id;
-      const head = document.createElement("button");
-      head.className = "group-head";
-      const caret = document.createElement("span");
-      caret.className = "caret";
-      caret.textContent = "▾";
-      const badge = document.createElement("span");
-      badge.className = "badge";
-      badge.textContent = group.id;
-      const label = document.createElement("span");
-      label.textContent = group.title;
-      head.append(caret, badge, label);
-      head.addEventListener("click", () => wrapper.classList.toggle("collapsed"));
-      wrapper.appendChild(head);
-      const list = document.createElement("ul");
-      list.className = "leaves";
-      for (const leaf of group.children) list.appendChild(leafButton(leaf));
-      wrapper.appendChild(list);
-      fragment.appendChild(wrapper);
-    }
+  for (const group of DATA.groups) {
+    const wrapper = document.createElement("div");
+    wrapper.className = "group";
+    wrapper.dataset.group = group.id;
+    const head = document.createElement("button");
+    head.className = "group-head";
+    const caret = document.createElement("span");
+    caret.className = "caret";
+    caret.textContent = "▾";
+    const badge = document.createElement("span");
+    badge.className = "badge";
+    badge.textContent = group.id;
+    const label = document.createElement("span");
+    label.textContent = group.title;
+    head.append(caret, badge, label);
+    head.addEventListener("click", () => wrapper.classList.toggle("collapsed"));
+    wrapper.appendChild(head);
+    const list = document.createElement("ul");
+    list.className = "leaves";
+    for (const leaf of group.children) list.appendChild(leafButton(leaf));
+    wrapper.appendChild(list);
+    fragment.appendChild(wrapper);
   }
   treeEl.appendChild(fragment);
 }
@@ -174,27 +163,19 @@ function applyFilter() {
     group.classList.toggle("hidden", shown === 0);
     if (query && shown) group.classList.remove("collapsed");
   });
-  document.querySelectorAll(".root-title").forEach(root => {
-    const any = DATA[root.dataset.root].some(group => {
-      const element = document.querySelector('.group[data-group="' + group.id + '"]');
-      return element && !element.classList.contains("hidden");
-    });
-    root.classList.toggle("hidden", !any);
-  });
 }
 
 filterEl.addEventListener("input", applyFilter);
 renderTree();
-if (!DATA.business.length && !DATA.nfr.length) {
+const leafCount = DATA.groups.reduce((n, group) => n + group.children.length, 0);
+if (!leafCount) {
   const empty = document.createElement("p");
   empty.className = "empty";
   empty.textContent = "No requirements yet.";
   treeEl.appendChild(empty);
 }
-document.getElementById("counts").textContent =
-  DATA.business.reduce((n, group) => n + group.children.length, 0) + " business · " +
-  DATA.nfr.reduce((n, group) => n + group.children.length, 0) + " non-functional";
-const first = SECTIONS.map(section => DATA[section.key]).flat().find(group => group.children.length)?.children[0];
+document.getElementById("counts").textContent = leafCount + " requirements";
+const first = DATA.groups.find(group => group.children.length)?.children[0];
 if (first) select(first.id);
 </script>
 </body>

@@ -34,7 +34,8 @@ validate_index_path() {
 for index_path in \
 	"$docs/index.html" \
 	"$adr_dir/index.html" \
-	"$requirements_dir/index.html" \
+	"$requirements_dir/business/index.html" \
+	"$requirements_dir/non-functional/index.html" \
 	"$rules_dir/index.html" \
 	"$glossary_dir/index.html"; do
 	validate_index_path "$index_path"
@@ -112,11 +113,11 @@ for file in "$adr_dir"/ADR-*.md; do
 	has_adr=1
 done
 
-has_requirements=0
-for file in "$requirements_dir"/business/REQ-*.md "$requirements_dir"/non-functional/NFR-*.md; do
-	[ -f "$file" ] || continue
-	has_requirements=1
-done
+has_business=0
+for file in "$requirements_dir"/business/REQ-*.md; do [ -f "$file" ] || continue; has_business=1; done
+
+has_nfr=0
+for file in "$requirements_dir"/non-functional/NFR-*.md; do [ -f "$file" ] || continue; has_nfr=1; done
 
 has_rules=0
 for file in "$rules_dir"/BR-*.md; do [ -f "$file" ] || continue; has_rules=1; done
@@ -132,11 +133,18 @@ create_corpus_index \
 	"$adr_dir" "$has_adr" "$adr_generator"
 
 create_corpus_index \
-	"$requirements_dir/index.html" \
+	"$requirements_dir/business/index.html" \
 	"$skill_root/../requirements-index-visualization/templates/index.html" \
-	'{"business":[],"nfr":[]}' \
-	"Requirements" "Requirements" \
-	"$requirements_dir" "$has_requirements" "$requirements_generator"
+	'{"groups":[]}' \
+	"Business Requirements" "Business Requirements" \
+	"$requirements_dir/business" "$has_business" "$requirements_generator"
+
+create_corpus_index \
+	"$requirements_dir/non-functional/index.html" \
+	"$skill_root/../requirements-index-visualization/templates/index.html" \
+	'{"groups":[]}' \
+	"Non-Functional Requirements" "Non-Functional Requirements" \
+	"$requirements_dir/non-functional" "$has_nfr" "$requirements_generator"
 
 create_corpus_index \
 	"$rules_dir/index.html" \
@@ -154,5 +162,5 @@ create_corpus_index \
 
 create_index \
 	"$docs/index.html" "$docs_template" \
-	'{"indexes":[{"title":"Architecture Decision Records","href":"architecture/adr/index.html","description":"Architecture decisions, status, and rationale."},{"title":"Requirements","href":"requirements/index.html","description":"Business and non-functional requirements."},{"title":"Business Rules","href":"business-rules/index.html","description":"Validated business rules and applicability."},{"title":"Business Glossary","href":"domain-model/business-glossary/index.html","description":"Canonical business terms and definitions."}]}' \
+	'{"indexes":[{"title":"Architecture Decision Records","href":"architecture/adr/index.html","description":"Architecture decisions, status, and rationale."},{"title":"Business Requirements","href":"requirements/business/index.html","description":"Business requirements."},{"title":"Non-Functional Requirements","href":"requirements/non-functional/index.html","description":"Non-functional requirements."},{"title":"Business Rules","href":"business-rules/index.html","description":"Validated business rules and applicability."},{"title":"Business Glossary","href":"domain-model/business-glossary/index.html","description":"Canonical business terms and definitions."}]}' \
 	"Project Documentation" "Project Documentation"
