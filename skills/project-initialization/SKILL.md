@@ -1,6 +1,6 @@
 ---
 name: project-initialization
-description: 'Use ONLY from @project-planner when asked to initialize a new or existing project: gather specialist intake needs, create an approved base folder structure, and verify Backlog.md CLI readiness.'
+description: 'Use ONLY from @project-planner when asked to initialize a new or existing project: gather specialist intake needs, create an approved base folder structure and documentation indexes, and verify Backlog.md CLI readiness.'
 user-invocable: false
 disable-model-invocation: false
 ---
@@ -9,7 +9,7 @@ disable-model-invocation: false
 
 ## Outcome
 
-Prepare a project for the requirements → planning → feature specification → implementation workflow by gathering project context, consulting the documentation owners, creating only the authorized missing base folders, and confirming that Backlog.md can operate in the target project.
+Prepare a project for the requirements → planning → feature specification → implementation workflow by gathering project context, consulting the documentation owners, creating only the authorized missing base folders and documentation indexes, and confirming that Backlog.md can operate in the target project.
 
 This skill is owned and used only by `@project-planner`. It is for project bootstrap, not ordinary backlog planning. It does not create substantive requirements, feature specifications, business rules, architecture decisions, milestones, or feature tickets.
 
@@ -32,7 +32,7 @@ Confirm the target root and whether this is a new, existing, or partially initia
 
 ### 2. Inspect the project before proposing changes
 
-Inventory the project root, including hidden entries and repository metadata. Review `git status --short` when it is a Git repository, and inspect ignored entries under paths proposed for initialization where needed to avoid collisions. Record the existing presence and status of all planned target paths. Do not read potentially sensitive file contents merely because they are ignored or untracked. Identify existing source, documentation, conventions, project manifests, and Backlog.md files/configuration. Classify the project as:
+Inventory the project root, including hidden entries and repository metadata. Review `git status --short` when it is a Git repository, and inspect ignored entries under paths proposed for initialization where needed to avoid collisions. Record the existing presence and status of all planned folder and index-file paths, including `docs/index.html` and each corpus `index.html`. Do not read potentially sensitive file contents merely because they are ignored or untracked. Identify existing source, documentation, conventions, project manifests, and Backlog.md files/configuration. Classify the project as:
 
 - **New/empty:** no existing project-specific structure beyond repository metadata.
 - **Existing:** project source, documentation, configuration, or backlog artifacts are present.
@@ -67,21 +67,33 @@ Use project conventions where they exist. Otherwise propose the shared documenta
 
 ```text
 docs/
+├── index.html
 ├── requirements/
+│   ├── business/
 │   └── non-functional/
 ├── specifications/
 ├── business-rules/
 ├── domain-model/
+│   ├── business-glossary/
 │   └── object-model/
 ├── business-processes/
 └── architecture/
+    └── adr/
 ```
+
+The documentation entry points initialized by this skill are `docs/index.html`, `docs/architecture/adr/index.html`, `docs/requirements/index.html`, `docs/business-rules/index.html`, and `docs/domain-model/business-glossary/index.html`.
 
 The Backlog.md CLI owns its own folder and configuration structure. Do not create those paths manually. Propose stack-specific source folders only after platform choices are confirmed.
 
-Before writing, show the user the proposed structure adapted to the inspected project. For every path, identify whether it will be **reused**, **created**, or **deferred**, and state why. Ask the user to approve the proposal. Wait for explicit approval before creating any folders; if the user requests changes, revise the proposal and obtain approval for the revised structure. If approval is not given, make no filesystem changes.
+Before writing, show the user the proposed folders and index files adapted to the inspected project. For every path, identify whether it will be **reused**, **created**, or **deferred**, and state why. Ask the user to approve the proposal, including creation of the documentation index files. Wait for explicit approval before creating any folders or files; if the user requests changes, revise the proposal and obtain approval for the revised structure. If approval is not given, make no filesystem changes.
 
-After approval, create only the missing paths the user approved. Recheck each path and its ancestors immediately before creation. Do not create placeholder requirement/specification/ADR files or `.gitkeep` files unless the approved proposal or repository convention calls for them. The specialist agents own their substantive documentation and generated indexes.
+After approval, create only the missing folders the user approved. Recheck each path and its ancestors immediately before creation. Do not create placeholder requirement/specification/ADR Markdown files or `.gitkeep` files unless the approved proposal or repository convention calls for them. Once the approved documentation folders exist, run the bundled initializer:
+
+```
+~/.config/opencode/skills/project-initialization/scripts/initialize_docs_indexes.sh <project-root>
+```
+
+The initializer creates a `docs/index.html` landing page linking to the four corpus indexes above. For each missing corpus index, it renders the visualization template with an empty data payload if that corpus has no records; if canonical records already exist, it calls that corpus's generator to create a populated index. Existing regular `index.html` files are preserved. Symlinks, non-directory path components, and other unexpected path collisions stop initialization for review. The initialization helper requires the approved base directories to exist and does not create folders itself. The visualization skills own all subsequent index regeneration after corpus changes.
 
 ### 5. Check and prepare Backlog.md
 
@@ -98,13 +110,14 @@ Report readiness accurately: distinguish **ready** (CLI available and both proje
 
 ### 6. Handoff and report
 
-After scaffolding, re-check every planned path and confirm that only the intended missing folders were added. If using Git, compare `git status --short` and ignored entries under the planned paths with the pre-initialization state. Investigate any unexpected changes; preserve pre-existing untracked, ignored, and modified files. Do not try to revert unexpected changes automatically.
+After scaffolding, re-check every planned path and confirm that only the intended missing folders and index files were added. Verify that a newly created `docs/index.html` links to all four corpus indexes, that each missing empty-corpus index embeds its expected empty data shape, and that existing index files remain unchanged. If a pre-existing docs landing page lacks a link, report that without modifying it. If using Git, compare `git status --short` and ignored entries under the planned paths with the pre-initialization state. Investigate any unexpected changes; preserve pre-existing untracked, ignored, and modified files. Do not try to revert unexpected changes automatically.
 
 Report:
 
 - Target root and project classification.
 - Specialist agents consulted and their outstanding input needs.
 - Folders created, reused, or intentionally deferred.
+- Documentation indexes created, preserved, or populated from existing corpus records.
 - Backlog.md version, setup action (if any), and results of both readiness checks.
 - Decisions still needed, blockers, and clear next handoffs to requirements-engineer, business-analyst, and architect.
 - Whether a separate project-planning step can begin. Do not mark requirements validated simply because initialization inputs were collected.
@@ -114,6 +127,7 @@ Report:
 - Target root was explicit or confirmed before any writes.
 - Existing project content and conventions were inspected and preserved.
 - Each documentation owner was consulted for its intake needs.
-- The user approved the proposed structure before implementation; only approved, missing shared folders were created, with no specialist-owned substantive documents invented by the planner.
+- The user approved the proposed structure before implementation; only approved, missing shared folders and indexes were created, with no specialist-owned substantive documents invented by the planner.
+- A newly created `docs/index.html` links to all four corpus indexes; each missing corpus index is rendered empty when its corpus is empty, or populated from existing canonical records. Pre-existing indexes are preserved.
 - Backlog.md was verified through successful project-scoped read commands, or clearly reported as blocked/unverified.
 - Any planned milestones or feature tickets are deferred unless separately requested and supported by validated requirements.

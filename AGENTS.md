@@ -34,11 +34,12 @@ This file list available agents and give general rules for the agents.
 - `business-rules-index-visualization`: Regenerate docs/business-rules/index.html — a searchable list and detail view of business rules — from BR-XXX Markdown files after rule changes.
 - `business-terminology-consistency-check`: Check docs and backlog for non-canonical business terms, conflicting term variants, and missing glossary alignment. Use when validating wording consistency before or after glossary changes.
 - `domain-modeling`: Create and maintain the semantic domain model of the project: Business Object Models, context maps, and business object documentation.
+- `html-template-migration`: Migrate Markdown-driven HTML index generators to standalone templates rendered by the shared typed-placeholder script.
 - `lilypond-piano`: Use for creating and editing LilyPond piano scores. Handles multi-staff layout with right and left hands, master .ly file with includes, measure numbering synchronization, breaks in right hand only, and piano-specific score block with optional layout (staff size) and MIDI.
 - `lilypond-single-voice`: Use for creating and editing single-voice LilyPond scores (e.g. recorder, flute, violin, clarinet, trumpet, harp, etc.). Simple single-file layout (no split, no master, no .ily includes), one measure per line with measure number comments, and appropriate score/MIDI/layout setup.
 - `markdown-move`: Move a markdown file to a new location and update all relative links within it to reflect the new path.
 - `non-functional-requirements-management`: Create, update, reorganize and check consistency of non-functional     requirements under docs/requirements/non-functional/.
-- `project-initialization`: Used only by `project-planner` to gather specialist intake needs, scaffold approved project documentation folders, and verify Backlog.md readiness.
+- `project-initialization`: Used only by `project-planner` to gather specialist intake needs, scaffold approved documentation folders and indexes, and verify Backlog.md readiness.
 - `requirements-index-visualization`: Regenerate index.html — the tree + detail visualization of the requirements corpus — by running the skill's bundled scripts/generate_index.sh against the project docs/requirements. Use after any change to REQ/NFR files to keep the visual index in sync.
 - `reverse-engineering`: Read existing source code and produce the business (REQ) and non-functional (NFR) requirements that correspond to the implemented behavior.
 - `state-diagram-creation`: Create Mermaid state diagrams for domain objects with lifecycle states, statuses, and transitions. Each diagram is stored in docs/domain-model/ and shows valid states, transitions, and the conditions that trigger them.

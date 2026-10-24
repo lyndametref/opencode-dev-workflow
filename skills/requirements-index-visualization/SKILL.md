@@ -22,7 +22,8 @@ Do not use for projects whose requirements do not use the canonical atomic struc
 
 ## Prerequisites
 
-- This skill bundles its generator at `scripts/generate_index.sh` (POSIX sh + awk; no other dependencies, no network). It is the single source of truth — there is no project-local copy.
+- This skill bundles its parser at `scripts/generate_index.sh` (POSIX sh + awk) and its presentation at `templates/index.html`.
+- Rendering uses the shared POSIX sh/awk renderer from the `html-template-migration` skill.
 - The target project has `<requirements-dir>/business/` and `<requirements-dir>/non-functional/` directories containing group and atomic requirement files. Markdown `INDEX.md` files are not required or generated.
 
 If the bundled script is missing, stop and report it — do not create a replacement silently.
@@ -35,21 +36,21 @@ If the bundled script is missing, stop and report it — do not create a replace
    ~/.config/opencode/skills/requirements-index-visualization/scripts/generate_index.sh
    ```
 
-   It defaults to `docs/requirements` relative to the current directory. Pass a directory to override:
+    It defaults to `docs/requirements` relative to the current directory. Pass a directory to override; an optional second argument selects a different output path:
 
    ```
-   ~/.config/opencode/skills/requirements-index-visualization/scripts/generate_index.sh path/to/requirements
+    ~/.config/opencode/skills/requirements-index-visualization/scripts/generate_index.sh path/to/requirements path/to/index.html
    ```
 
-2. On success the script prints `wrote <dir>/index.html: N requirements (M groups)` and exits 0. Report that summary.
-3. On failure the script removes its partial output and exits non-zero. Read stderr and fix the reported cause before retrying (see Failure Modes).
+2. On success the script prints `wrote <output>: N requirements (M groups)` and exits 0. Report that summary.
+3. On failure the script exits non-zero, removes its temporary data file, and leaves the destination unchanged. Read stderr and fix the reported cause before retrying (see Failure Modes).
 4. Never hand-edit `<requirements-dir>/index.html` — it is a generated artifact; always regenerate it.
 
 ## What the Script Does
 
 - Parses every group and atomic requirement file; these files are the sole source of truth.
-- Emits only a self-contained `index.html`: left pane = collapsible tree (Business REQ groups → requirements, Non-Functional NFR groups → requirements) with a filter box; right pane = full requirement detail (criticality, user story, description, acceptance criteria for REQ; description, rationale, verification method for NFR). Markdown files are read-only inputs and no Markdown index is generated.
-- Output has no external resources (works offline via `file://`), uses no temp files outside the requirements directory, and is deterministic.
+- Builds a JSON payload and renders it through `templates/index.html`: left pane = collapsible tree (Business REQ groups → requirements, Non-Functional NFR groups → requirements) with a filter box; right pane = full requirement detail (criticality, user story, description, acceptance criteria for REQ; description, rationale, verification method for NFR). Markdown files are read-only inputs and no Markdown index is generated.
+- Output has no external resources (works offline via `file://`) and is deterministic. The parser's temporary data file is created in the requirements directory; the renderer writes atomically beside the selected output.
 
 ## Failure Modes
 
@@ -58,11 +59,12 @@ If the bundled script is missing, stop and report it — do not create a replace
 | `requirements directory not found: <dir>` | No `docs/requirements` in the current directory and no directory argument given | Run from the project root or pass the directory explicitly |
 | `group <ID> not seen before <atomic-ID>` | An atomic file exists whose group file is missing or not named `REQ-XX.md`/`NFR-XX.md` | Create or rename the group file, then rerun |
 | `bad title: ...` | An `# ` heading does not match `REQ-XX[.XXX] Title` / `NFR-XX[.XXX] Title` | Fix the heading, then rerun |
-| `placeholder not replaced` / `expected N id entries` / `id ... missing from output` | Script or template problem | Report the details; do not edit `index.html` by hand |
+| `missing value` / `unused value` / `unresolved placeholder` | Template and payload do not match | Report the details; do not edit `index.html` by hand |
+| `expected N id entries` / `id ... missing from parsed data` | Parser or source problem | Check requirement IDs and rerun |
 
 ## Completion Checks
 
-- Script exited 0 and printed the `wrote <dir>/index.html: N requirements (M groups)` summary.
+- Script exited 0 and printed the `wrote <output>: N requirements (M groups)` summary.
 - `N` equals the number of atomic REQ files plus atomic NFR files.
 - `<requirements-dir>/index.html` exists and is newer than the requirement files.
 - No manual edits were made to `index.html`.
