@@ -79,4 +79,5 @@ If the bundled script is missing, stop and report it — do not create a replace
 - `<adr-dir>/index.html` exists and is newer than the ADR files (default `docs/architecture/adr/index.html`).
 - No markdown ADR index file was created or updated.
 - Selecting a decision shows its status and all ADR sections, including tables and lists.
+- The generated page includes a link back to the main documentation index (`docs/index.html`).
 - No manual edits were made to `index.html`.

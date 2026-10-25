@@ -67,4 +67,5 @@ If the bundled script is missing, stop and report it; do not create a replacemen
 - Script exits 0 and reports the number of glossary terms written.
 - The reported count equals the number of valid term files.
 - `<glossary-dir>/index.html` exists and is newer than its source term files.
+- The generated page includes a link back to the main documentation index (`docs/index.html`).
 - No Markdown index was created or updated.

@@ -67,4 +67,6 @@ If the bundled script is missing, stop and report it — do not create a replace
 
 - Script exited 0 and printed the `wrote <output>: N requirements (M groups)` summary.
 - `N` equals the number of atomic REQ files plus atomic NFR files.
-- `docs/requirements/business/index.html` and `docs/requirements/non-functional/index.html` exist and are newer than the requirement files.- No manual edits were made to `index.html`.
+- `docs/requirements/business/index.html` and `docs/requirements/non-functional/index.html` exist and are newer than the requirement files.
+- Each generated page includes a link back to the main documentation index (`docs/index.html`).
+- No manual edits were made to `index.html`.
