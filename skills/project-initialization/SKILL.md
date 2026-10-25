@@ -1,6 +1,6 @@
 ---
 name: project-initialization
-description: 'Use ONLY from @project-planner when asked to initialize a new or existing project: gather specialist intake needs, create an approved base folder structure and documentation indexes, and verify Backlog.md CLI readiness.'
+description: 'Create an approved base folder structure and documentation indexes from a fixed index set, and verify Backlog.md CLI readiness.'
 user-invocable: false
 disable-model-invocation: false
 ---
@@ -9,9 +9,9 @@ disable-model-invocation: false
 
 ## Outcome
 
-Prepare a project for the requirements → planning → feature specification → implementation workflow by gathering project context, consulting the documentation owners, creating only the authorized missing base folders and documentation indexes, and confirming that Backlog.md can operate in the target project.
+Prepare a project for the requirements → planning → feature specification → implementation workflow by gathering project context, creating only the authorized missing base folders and documentation indexes from a fixed index set, and confirming that Backlog.md can operate in the target project.
 
-This skill is owned and used only by `@project-planner`. It is for project bootstrap, not ordinary backlog planning. It does not create substantive requirements, feature specifications, business rules, architecture decisions, milestones, or feature tickets.
+This skill is for project bootstrap, not ordinary backlog planning. It does not create substantive requirements, feature specifications, business rules, architecture decisions, milestones, or feature tickets.
 
 ## Required safeguards
 
@@ -40,26 +40,18 @@ Inventory the project root, including hidden entries and repository metadata. Re
 
 Do not call a repository empty just because it has no application source. If the target is partial or ambiguous, preserve its conventions and ask before resolving conflicts.
 
-### 3. Ask documentation owners what they need
+### 3. Confirm the fixed documentation index set
 
-Use the `task` tool to consult these agents separately; request intake needs only, not file changes. The project-planner agent is configured to delegate and ask the user. If delegation is unavailable or denied, stop and report which specialist consultation is blocked; do not claim it was completed or substitute assumptions:
+Do not consult documentation owners during bootstrap. Use this hardcoded index set (paths are relative to `<project-root>/docs`):
 
-1. `requirements-engineer` — ask what project information and sources are needed to draft and validate business requirements and NFRs.
-2. `business-analyst` — ask what product/domain, user, workflow, UI, data, and integration context is needed for future feature specifications and ticket refinement.
-3. `architect` — ask what system-boundary, technology, integration, quality-attribute, deployment, and decision-authority information is needed for architecture documentation.
+- `index.html` (landing page)
+- `architecture/adr/index.html`
+- `requirements/business/index.html`
+- `requirements/non-functional/index.html`
+- `business-rules/index.html`
+- `domain-model/business-glossary/index.html`
 
-Combine their responses into one concise questionnaire for the user. Ask only for information not already established by reliable project artifacts or their answers. At minimum, clarify:
-
-- Project purpose, target users/stakeholders, intended first outcome, scope, and explicit exclusions.
-- Main user/business needs and known workflows, rules, and exceptions; source/owner for each input where known.
-- Priority or criticality and important quality attributes, measurable targets, and verification expectations when available.
-- Platforms/channels, data/API needs, known systems to integrate, and solution boundaries.
-- Required or prohibited technologies, compatibility, legal/policy, deployment, operations, and other constraints; distinguish decisions from preferences.
-- Existing decisions and documents, decision/approval owners, unresolved questions, and whether any unknown blocks requirements or architecture work.
-
-Wait for the user's answers before creating folders or running `backlog init`. Record which answers are confirmed, undecided, or still open. If material questions remain, pause and ask whether the user wants to proceed with those explicitly listed unknowns; do not treat silence or a partial response as approval.
-
-Keep initialization-level questions separate from detailed feature questions. The business analyst should elicit screen-level behavior, complete API payloads, error cases, and testable feature acceptance criteria during feature refinement. Route API-contract specifications and multi-solution integration decisions to the architect.
+Collect only the project-level answers needed to proceed (purpose, scope, constraints, owners, unknowns) in one concise pass; specialist intake happens later during requirements, specification, and architecture work. Wait for the user's answers before creating folders or running `backlog init`. Record which answers are confirmed, undecided, or still open. If material questions remain, pause and ask whether the user wants to proceed with those explicitly listed unknowns; do not treat silence or a partial response as approval.
 
 ### 4. Propose and get approval for the base folder structure
 
@@ -115,7 +107,7 @@ After scaffolding, re-check every planned path and confirm that only the intende
 Report:
 
 - Target root and project classification.
-- Specialist agents consulted and their outstanding input needs.
+- Specialist agents consulted: none during bootstrap (intake deferred to later work).
 - Folders created, reused, or intentionally deferred.
 - Documentation indexes created, preserved, or populated from existing corpus records.
 - Backlog.md version, setup action (if any), and results of both readiness checks.
@@ -126,7 +118,7 @@ Report:
 
 - Target root was explicit or confirmed before any writes.
 - Existing project content and conventions were inspected and preserved.
-- Each documentation owner was consulted for its intake needs.
+- The fixed documentation index set was used without specialist consultation during bootstrap.
 - The user approved the proposed structure before implementation; only approved, missing shared folders and indexes were created, with no specialist-owned substantive documents invented by the planner.
 - A newly created `docs/index.html` links to all corpus indexes; each missing corpus index is rendered empty when its corpus is empty, or populated from existing canonical records. Each generated corpus index includes a link back to `docs/index.html`. Pre-existing indexes are preserved.
 - Backlog.md was verified through successful project-scoped read commands, or clearly reported as blocked/unverified.
