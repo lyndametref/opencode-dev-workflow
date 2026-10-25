@@ -22,6 +22,7 @@ Efficiently manage all project tasks, status, and documentation using the Backlo
 ## Core Capabilities
 - **Task Management**: Create, edit, assign, prioritize, and track tasks with full metadata
 - **Search**: Fuzzy search across tasks, documents, and decisions with `backlog search`
+- **Priority ordering**: List tasks sorted by priority with `backlog task list --sort priority --plain`
 - **Acceptance Criteria**: Granular control with add/remove/check/uncheck by index
 - **Definition of Done checklists**: Per-task DoD items with add/remove/check/uncheck
 - **Board Visualization**: Terminal-based Kanban board (`backlog board`) and web UI (`backlog browser`)
@@ -194,6 +195,7 @@ Fuzzy matching across titles, descriptions, content, and modified_files. Always 
 |--------|----|-------|
 | View task | `backlog task 42 --plain` | Open .md directly |
 | List tasks | `backlog task list --plain` | Browse folder |
+| Highest priority | `backlog task list --sort priority --plain` | Browse folder |
 | Check AC | `backlog task edit 42 --check-ac 1` | Change checkbox in file |
 | Add notes | `backlog task edit 42 --notes "..."` | Type into .md file |
 | Add summary | `backlog task edit 42 --final-summary "..."` | Type into .md file |
