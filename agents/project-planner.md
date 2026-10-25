@@ -1,6 +1,6 @@
 ---
 description: Initialize projects and plan milestones, sequencing, and delivery strategy for the Geep ecosystem.
-mode: subagent
+mode: all
 permission:
   read: allow
   glob: allow
