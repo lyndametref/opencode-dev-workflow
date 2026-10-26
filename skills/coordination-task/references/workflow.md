@@ -6,38 +6,43 @@ This overview explains what happens when `coordination-task` is used. The `SKILL
 flowchart TD
     A([Start: task ID provided]) --> B[Inspect repository state]
     B --> C{Uncommitted changes?}
-    C -- Yes --> D[Stop and ask user to clean up repository]
-    D --> X([Wait for user confirmation that cleanup is done])
-    X --> B
+    C -- Yes --> D[Show changes and ask user how to proceed]
+    D --> CHOICE{User choice?}
+    CHOICE -- Clean up --> CLEANUP([Wait for user confirmation that cleanup is done])
+    CLEANUP --> B
+    CHOICE -- Approve current state --> CURRENT[Continue on current branch without checkout or pull]
+    CURRENT --> H[Set task Initiated]
     C -- No --> E[Checkout main]
     E --> F[Pull latest from origin]
     F --> G[Create branch task/&lt;task-id&gt;]
-    G --> H[Business analyst refines task]
-    H --> I[Set task In Progress]
-    I --> J{Subtasks created?}
-    J -- Yes --> K[Choose implementation agent per subtask goal]
-    J -- No --> L[Choose implementation agent for task]
-    K --> M[Implement with android-dev or backend-dev]
-    L --> M
-    M --> N[Quality gatekeeper reviews implementation]
-    N --> O{Review is OK?}
-    O -- No --> P[Set task In Progress and send review findings to development]
-    P --> M
-    O -- Yes --> Q[Set task Done]
-    Q --> R[Ask user whether they are satisfied]
-    R --> S{User is satisfied?}
-    S -- No --> T[Gather actionable user feedback]
-    T --> U[Set task In Progress and send feedback plus review findings to development]
-    U --> M
-    S -- Yes --> V([User may mark task complete])
+    G --> H[Set task Initiated]
+    H --> I[Business analyst refines task]
+    I --> J[Set task Refined]
+    J --> K{Subtasks created?}
+    K -- Yes --> L[Choose implementation agent per subtask goal]
+    K -- No --> M[Choose implementation agent for task]
+    L --> N[Implement with android-dev or backend-dev]
+    M --> N
+    N --> O[Set task Implemented]
+    O --> P[Quality gatekeeper reviews implementation]
+    P --> Q{Review passes?}
+    Q -- No --> R[Set task Refined and send findings to development]
+    R --> N
+    Q -- Yes --> S[Set task Validated]
+    S --> T[Ask user for explicit approval]
+    T --> U{User approves?}
+    U -- No --> V[Set task Initiated and gather feedback]
+    V --> I
+    U -- Yes --> W[Set task Done]
+    W --> DONE([Approved and complete])
 ```
 
-## What to expect
-
-1. The working tree is checked first. If it has uncommitted changes, coordination stops and the user is asked to clean up the repository and confirm when done; those changes are not committed, stashed, or discarded by the skill. After the user's confirmation, the working tree is checked again. Once clean, the repository is prepared on a task-specific branch before refinement or implementation.
-2. The business analyst clarifies the task and may split it into implementation subtasks.
-3. The task is moved to `In Progress`; implementation is delegated per task/subtask to the appropriate development agent. Independent subtasks may proceed in parallel.
-4. The quality gatekeeper checks the result against the refined task's acceptance criteria and definition of done.
-5. An incomplete review returns the task to `In Progress` and its findings go to development. An OK review sets the task to `Done`, after which the user is explicitly asked whether they are satisfied. If not, actionable feedback is gathered before the task returns to `In Progress` and development resumes with both that feedback and the review findings. The user decides when to mark it complete.
+## What is done
+1. **Prepare the repository.** Inspect the working tree. If there are uncommitted changes, show them to the user and ask whether they want to clean up or approve continuing in the current repository state. Never commit, stash, or discard those changes. If the user chooses cleanup, wait for confirmation and re-check the working tree; when clean, checkout `main`, pull from `origin`, and create a task-specific branch. If the user approves the current state, preserve the changes and continue on the current branch. In this case, do not checkout `main`, pull from `origin`, or create a branch. Set the task to `Initiated` after repository preparation.
+2. **Refine the task.** The business analyst clarifies scope and may split the task into implementation subtasks. After refinement, set the task to `Refined`.
+3. **Implement.** Delegate each implementation unit to the appropriate development agent. Independent units may proceed in parallel. Once implementation is complete, set the task to `Implemented`.
+4. **Review.** The quality gatekeeper reviews it against the refined task's acceptance criteria and definition of done. An incomplete review returns the task to `Refined` while development resumes.
+5. **Validate and request approval.** A passing review moves the task to `Validated`; present the review result and ask the user for explicit approval.
+6. **Complete or revise.** If the user approves, set the task to `Done`. If the user requests changes, return the task to `Initiated`. Depending on the feedback the refinement can be skipped or not, then resume development, and repeat review and validation. An incomplete review returns the task to `Refined` as described above.
 
 Task reads and status changes use the `backlog-md` skill and backlog CLI.

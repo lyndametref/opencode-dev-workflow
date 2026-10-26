@@ -133,46 +133,6 @@ Per-task DoD checklist. Configurable defaults in project config.
 3. Each task delivers independent value
 4. Avoid blocking dependencies
 
----
-
-## 4. Implementing Tasks
-
-1. **Start**: `backlog task edit <id> -s "In Progress" -a @{myself}`
-2. **Review**: Check task references and documentation
-3. **Plan**: Add implementation plan via `backlog task edit <id> --plan "..."`. Share with user and wait for approval before coding.
-4. **Implement**: Follow ACs one by one, mark complete as you go
-5. **Log notes**: Use `backlog task edit <id> --append-notes "..."` progressively
-6. **Final summary**: Add PR description via `backlog task edit <id> --final-summary "..."`
-7. **Complete**: Verify DoD, set status to Done
-
-### Phase Discipline
-- **Creation**: Title, Description, ACs, labels/priority/assignee
-- **Implementation**: Plan (after In Progress) + Notes (appended as you work)
-- **Wrap-up**: Final Summary, verify AC and DoD checks
-
-Only implement what's in the ACs. If more is needed, update ACs first or create a follow-up task.
-
----
-
-## 5. Quality Checklist
-
-Before finalizing a task:
-- [ ] Title is clear and brief
-- [ ] Description explains WHY without HOW
-- [ ] Each AC is outcome-focused and testable (not implementation steps)
-- [ ] Task is atomic (single PR scope)
-- [ ] No dependencies on future tasks
-- [ ] Structure is AI-agent friendly — unambiguous, self-contained
-
----
-
-## 6. Definition of Done
-
-A task is **Done** only when ALL are complete:
-
-**Via CLI:** All ACs checked, all DoD items checked, Final Summary added, Status set to Done.
-
-**Via Code/Testing:** Tests pass, docs updated, code reviewed, no regressions.
 
 ---
 

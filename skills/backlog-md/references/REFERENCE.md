@@ -21,7 +21,7 @@ Companion to `.opencode/skills/backlog-md/SKILL.md` — detailed command example
 backlog task edit 7 --check-ac 1
 backlog task edit 7 --notes "Implementation complete"
 backlog task edit 7 --final-summary "PR-style summary"
-backlog task edit 7 -s "In Progress" -a @agent-k
+backlog task edit 7 -s Initiated -a @agent-k
 ```
 
 ---
@@ -31,7 +31,7 @@ backlog task edit 7 -s "In Progress" -a @agent-k
 | What You Want to Change | CLI Command to Use                                       |
 |-------------------------|----------------------------------------------------------|
 | Title                   | `backlog task edit 42 -t "New Title"`                    |
-| Status                  | `backlog task edit 42 -s "In Progress"`                  |
+| Status                  | `backlog task edit 42 -s Implemented`                    |
 | Assignee                | `backlog task edit 42 -a @sara`                          |
 | Labels                  | `backlog task edit 42 -l backend,api`                    |
 | Description             | `backlog task edit 42 -d "New description"`              |
@@ -108,7 +108,7 @@ backlog task create "Feature" --no-dod-defaults
 ### Start work
 
 ```bash
-backlog task edit 42 -s "In Progress" -a @{myself}
+backlog task edit 42 -s Initiated -a @{myself}
 ```
 
 ### Add implementation plan
@@ -141,23 +141,30 @@ backlog task list -s "To Do" --plain
 # 2. Read task details
 backlog task 42 --plain
 
-# 3. Start work: assign yourself & change status
-backlog task edit 42 -s "In Progress" -a @myself
+# 3. Initiate work: assign yourself & change status
+backlog task edit 42 -s Initiated -a @myself
 
-# 4. Add implementation plan
+# 4. Mark refinement complete
+backlog task edit 42 -s Refined
+
+# 5. Add implementation plan
 backlog task edit 42 --plan "1. Analyze\n2. Refactor\n3. Test"
 
-# 5. Share the plan with the user and wait for approval
+# 6. Share the plan with the user and wait for approval
 
-# 6. Work on the task (write code, test, etc.)
+# 7. Work on the task (write code, test, etc.)
 
-# 7. Mark acceptance criteria as complete
+# 8. Mark acceptance criteria as complete
 backlog task edit 42 --check-ac 1 --check-ac 2 --check-ac 3
 
-# 8. Add Final Summary
+# 9. Add Final Summary
 backlog task edit 42 --final-summary "Refactored using strategy pattern, updated tests"
 
-# 9. Mark task as done
+# 10. Mark implementation ready for review
+backlog task edit 42 -s Implemented
+# 11. After a passing review, mark Validated
+backlog task edit 42 -s Validated
+# 12. After the user explicitly approves the validated work:
 backlog task edit 42 -s Done
 ```
 
@@ -173,7 +180,7 @@ backlog search "auth" --plain
 backlog search "login" --type task --plain
 
 # Search with filters
-backlog search "api" --status "In Progress" --plain
+backlog search "api" --status Implemented --plain
 backlog search "bug" --priority high --plain
 
 # Find tasks that modified a project file path
@@ -205,7 +212,7 @@ backlog search --modified-file src/server/api.ts --plain
 |--------|---------|
 | Edit title | `backlog task edit 42 -t "New Title"` |
 | Edit description | `backlog task edit 42 -d "New description"` |
-| Change status | `backlog task edit 42 -s "In Progress"` |
+| Change status | `backlog task edit 42 -s Implemented` |
 | Assign | `backlog task edit 42 -a @sara` |
 | Add labels | `backlog task edit 42 -l backend,api` |
 | Set priority | `backlog task edit 42 --priority high` |
@@ -245,7 +252,7 @@ backlog search --modified-file src/server/api.ts --plain
 | Search tasks | `backlog search "topic" --plain` |
 | Search with filter | `backlog search "api" --status "To Do" --plain` |
 | Search by modified file | `backlog search --modified-file src/api.ts --plain` |
-| Filter by status | `backlog task list -s "In Progress" --plain` |
+| Filter by status | `backlog task list -s Implemented --plain` |
 | Filter by assignee | `backlog task list -a @sara --plain` |
 | Archive task | `backlog task archive 42` |
 | Demote to draft | `backlog task demote 42` |
