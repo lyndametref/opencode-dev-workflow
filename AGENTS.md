@@ -37,6 +37,9 @@ This file list available agents and give general rules for the agents.
 - `music-engraving-single-voice`: Use for creating and editing single-voice LilyPond scores (e.g. recorder, flute, violin, clarinet, trumpet, harp, etc.). Simple single-file layout (no split, no master, no .ily includes), one measure per line with measure number comments, and appropriate score/MIDI/layout setup.
 - `music-engraving-musicxml-to-lilypond`: Convert MusicXML scores to LilyPond via musicxml2ly, then apply the matching piano or single-voice score layout.
 - `markdown-move`: Move a markdown file to a new location and update all relative links within it to reflect the new path.
+- `tdd`: Test-driven development workflow applicable to any language (red-green-refactor).
+- `gradle-build`: Build, test, and inspect Android/Gradle projects.
+- `kotlin-style-audit`: Audit Kotlin code for Google Kotlin style guide compliance.
 - `non-functional-requirements-management`: Create, update, reorganize and check consistency of non-functional     requirements under docs/requirements/non-functional/.
 - `project-initialization`: Used only by `project-planner` to gather specialist intake needs, scaffold approved documentation folders and indexes, and verify Backlog.md readiness.
 - `requirements-index-visualization`: Regenerate index.html files — the tree + detail visualization of the requirements corpus — by running the skill's bundled scripts/generate_index.sh against the project docs/requirements. Use after any change to REQ/NFR files to keep the visual indexes in sync.
