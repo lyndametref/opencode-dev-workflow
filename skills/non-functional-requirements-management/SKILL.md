@@ -78,6 +78,14 @@ The browsable index is `docs/requirements/non-functional/index.html`, generated 
 
 8. **Report outcome** — Summarize the action, files changed, and any risks.
 
+## Resume / interruption
+
+NFR edits are multi-file. If interrupted, re-run a validation pass on the affected group and regenerate the index before continuing.
+
+## Handoff
+
+After changing NFRs, report the changed NFR IDs to the caller (project-planner / architect) so specs and verification plans can be aligned.
+
 ## Example
 
 See `references/example-NFR-01-system-performance.md` for a well-formed NFR group example.
