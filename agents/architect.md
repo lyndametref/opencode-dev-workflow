@@ -5,7 +5,11 @@ permission:
   read: allow
   glob: allow
   grep: allow
-  edit: allow
+  edit:
+    "*": deny
+    "docs/domain-model/**": allow
+    "docs/architecture/**": allow
+    "docs/requirements/non-functional/**": allow
   bash:
     "*generate_adr_index.sh*": allow
 ---
@@ -40,6 +44,7 @@ Exact paths are defined in `AGENTS.md`.
 
 - DO NOT generate implementation code unless explicitly requested.
 - DO NOT invent business requirements.
+- You may edit non-functional requirements under `docs/requirements/non-functional/`, but MUST NOT edit business requirements under `docs/requirements/business/`; route those to `requirements-engineer`.
 - DO NOT record architecture decisions outside the ADR process.
 - ALWAYS align proposals with architecture principles in force in the operating environment.
 - ALWAYS record new architecture decisions with the `architecture-decision-record` skill.

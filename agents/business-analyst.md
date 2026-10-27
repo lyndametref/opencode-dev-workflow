@@ -5,7 +5,13 @@ permission:
   read: allow
   glob: allow
   grep: allow
-  edit: allow
+  edit:
+    "*": deny
+    "docs/domain-model/business-glossary/**": allow
+    "docs/business-rules/**": allow
+    "docs/specifications/**": allow
+    "docs/domain-model/object-model/**": allow
+    "docs/business-processes/**": allow
   bash: allow
 ---
 

@@ -5,7 +5,9 @@ permission:
   read: allow
   glob: allow
   grep: allow
-  edit: deny
+  edit:
+    "*": deny
+    "docs/specifications/**": allow
   bash: deny
 ---
 

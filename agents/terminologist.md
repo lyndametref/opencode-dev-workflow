@@ -5,7 +5,9 @@ permission:
   read: allow
   glob: allow
   grep: allow
-  edit: allow
+  edit:
+    "*": deny
+    "docs/domain-model/business-glossary/**": allow
   bash: deny
 ---
 

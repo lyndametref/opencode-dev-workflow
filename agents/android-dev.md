@@ -5,7 +5,9 @@ permission:
   read: allow
   glob: allow
   grep: allow
-  edit: allow
+  edit:
+    "*": deny
+    "apps/appAndroid/**": allow
   bash: allow
 ---
 
