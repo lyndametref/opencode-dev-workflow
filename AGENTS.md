@@ -32,7 +32,7 @@ This file list available agents and give general rules for the agents.
 - `business-rules-management`: Create, update, and validate business rules in the canonical format. Each business rule is a self-contained file under docs/business-rules/BR-XXX-short-name.md with unique BR-XXX ID, description, rationale grounded in requirements, and applicability statement.
 - `business-rules-index-visualization`: Regenerate docs/business-rules/index.html — a searchable list and detail view of business rules — from BR-XXX Markdown files after rule changes.
 - `business-terminology-consistency-check`: Check docs and backlog for non-canonical business terms, conflicting term variants, and missing glossary alignment. Use when validating wording consistency before or after glossary changes.
-- `coordination-task`: Coordinate end-to-end implementation of a backlog task: refine via @business-analyst, move to in progress, delegate implementation to @android-dev or @backend-dev per sub-task goals, then review via @quality-gatekeeper.
+- `coordination-task`: Coordinate end-to-end implementation of a backlog task: refine via @business-analyst, move to in progress, delegate implementation to @android-dev, @backend-dev, or @frontend-dev per sub-task goals, then review via @quality-gatekeeper.
 - `domain-modeling`: Create and maintain the semantic domain model of the project: Business Object Models, context maps, and business object documentation.
 - `html-template-migration`: Migrate Markdown-driven HTML index generators to standalone templates rendered by the shared typed-placeholder script.
 - `music-engraving-piano`: Use for creating and editing LilyPond piano scores. Handles multi-staff layout with right and left hands, master .ly file with includes, measure numbering synchronization, breaks in right hand only, and piano-specific score block with optional layout (staff size) and MIDI.
@@ -42,6 +42,7 @@ This file list available agents and give general rules for the agents.
 - `spring-boot-rest`: Design and implement REST APIs with Spring Boot.
 - `postgresql-jpa`: Persistence with PostgreSQL and JPA/Hibernate.
 - `spring-boot-testing`: Test Spring Boot applications (unit, slice, integration).
+- `quality-verification`: Verify a completed backlog ticket against acceptance criteria, definition of done, and implementation plan.
 - `alpine-js`: Alpine.js patterns for lightweight reactive UIs.
 - `frontend-testing`: Test vanilla JavaScript and Alpine.js UIs.
 - `frontend-style-audit`: Audit frontend (JS, HTML, CSS, Alpine.js) for style, accessibility, and security.
