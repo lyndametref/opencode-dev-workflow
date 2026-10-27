@@ -1,6 +1,6 @@
 ---
-name: musicxml-to-lilypond
-description: Convert a MusicXML score (.musicxml, .xml, .mxl) to LilyPond using musicxml2ly, then restructure the raw output to the lilypond-piano or lilypond-single-voice layout. Use when the user provides a MusicXML file to turn into a LilyPond score.
+name: music-engraving-musicxml-to-lilypond
+description: Convert a MusicXML score (.musicxml, .xml, .mxl) to LilyPond using musicxml2ly, then restructure the raw output to the music-engraving-piano or music-engraving-single-voice layout. Use when the user provides a MusicXML file to turn into a LilyPond score.
 ---
 
 # MusicXML to LilyPond Skill

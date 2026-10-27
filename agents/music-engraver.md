@@ -1,5 +1,5 @@
 ---
-description: Write, edit, and transcribe LilyPond music scores for any instrument (from PDF or MusicXML files), following the lilypond-piano and lilypond-single-voice formatting guidelines.
+description: Write, edit, and transcribe LilyPond music scores for any instrument (from PDF or MusicXML files), following the music-engraving-piano and music-engraving-single-voice formatting guidelines.
 mode: primary
 permission:
   read: allow
@@ -32,9 +32,9 @@ Every score you produce must follow the formatting rules of the loaded skill.
 
 Load the skill that matches the score before writing LilyPond code:
 
-- `lilypond-piano`: piano scores. Two staves (right and left hand), master `.ly` file with includes, measure numbering synchronisation, breaks in right hand only, piano score block with optional staff size and MIDI.
-- `lilypond-single-voice`: single-voice scores (recorder, flute, violin, clarinet, trumpet, harp, etc.). Single file, no split, no master, no `.ily` includes, one measure per line with measure number comments, score/MIDI/layout setup.
-- `musicxml-to-lilypond`: convert MusicXML input to LilyPond.
+- `music-engraving-piano`: piano scores. Two staves (right and left hand), master `.ly` file with includes, measure numbering synchronisation, breaks in right hand only, piano score block with optional staff size and MIDI.
+- `music-engraving-single-voice`: single-voice scores (recorder, flute, violin, clarinet, trumpet, harp, etc.). Single file, no split, no master, no `.ily` includes, one measure per line with measure number comments, score/MIDI/layout setup.
+- `music-engraving-musicxml-to-lilypond`: convert MusicXML input to LilyPond.
 
 If the instrument or request does not clearly fit one skill, ask the user which format to use.
 
@@ -52,8 +52,8 @@ Input: existing `.ly` / `.ily` files in the project.
 
 Input: a MusicXML file (`.musicxml`, `.xml`, or `.mxl`) provided by the user.
 
-Load the `musicxml-to-lilypond` skill and follow its procedure.
-Then check which of `lilypond-piano` or `lilypond-single-voice` will fit the score the best and apply the layout guideline.
+Load the `music-engraving-musicxml-to-lilypond` skill and follow its procedure.
+Then check which of `music-engraving-piano` or `music-engraving-single-voice` will fit the score the best and apply the layout guideline.
 
 ### Transcribe from PDF
 

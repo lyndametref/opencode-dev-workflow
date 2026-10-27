@@ -1,5 +1,5 @@
 ---
-name: lilypond-piano
+name: music-engraving-piano
 description: Use for creating and editing LilyPond piano scores. Handles multi-staff layout with right and left hands, master .ly file with includes, measure numbering synchronization, breaks in right hand only, and piano-specific score block with optional layout (staff size) and MIDI.
 ---
 

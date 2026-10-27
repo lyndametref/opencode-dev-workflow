@@ -1,5 +1,5 @@
 ---
-name: lilypond-single-voice
+name: music-engraving-single-voice
 description: Use for creating and editing single-voice LilyPond scores (e.g. recorder, flute, violin, clarinet, trumpet, harp, etc.). Simple single-file layout (no split, no master, no .ily includes), one measure per line with measure number comments, and appropriate score/MIDI/layout setup.
 ---
 

@@ -8,7 +8,7 @@ This file list available agents and give general rules for the agents.
 
 - `android-dev`: Implement and improve Android/Kotlin code with emphasis on maintainability, testability, and security.
 - `architect`: Define and evolve system architecture, boundaries, and technical design decisions.
-- `music-engraver`: Write and edit LilyPond scores for any instrument, following the `lilypond-piano` and `lilypond-single-voice` formatting guidelines. Primary agent.
+- `music-engraver`: Write and edit LilyPond scores for any instrument, following the `music-engraving-piano` and `music-engraving-single-voice` formatting guidelines. Primary agent.
 - `business-analyst`: Analyze business needs, clarify business rules, and align deliverables with stakeholder intent.
 - `encyclopedist`: Collect reliable knowledge from the internet with citations, neutral contradiction reporting, and bias disclosure.
 - `project-planner`: Initialize projects and plan milestones, sequencing, and delivery strategy for the Geep ecosystem.
@@ -33,8 +33,9 @@ This file list available agents and give general rules for the agents.
 - `coordination-task`: Coordinate end-to-end implementation of a backlog task: refine via @business-analyst, move to in progress, delegate implementation to @android-dev or @backend-dev per sub-task goals, then review via @quality-gatekeeper.
 - `domain-modeling`: Create and maintain the semantic domain model of the project: Business Object Models, context maps, and business object documentation.
 - `html-template-migration`: Migrate Markdown-driven HTML index generators to standalone templates rendered by the shared typed-placeholder script.
-- `lilypond-piano`: Use for creating and editing LilyPond piano scores. Handles multi-staff layout with right and left hands, master .ly file with includes, measure numbering synchronization, breaks in right hand only, and piano-specific score block with optional layout (staff size) and MIDI.
-- `lilypond-single-voice`: Use for creating and editing single-voice LilyPond scores (e.g. recorder, flute, violin, clarinet, trumpet, harp, etc.). Simple single-file layout (no split, no master, no .ily includes), one measure per line with measure number comments, and appropriate score/MIDI/layout setup.
+- `music-engraving-piano`: Use for creating and editing LilyPond piano scores. Handles multi-staff layout with right and left hands, master .ly file with includes, measure numbering synchronization, breaks in right hand only, and piano-specific score block with optional layout (staff size) and MIDI.
+- `music-engraving-single-voice`: Use for creating and editing single-voice LilyPond scores (e.g. recorder, flute, violin, clarinet, trumpet, harp, etc.). Simple single-file layout (no split, no master, no .ily includes), one measure per line with measure number comments, and appropriate score/MIDI/layout setup.
+- `music-engraving-musicxml-to-lilypond`: Convert MusicXML scores to LilyPond via musicxml2ly, then apply the matching piano or single-voice score layout.
 - `markdown-move`: Move a markdown file to a new location and update all relative links within it to reflect the new path.
 - `non-functional-requirements-management`: Create, update, reorganize and check consistency of non-functional     requirements under docs/requirements/non-functional/.
 - `project-initialization`: Used only by `project-planner` to gather specialist intake needs, scaffold approved documentation folders and indexes, and verify Backlog.md readiness.
