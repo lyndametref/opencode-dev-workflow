@@ -48,10 +48,12 @@ Do not use this skill for:
 2. **Gather evidence** — Search the repository for the files, features, and configuration the ticket's changes should have produced. Cross-map the ticket's acceptance criteria and implementation to relevant linked requirement and feature-specification behavior. The ticket's acceptance criteria remain the closure criteria; if a linked source requires behavior absent from the ticket, report the mismatch and mark verification incomplete for business-analyst alignment. Do not silently expand scope or invent acceptance criteria.
 3. **Scope creep check** — Cross-reference the implementation plan against the actual changes. Verify that every file, feature, component, and configuration change is traceable to a documented AC, DoD item, or implementation-plan entry. Flag any additions not justified by the plan.
 4. **Validate each acceptance criterion** — Mark each AC pass/fail/inconclusive with evidence references. If a criterion cannot be assessed unambiguously, ask the user.
-5. **Validate definition of done** — Mark each DoD item pass/fail/inconclusive with evidence references. If a point cannot be assessed unambiguously, ask the user.
-6. **Report** — Produce the Decision and Completion summary table (see Output Format).
-7. **Ask for confirmation** — Ask the user whether the ticket can be closed. Do not close it unilaterally.
-8. **Close the ticket** — After user confirmation, verify all ACs are checked and mark the ticket done via the backlog CLI.
+5. **Rerun tests** — Execute the relevant test suite (via bash) for the changed code (e.g., `./gradlew test`, `npm test`, `pytest`) and record pass/fail results. Do not rely on reported evidence alone. If tests fail, cannot run, or no tests exist, mark the ticket Incomplete and report the failure/gap; do not accept "manual verification" as sufficient unless the ticket explicitly allows it.
+6. **Verify NFR coverage** — If the ticket references non-functional requirements, verify each is addressed (performance, security, usability, etc.) with evidence; flag any unverified NFR.
+7. **Validate definition of done** — Mark each DoD item pass/fail/inconclusive with evidence references. If a point cannot be assessed unambiguously, ask the user.
+8. **Report** — Produce the Decision and Completion summary table (see Output Format).
+9. **Ask for confirmation** — Ask the user whether the ticket can be closed. Do not close it unilaterally.
+10. **Close the ticket** — After user confirmation, verify all ACs are checked and mark the ticket done via the backlog CLI.
 
 ## Output Format
 
@@ -63,9 +65,19 @@ Do not use this skill for:
 - **Scope creep findings**: any unjustified changes (or "none").
 - **Open questions**: ambiguous criteria or missing evidence awaiting user input.
 
+## Completion Checks
+
+- Every AC marked pass/fail/inconclusive with evidence.
+- Tests rerun and passing (or marked Incomplete with failure/gap details).
+- NFRs referenced by the ticket verified (if any).
+- DoD items marked pass/fail/inconclusive with evidence.
+- Scope creep checked; unjustified changes flagged.
+- Decision reported; closure only after user confirmation.
+
+## Resume / interruption
+
+Verification is a single pass. If interrupted, re-run from the ticket read; no persistent state is kept.
+
 ## Examples
 
-Review the examples in `agents/quality-gatekeeper/examples/` to understand the expected review format:
-
-- `task-incomplete.md` — a review where some ACs and DoD items fail (decision: Incomplete)
-- `task-ready.md` — a review where all criteria pass (decision: Ready to close)
+No example files are currently bundled. Follow the Output Format above.
