@@ -12,6 +12,14 @@ disable-model-invocation: false
 
 A single backlog task moves through `Initiated`, `Refined`, `Implemented`, and `Validated`, then reaches `Done` only after explicit user approval. Refinement, implementation, and quality review are delegated to the appropriate agents, with status tracked through the backlog CLI.
 
+## Resume / restart support
+
+Task state lives in the backlog (task status) and the repository (branch). If a run is interrupted, re-invoking this skill must not restart from scratch or lose progress:
+
+- Read the current task status first (`backlog task <id> --plain`); resume from the step matching that status (see Procedure).
+- Do not recreate a branch or discard changes if already on `task/<id>` or if the branch exists; preserve existing changes.
+- Each step is idempotent: check status before acting and skip phases already completed.
+
 For a user-facing explanation and workflow diagram, see [Coordination Task Workflow](references/workflow.md).
 
 ## Prerequisites
@@ -30,19 +38,29 @@ Do not use this skill for:
 
 ## Procedure
 
-0. **Resolve target task** — If the prompt provides a task id or path, use it. Otherwise, get the next task from the backlog with: `backlog task list --ready --plain` (filters to dependency-ready tasks in default order: ordinal, then priority, then ID). Take the first result. If the list is empty or the choice is ambiguous, ask the user which task to coordinate. If no To Do task exists, report that the backlog is empty and stop.
+**Resume check (run first).** Read the current status of the target task (`backlog task <id> --plain`). Map it to the starting step and skip any phase already completed:
+- `To Do` (never started) → start at step 1.
+- `Initiated` (repo already prepared) → skip to step 3 (do NOT re-run step 2).
+- `Refined` → skip to step 4.
+- `Implemented` → skip to step 5.
+- `Validated` → skip to step 6 (request approval; do not re-run review unless requested).
+- `Done` → step 7 (Report) and stop; nothing to do.
 
-1. **Prepare repository** — Inspect the working tree before any task work. If there are uncommitted changes, show them to the user and ask whether they want to clean up or explicitly approve continuing in the current repository state. Never commit, stash, discard, or otherwise alter those changes. If the user chooses cleanup, wait for confirmation and re-check that the working tree is clean; then checkout `main`, pull from `origin`, and create a branch named `task/<task-id>`. If the user approves the current state, preserve the changes and continue on the current branch. In this case, do not checkout `main`, pull from `origin`, or create a branch.
+On any resume, repository preparation (step 2) is skipped.
 
-2. **Initiate and refine** — After repository preparation, use the `backlog-md` skill and CLI to set the task status to `Initiated`. Call the `task` tool with subagent `business-analyst`, passing the task id/path and the goal of refining it (scope, assumptions, dependencies, acceptance criteria, definition of done). Wait for completion, then set the status to `Refined`.
+1. **Resolve target task** — If the prompt provides a task id or path, use it. Otherwise, run `backlog task list --ready --plain` to list dependency-ready tasks (default order: ordinal, then priority, then ID). If exactly one is returned, use it. If several are returned, apply the project-planner prioritization rules (stakeholder-visible outcomes first; never a task that cannot be used before its enabler) and, if still ambiguous, present the candidates to the user and ask which to coordinate. If the list is empty, report that the backlog is empty and stop.
 
-3. **Delegate implementation** — Review the refined task (and any sub-tasks created by `@business-analyst`). For each implementation unit, call the `task` tool with subagent `android-dev` or `backend-dev` based on the goals of that unit (Android/Kotlin work → `android-dev`; server/backend work → `backend-dev`). Run independent units in parallel where possible. When all implementation units are complete, set the task status to `Implemented`.
+2. **Prepare repository** — Skip this step if the task status is already `Initiated` or later (resume). Otherwise inspect the working tree before any task work. If already on branch `task/<task-id>` or that branch exists, reuse it and do not recreate it. If there are uncommitted changes, show them to the user and ask whether they want to clean up or explicitly approve continuing in the current repository state. Never commit, stash, discard, or otherwise alter those changes. If the user chooses cleanup, wait for confirmation and re-check that the working tree is clean; then checkout `main`, pull from `origin`, and create a branch named `task/<task-id>` (only if it does not already exist). If the user approves the current state, preserve the changes and continue on the current branch. In this case, do not checkout `main`, pull from `origin`, or create a branch.
 
-4. **Delegate quality review** — Once implementation is complete, call the `task` tool with subagent `quality-gatekeeper` to review and validate the implementation against the task's acceptance criteria and definition of done.
+3. **Initiate and refine** — After repository preparation, if the status is not yet `Initiated` or later, set it to `Initiated` via the backlog CLI. If the status is already `Refined` or later, skip refinement. Otherwise call the `task` tool with subagent `business-analyst`, passing the task id/path and the goal of refining it (scope, assumptions, dependencies, acceptance criteria, definition of done). Wait for completion, then set the status to `Refined`.
 
-5. **Validate and request approval** — If the review is incomplete, set the task back to `Refined` and send the quality-gatekeeper's findings to the appropriate development agent for further work. After implementation resumes, set the task to `Implemented` and repeat the quality review. Once the gatekeeper confirms that all acceptance criteria and definition-of-done items pass, set the status to `Validated`, present the review result, and ask the user for explicit approval. Set the status to `Done` only after the user approves. If the user requests changes or withholds approval, gather actionable feedback and set the task back to `Initiated`. Depending on the feedback, repeat refinement or proceed directly to implementation, then resume implementation, quality review, and approval.
+4. **Delegate implementation** — Review the refined task (and any sub-tasks created by `@business-analyst`). For each implementation unit, call the `task` tool with subagent `android-dev` or `backend-dev` based on the goals of that unit (Android/Kotlin work → `android-dev`; server/backend work → `backend-dev`). Run independent units in parallel where possible. When all implementation units are complete, set the task status to `Implemented`.
 
-6. **Report** — Summarize the goal of this task (list of Acceptance criteria), actions taken, agents invoked, and the quality-gatekeeper decision. If incomplete, list open items.
+5. **Delegate quality review** — Once implementation is complete, call the `task` tool with subagent `quality-gatekeeper` to review and validate the implementation against the task's acceptance criteria and definition of done.
+
+6. **Validate and request approval** — If the review is incomplete, set the task back to `Refined` and send the quality-gatekeeper's findings to the appropriate development agent for further work. After implementation resumes, set the task to `Implemented` and repeat the quality review. Once the gatekeeper confirms that all acceptance criteria and definition-of-done items pass, set the status to `Validated`, present the review result, and ask the user for explicit approval. Set the status to `Done` only after the user approves. If the user requests changes or withholds approval, gather actionable feedback and set the task back to `Initiated`. Depending on the feedback, repeat refinement or proceed directly to implementation, then resume implementation, quality review, and approval.
+
+7. **Report** — Summarize the goal of this task (list of Acceptance criteria), actions taken, agents invoked, and the quality-gatekeeper decision. If incomplete, list open items.
 
 ## Completion Checks
 
