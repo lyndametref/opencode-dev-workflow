@@ -17,6 +17,7 @@ permission:
   subagent:
     "*": deny
     android-dev: allow
+    backend-dev: allow
     architect: allow
     business-analyst: allow
     encyclopedist: allow
@@ -48,6 +49,9 @@ permission:
     quality-verification: allow
     html-template-migration: allow
     markdown-move: allow
+    spring-boot-rest: allow
+    postgresql-jpa: allow
+    spring-boot-testing: allow
 ---
 
 # Project Planner

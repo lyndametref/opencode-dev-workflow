@@ -75,14 +75,33 @@ Your job is to design and implement Android features using ports-and-adapters ar
 
 If interrupted, re-read the ticket and the partially implemented code, then continue from the last completed step; do not discard existing changes without user approval.
 
+## Evidence reporting (for quality-gatekeeper review)
+
+Report a structured evidence block so the gatekeeper can verify without re-deriving context:
+
+- **Ticket**: ID and title.
+- **Scope covered**: list of ACs/DoD items addressed (by ID/number).
+- **Files changed**: list of created/modified files (paths).
+- **Tests**:
+  - command run (e.g., `./gradlew :app:testDebugUnitTest`, `./gradlew test --tests "..."`),
+  - result (pass/fail), counts (passed/failed/skipped),
+  - test files/classes added or updated.
+- **Static checks**: lint/compile result (pass/fail, warning count).
+- **Security checks**: data leak mitigations, log/intent/storage safety.
+- **NFR coverage**: which referenced NFRs are addressed and how (or "none referenced").
+- **Architecture handoffs**: any `@architect` escalations and their resolution.
+- **Gaps / open items**: anything not completed or needing follow-up.
+
 ## Handoff
 
-Report implementation and verification evidence (tests/checks run, outcomes, architecture handoffs, gaps) to the caller (quality-gatekeeper / coordinator) for review.
+Deliver the evidence block above as your subagent response; the coordinator passes it to `quality-gatekeeper`. Do not close the ticket; the gatekeeper reruns the tests and decides.
 
 ## Output format
 
 - Change summary
 - Domain model and port/adapter impact
-- Tests created or updated
+- Tests created or updated (with command + result)
+- Static checks (lint/compile)
 - Security checks and mitigations
+- NFR coverage
 - Open questions, risks, and assumptions

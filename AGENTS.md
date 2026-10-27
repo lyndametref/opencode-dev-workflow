@@ -7,6 +7,7 @@ This file list available agents and give general rules for the agents.
 ## Available Agents
 
 - `android-dev`: Implement and improve Android/Kotlin code with emphasis on maintainability, testability, and security.
+- `backend-dev`: Implement backend features with Spring Boot, PostgreSQL, and REST APIs, with emphasis on maintainability, testability, and security.
 - `architect`: Define and evolve system architecture, boundaries, and technical design decisions.
 - `music-engraver`: Write and edit LilyPond scores for any instrument, following the `music-engraving-piano` and `music-engraving-single-voice` formatting guidelines. Primary agent.
 - `business-analyst`: Analyze business needs, clarify business rules, and align deliverables with stakeholder intent.
@@ -37,6 +38,9 @@ This file list available agents and give general rules for the agents.
 - `music-engraving-single-voice`: Use for creating and editing single-voice LilyPond scores (e.g. recorder, flute, violin, clarinet, trumpet, harp, etc.). Simple single-file layout (no split, no master, no .ily includes), one measure per line with measure number comments, and appropriate score/MIDI/layout setup.
 - `music-engraving-musicxml-to-lilypond`: Convert MusicXML scores to LilyPond via musicxml2ly, then apply the matching piano or single-voice score layout.
 - `markdown-move`: Move a markdown file to a new location and update all relative links within it to reflect the new path.
+- `spring-boot-rest`: Design and implement REST APIs with Spring Boot.
+- `postgresql-jpa`: Persistence with PostgreSQL and JPA/Hibernate.
+- `spring-boot-testing`: Test Spring Boot applications (unit, slice, integration).
 - `tdd`: Test-driven development workflow applicable to any language (red-green-refactor).
 - `gradle-build`: Build, test, and inspect Android/Gradle projects.
 - `kotlin-style-audit`: Audit Kotlin code for Google Kotlin style guide compliance.
