@@ -13,6 +13,14 @@ permission:
     "docs/domain-model/object-model/**": allow
     "docs/business-processes/**": allow
   bash: allow
+  skill:
+    "*": deny
+    attribute-list-definition: allow
+    business-process-diagramming: allow
+    task-refinement: allow
+    business-rules-management: allow
+    state-diagram-creation: allow
+    backlog-md: allow
 ---
 
 # Business Analyst
@@ -138,6 +146,14 @@ Preferred skills: `attribute-list-definition`, `business-process-diagramming`, `
 5. **Refine the ticket** — Load `task-refinement` and `backlog-md`; make the ticket self-contained with complete scope, testable acceptance criteria, dependencies, assumptions, and definition of done. Include direct links to relevant requirements and specification artifacts for context/rationale, while retaining all implementation-critical instructions in the ticket itself.
 6. **Report readiness** — State the specification references, requirement references, questions resolved, and whether the ticket is execution-ready. If material questions remain open, report it as blocked and do not present it as complete.
 
+## Resume / interruption
+
+BA work is multi-artifact (specs, rules, diagrams, tickets). If interrupted, re-run a consistency pass on the affected area, regenerate any affected indexes, and report what remains.
+
+## Handoff
+
+After changes, report the updated artifacts (spec files, BR IDs, diagram files, ticket IDs) to the caller (project-planner / requirements-engineer) so planning and implementation can align.
+
 ## Output format
 
 ### Analysis Report
@@ -186,12 +202,12 @@ Preferred skills: `attribute-list-definition`, `business-process-diagramming`, `
   - The rationale references at least one requirement (REQ-XX.XXX or REQ-XX).
   - The description is a single, precise statement.
   - The file is named following the `BR-XXX-short-kebab-case-name.md` convention.
-  - `docs/business-rules/INDEX.md` has been updated with the new entry.
+  - `docs/business-rules/index.html` has been regenerated with the new entry.
 - For Business Rule Review Mode:
   - All BR files follow the BR-XXX naming pattern and canonical format.
   - Each BR file has all required sections (title, description, rationale, applicability).
   - Each rationale references at least one requirement (REQ-XX.XXX or REQ-XX).
-  - `docs/business-rules/INDEX.md` is in sync with the actual BR files.
+  - `docs/business-rules/index.html` is in sync with the actual BR files.
 - For State Diagram Management Mode:
   - File exists at `docs/domain-model/object-model/<entity-name>-state-diagram.md`.
   - All states from the domain model and specs are represented.

@@ -43,8 +43,6 @@ WARNING: the attribute list is about the business object description and do not 
 | `attributeName` | <type> | Yes/No | <constraint or N/A> | REQ-XX.XXX |
 ```
 
-At the begining of each attribute list 
-
 ### Conventions
 
 - **Attribute** column: the canonical attribute name in camelCase.
@@ -65,6 +63,10 @@ At the begining of each attribute list
    - Any format constraints, allowed values, or default values
    - The requirement that defines it
 4. **Save the file** — Write to `docs/domain-model/object-model/<entity-name>-attributes.md`.
+
+## Resume / interruption
+
+If interrupted, re-read the source docs and continue from the last completed step; the attribute file is the source of truth once saved.
 
 ## Completion Checks
 

@@ -56,6 +56,10 @@ Do not use this skill for:
 
 6. **Return a summary** — Provide a summary of changes made, any assumptions that were documented, open questions that remain, and suggested next actions.
 
+## Resume / interruption
+
+If interrupted, re-read the target ticket and linked docs, then continue from the last completed step; do not re-apply already-made edits.
+
 ## Example
 
 See `references/` for a before/after refinement demonstration:

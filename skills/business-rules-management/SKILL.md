@@ -80,6 +80,14 @@ When and where this rule applies (creation time, state transitions, entity types
 
 8. **Report outcome** — Summarize the action, files changed, and any risks.
 
+## Resume / interruption
+
+BR edits are multi-file. If interrupted, re-run a validation pass on the affected rules and regenerate the index before continuing.
+
+## Handoff
+
+After changing business rules, report the changed BR IDs and affected requirement references to the caller (business-analyst / requirements-engineer) so specs and tickets can align.
+
 ## Example
 
 See `references/example-BR-005-parentage-role-semantics.md` for a well-formed business rule example.

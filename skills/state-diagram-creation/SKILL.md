@@ -84,6 +84,10 @@ stateDiagram-v2
 6. **Present the draft** — Show the proposed diagram to the user for review.
 7. **Save the file** — Write to `docs/domain-model/object-model/<entity-name>-state-diagram.md`.
 
+## Resume / interruption
+
+If interrupted, re-read the entity's source docs and continue from the last completed step; the diagram file is the source of truth once saved.
+
 ## Completion Checks
 
 - [ ] File exists at `docs/domain-model/object-model/<entity-name>-state-diagram.md`.

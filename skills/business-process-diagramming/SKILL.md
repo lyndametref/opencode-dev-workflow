@@ -43,6 +43,10 @@ See `references/example-mating-cycle-process.md` for a complete worked example c
 7. Iterate on user feedback, if needed ask questions.
 8. Save to `docs/business-processes/<name>-process.md`
 
+## Resume / interruption
+
+If interrupted, re-read the source docs and continue from the last completed step; the process file is the source of truth once saved.
+
 ## Completion checks
 
 - File exists at `docs/business-processes/<name>-process.md`
