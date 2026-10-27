@@ -25,7 +25,7 @@ For a user-facing explanation and workflow diagram, see [Coordination Task Workf
 ## Prerequisites
 
 - **backlog-md skill (REQUIRED)** — All ticket reads and status changes go through the backlog CLI.
-- Available subagents: `@business-analyst`, `@android-dev`, `@backend-dev`, `@quality-gatekeeper`.
+- Available subagents: `@business-analyst`, `@android-dev`, `@backend-dev`, `@frontend-dev`, `@quality-gatekeeper`.
 
 ## When To Use
 
@@ -54,7 +54,7 @@ On any resume, repository preparation (step 2) is skipped.
 
 3. **Initiate and refine** — After repository preparation, if the status is not yet `Initiated` or later, set it to `Initiated` via the backlog CLI. If the status is already `Refined` or later, skip refinement. Otherwise call the `task` tool with subagent `business-analyst`, passing the task id/path and the goal of refining it (scope, assumptions, dependencies, acceptance criteria, definition of done). Wait for completion, then set the status to `Refined`.
 
-4. **Delegate implementation** — Review the refined task (and any sub-tasks created by `@business-analyst`). For each implementation unit, call the `task` tool with subagent `android-dev` or `backend-dev` based on the goals of that unit (Android/Kotlin work → `android-dev`; server/backend work → `backend-dev`). Run independent units in parallel where possible. Capture each subagent's evidence report from its response. When all implementation units are complete, set the task status to `Implemented`.
+4. **Delegate implementation** — Review the refined task (and any sub-tasks created by `@business-analyst`). For each implementation unit, call the `task` tool with subagent `android-dev`, `backend-dev`, or `frontend-dev` based on the goals of that unit (Android/Kotlin work → `android-dev`; server/backend work → `backend-dev`; web/frontend work → `frontend-dev`). Run independent units in parallel where possible. Capture each subagent's evidence report from its response. When all implementation units are complete, set the task status to `Implemented`.
 
 5. **Delegate quality review** — Once implementation is complete, call the `task` tool with subagent `quality-gatekeeper`, passing the task id/path, the acceptance criteria, and the captured implementation evidence reports. The gatekeeper reruns tests and decides.
 
@@ -67,7 +67,7 @@ On any resume, repository preparation (step 2) is skipped.
 - Repository prepared before work: either clean, on `main`, pulled, and on a task branch, or continuing on the current branch with existing changes explicitly approved by the user and preserved.
 - Task refined by `@business-analyst` before implementation.
 - Task status follows `Initiated` after repository preparation, `Refined` after analyst refinement, and `Implemented` after implementation.
-- Each implementation unit assigned to `@android-dev` or `@backend-dev` per its goals.
+- Each implementation unit assigned to `@android-dev`, `@backend-dev`, or `@frontend-dev` per its goals.
 - `@quality-gatekeeper` review completed with a decision.
 - A passing quality review sets the task to `Validated` and is presented to the user for explicit approval.
 - If review is incomplete, the task returns to `Refined` while development resumes; set it to `Implemented` again after the changes are complete.

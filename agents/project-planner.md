@@ -18,6 +18,7 @@ permission:
     "*": deny
     android-dev: allow
     backend-dev: allow
+    frontend-dev: allow
     architect: allow
     business-analyst: allow
     encyclopedist: allow
@@ -52,6 +53,9 @@ permission:
     spring-boot-rest: allow
     postgresql-jpa: allow
     spring-boot-testing: allow
+    alpine-js: allow
+    frontend-testing: allow
+    frontend-style-audit: allow
 ---
 
 # Project Planner

@@ -8,6 +8,7 @@ This file list available agents and give general rules for the agents.
 
 - `android-dev`: Implement and improve Android/Kotlin code with emphasis on maintainability, testability, and security.
 - `backend-dev`: Implement backend features with Spring Boot, PostgreSQL, and REST APIs, with emphasis on maintainability, testability, and security.
+- `frontend-dev`: Implement frontend web features with Alpine.js and vanilla JavaScript, consuming REST APIs, with emphasis on simplicity, light payloads, and security.
 - `architect`: Define and evolve system architecture, boundaries, and technical design decisions.
 - `music-engraver`: Write and edit LilyPond scores for any instrument, following the `music-engraving-piano` and `music-engraving-single-voice` formatting guidelines. Primary agent.
 - `business-analyst`: Analyze business needs, clarify business rules, and align deliverables with stakeholder intent.
@@ -41,6 +42,9 @@ This file list available agents and give general rules for the agents.
 - `spring-boot-rest`: Design and implement REST APIs with Spring Boot.
 - `postgresql-jpa`: Persistence with PostgreSQL and JPA/Hibernate.
 - `spring-boot-testing`: Test Spring Boot applications (unit, slice, integration).
+- `alpine-js`: Alpine.js patterns for lightweight reactive UIs.
+- `frontend-testing`: Test vanilla JavaScript and Alpine.js UIs.
+- `frontend-style-audit`: Audit frontend (JS, HTML, CSS, Alpine.js) for style, accessibility, and security.
 - `tdd`: Test-driven development workflow applicable to any language (red-green-refactor).
 - `gradle-build`: Build, test, and inspect Android/Gradle projects.
 - `kotlin-style-audit`: Audit Kotlin code for Google Kotlin style guide compliance.
