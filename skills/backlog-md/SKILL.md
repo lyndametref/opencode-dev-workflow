@@ -23,6 +23,15 @@ Efficiently manage all project tasks, status, and documentation using the Backlo
 - **Task Management**: Create, edit, assign, prioritize, and track tasks with full metadata
 - **Search**: Fuzzy search across tasks, documents, and decisions with `backlog search`
 - **Priority ordering**: List tasks sorted by priority with `backlog task list --sort priority --plain`
+- **Ordinal ordering**: List tasks sorted by ordinal with `backlog task list --sort ordinal --plain`
+- **Ready tasks**: Filter to dependency-ready tasks with `backlog task list --ready --plain` (tasks whose dependencies are all completed)
+- **Execution sequences**: Compute dependency-aware execution order with `backlog sequence list --plain` (respects task dependencies)
+- **Paging/counting**: `--max-count <n>`, `--skip <n>`, `--count`, `--limit <n>`; `--json --watch` for live updates
+- **Archive/restore/delete**: `backlog task archive|restore|delete <id>` (archive first, then delete)
+- **Task view**: `backlog task <id> --plain` shows dependency graph, readiness, checklists, comments
+- **Docs/decisions**: `backlog doc ...`, `backlog decision ...` (create/update/archive/restore/delete)
+- **Maintenance**: `backlog doctor`, `backlog cleanup`, `backlog overview`, `backlog browser`
+- **Agent instructions**: `backlog instructions ...`, `backlog agents --update-instructions`
 - **Acceptance Criteria**: Granular control with add/remove/check/uncheck by index
 - **Definition of Done checklists**: Per-task DoD items with add/remove/check/uncheck
 - **Board Visualization**: Terminal-based Kanban board (`backlog board`) and web UI (`backlog browser`)
@@ -36,6 +45,7 @@ Efficiently manage all project tasks, status, and documentation using the Backlo
 - Tasks live in `backlog/tasks/` as `task-<id> - <title>.md` files
 - Interact via CLI only: `backlog task create`, `backlog task edit`, etc.
 - Use `--plain` flag for AI-friendly output when viewing/listing
+- Default task list order: ordinal, then priority, then ID. `--sort priority` prints one flat list; `--ready` filters to dependency-complete tasks; `--json` returns a flat array.
 - Never bypass the CLI — it handles Git, metadata, file naming, and relationships
 
 ---
@@ -147,6 +157,16 @@ backlog search --modified-file src/api.ts --plain
 
 Fuzzy matching across titles, descriptions, content, and modified_files. Always use `--plain`.
 
+## 7b. Execution sequences (dependency-aware order)
+
+Compute the order in which tasks can be executed given their dependencies:
+
+```bash
+backlog sequence list --plain
+```
+
+Use this to determine the next task to implement when dependencies matter. Combine with `backlog task list --sort priority --plain` for priority ranking.
+
 ---
 
 ## 8. Quick Reference: DO vs DON'T
@@ -156,6 +176,9 @@ Fuzzy matching across titles, descriptions, content, and modified_files. Always 
 | View task | `backlog task 42 --plain` | Open .md directly |
 | List tasks | `backlog task list --plain` | Browse folder |
 | Highest priority | `backlog task list --sort priority --plain` | Browse folder |
+| Ordinal order | `backlog task list --sort ordinal --plain` | Guess order |
+| Ready tasks (deps done) | `backlog task list --ready --plain` | Guess order |
+| Execution sequence | `backlog sequence list --plain` | Guess order |
 | Check AC | `backlog task edit 42 --check-ac 1` | Change checkbox in file |
 | Add notes | `backlog task edit 42 --notes "..."` | Type into .md file |
 | Add summary | `backlog task edit 42 --final-summary "..."` | Type into .md file |

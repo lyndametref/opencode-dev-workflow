@@ -1,7 +1,7 @@
 ---
 name: coordination-task
 description: 'Coordinate a backlog task through Initiated, Refined, Implemented, Validated, and user-approved Done statuses, delegating refinement, implementation, and quality review.'
-argument-hint: 'Provide a task id or path to coordinate (e.g. "task-0042" or "backlog/tasks/task-0042").'
+argument-hint: 'Optionally provide a task id or path to coordinate (e.g. "task-0042" or "backlog/tasks/task-0042"). If omitted, the next task is taken from the backlog.'
 user-invocable: true
 disable-model-invocation: false
 ---
@@ -30,6 +30,8 @@ Do not use this skill for:
 
 ## Procedure
 
+0. **Resolve target task** — If the prompt provides a task id or path, use it. Otherwise, get the next task from the backlog with: `backlog task list --ready --plain` (filters to dependency-ready tasks in default order: ordinal, then priority, then ID). Take the first result. If the list is empty or the choice is ambiguous, ask the user which task to coordinate. If no To Do task exists, report that the backlog is empty and stop.
+
 1. **Prepare repository** — Inspect the working tree before any task work. If there are uncommitted changes, show them to the user and ask whether they want to clean up or explicitly approve continuing in the current repository state. Never commit, stash, discard, or otherwise alter those changes. If the user chooses cleanup, wait for confirmation and re-check that the working tree is clean; then checkout `main`, pull from `origin`, and create a branch named `task/<task-id>`. If the user approves the current state, preserve the changes and continue on the current branch. In this case, do not checkout `main`, pull from `origin`, or create a branch.
 
 2. **Initiate and refine** — After repository preparation, use the `backlog-md` skill and CLI to set the task status to `Initiated`. Call the `task` tool with subagent `business-analyst`, passing the task id/path and the goal of refining it (scope, assumptions, dependencies, acceptance criteria, definition of done). Wait for completion, then set the status to `Refined`.
@@ -53,4 +55,5 @@ Do not use this skill for:
 - If review is incomplete, the task returns to `Refined` while development resumes; set it to `Implemented` again after the changes are complete.
 - If the user requests changes or withholds approval, gather actionable feedback and return the task to `Initiated`; refine again or proceed directly to implementation depending on the feedback.
 - Task status is set to `Done` only after explicit user approval; a successful review alone is not approval.
+- Target task resolved (provided or selected via prioritization rules from the backlog) before repository preparation.
 - All backlog operations performed via the backlog CLI.

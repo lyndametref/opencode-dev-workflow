@@ -6,7 +6,6 @@ This file list available agents and give general rules for the agents.
 
 ## Available Agents
 
-- `agent-manager`: Create, update, rename, validate, convert, and export agent and skill definitions across clients.
 - `android-dev`: Implement and improve Android/Kotlin code with emphasis on maintainability, testability, and security.
 - `architect`: Define and evolve system architecture, boundaries, and technical design decisions.
 - `music-engraver`: Write and edit LilyPond scores for any instrument, following the `lilypond-piano` and `lilypond-single-voice` formatting guidelines. Primary agent.
@@ -20,9 +19,6 @@ This file list available agents and give general rules for the agents.
 
 ## Available Skills
 
-- `agent-interoperability`: Manage agent definitions across multiple clients (Claude, OpenCode, GitHub Copilot, Gemini) by importing/exporting agents to/from the canonical .ai/agents format.
-- `agent-management`: Create, update, and validate canonical agent definitions in .ai/agents/<slug>/AGENT.md and keep `.ai/AGENTS.md` up to date. Use when adding a new home-format agent, refactoring an existing one, or enforcing canonical structure and metadata.
-- `agent-skill-conversion`: Convert agent definitions to skill definitions and vice versa.
 - `architecture-decision-record`: Create and manage Architecture Decision Records (ADRs) in `docs/architecture/adr/`, regenerating the visual index after every change.
 - `adr-index-visualization`: Regenerate `docs/architecture/adr/index.html` — a list + detail visualization of the ADR corpus — from the ADR markdown files, keeping it in sync after ADR changes.
 - `attribute-list-definition`: Create a structured attribute list for a business object or event, documenting each attribute with name, type, optionality, constraint, and requirement traceability. Stored in docs/domain-model/object-model/<entity-name>-attributes.md.
@@ -40,7 +36,6 @@ This file list available agents and give general rules for the agents.
 - `lilypond-piano`: Use for creating and editing LilyPond piano scores. Handles multi-staff layout with right and left hands, master .ly file with includes, measure numbering synchronization, breaks in right hand only, and piano-specific score block with optional layout (staff size) and MIDI.
 - `lilypond-single-voice`: Use for creating and editing single-voice LilyPond scores (e.g. recorder, flute, violin, clarinet, trumpet, harp, etc.). Simple single-file layout (no split, no master, no .ily includes), one measure per line with measure number comments, and appropriate score/MIDI/layout setup.
 - `markdown-move`: Move a markdown file to a new location and update all relative links within it to reflect the new path.
-- `next-task-selection`: Select the next backlog task to perform based on backlog order (lowest task id among To Do tasks).
 - `non-functional-requirements-management`: Create, update, reorganize and check consistency of non-functional     requirements under docs/requirements/non-functional/.
 - `project-initialization`: Used only by `project-planner` to gather specialist intake needs, scaffold approved documentation folders and indexes, and verify Backlog.md readiness.
 - `requirements-index-visualization`: Regenerate index.html files — the tree + detail visualization of the requirements corpus — by running the skill's bundled scripts/generate_index.sh against the project docs/requirements. Use after any change to REQ/NFR files to keep the visual indexes in sync.
