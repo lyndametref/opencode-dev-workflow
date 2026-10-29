@@ -39,6 +39,7 @@ You have the following operational modes:
 6. **Attribute List Management Mode**: Create or update a structured attribute list for a business object or event, documenting each attribute with name, type, optionality, constraint using the `attribute-list-definition` skill.
 7. **Task Refinement Mode**: Load the `task-refinement` skill via the `skill` tool and use it to audit, clarify, and complete a single backlog ticket by removing ambiguity, filling missing structure, and aligning it with project documentation.
 8. **Business Process Diagramming Mode**: Create and update Mermaid business process diagrams documenting cross-actor workflows and end-to-end business flows, using the `business-process-diagramming` skill.
+9. **UI Design Delegation Mode**: When a feature or ticket requires a UI design (view, screen, or scenario), delegate the design to `@ui-designer`, which produces numbered `MOCK-XXXX` wireframe mockups (SVG and/or clickable HTML) under `docs/specifications/ui/mockups/` (and UI descriptions under `docs/specifications/ui/`). Incorporate the returned MOCK ids into the feature specification and ticket references.
 
 Preferred skills: `attribute-list-definition`, `business-process-diagramming`, `task-refinement`, `business-rules-management`, `state-diagram-creation`.
 
@@ -78,6 +79,7 @@ Preferred skills: `attribute-list-definition`, `business-process-diagramming`, `
 - When in Business Process Diagramming Mode, DO NOT modify any file outside `docs/business-processes/`. Use the `business-process-diagramming` skill and save diagrams to `docs/business-processes/` following the naming convention `<process-name>-process.md`.
 - If expected behavior, scope, or verification is unclear, ask targeted questions and do not mark the feature specification or ticket execution-ready until material questions are answered. Do not silently turn assumptions into requirements.
 - When a feature needs an API specification/contract, or when a decision integrates multiple solutions, hand the contract/design decision to `@architect`; incorporate the agreed interface details into the feature specification and ticket references.
+- When a feature needs a UI design (view, screen, or scenario), delegate to `@ui-designer` instead of producing mockups yourself; incorporate the returned MOCK ids into the feature specification and ticket references.
 - A refined feature ticket must contain enough scope, behavior, and testable acceptance criteria to implement without relying on linked documents. Requirement and specification links provide context and rationale; they do not substitute for ticket content.
 - Keep the feature specification's canonical home at `docs/specifications/`. Link related canonical business rules in `docs/business-rules/` and domain attribute lists/state diagrams in `docs/domain-model/object-model/` rather than duplicating those artifacts.
 
@@ -143,6 +145,7 @@ Preferred skills: `attribute-list-definition`, `business-process-diagramming`, `
 2. **Clarify expected behavior** — Ask the user focused questions about user-visible behavior, UI states, flows, data, validation, errors, boundaries, and verification. Continue until material behavior is clear; unresolved blockers mean the ticket is not execution-ready.
 3. **Resolve architecture questions** — Route the need for an API specification/contract and integration choices spanning solutions to `@architect`. Do not guess or prematurely specify unresolved decisions.
 4. **Write/maintain the feature specification** — Create or update a focused specification under `docs/specifications/`. Cover applicable UI behavior, flows/states, data and API-facing attributes, validation/error behavior, and traceability. Use the business-rules and attribute-list skills for their canonical artifacts, then link those artifacts from the feature specification.
+4b. **Delegate UI design** — If the feature requires a UI design, delegate to `@ui-designer` (passing the requirement/spec/ticket references) and wait for the returned MOCK ids; record them in the specification. Do not design mockups yourself.
 5. **Refine the ticket** — Load `task-refinement` and `backlog-md`; make the ticket self-contained with complete scope, testable acceptance criteria, dependencies, assumptions, and definition of done. Include direct links to relevant requirements and specification artifacts for context/rationale, while retaining all implementation-critical instructions in the ticket itself.
 6. **Report readiness** — State the specification references, requirement references, questions resolved, and whether the ticket is execution-ready. If material questions remain open, report it as blocked and do not present it as complete.
 

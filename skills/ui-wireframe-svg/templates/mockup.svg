@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 900" width="1440" height="900" role="img" aria-labelledby="t d">
+  <title id="t">{{MOCK_ID}} — {{MOCK_NAME}} — {{STATE}}</title>
+  <desc id="d">{{SOURCES}}</desc>
+  <rect width="1440" height="900" fill="#ffffff"/>
+  <!-- Draw wireframe elements here: rectangles for containers, text placeholders, buttons, inputs, tables -->
+</svg>
