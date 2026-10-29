@@ -25,7 +25,7 @@ For a user-facing explanation and workflow diagram, see [Coordination Task Workf
 ## Prerequisites
 
 - **backlog-md skill (REQUIRED)** — All ticket reads and status changes go through the backlog CLI.
-- Available subagents: `@business-analyst`, `@android-dev`, `@backend-dev`, `@frontend-dev`, `@quality-gatekeeper`.
+- Available subagents: `@business-analyst`, `@ui-designer`, `@android-dev`, `@backend-dev`, `@frontend-dev`, `@quality-gatekeeper`.
 
 ## When To Use
 
@@ -58,7 +58,7 @@ On any resume, repository preparation (step 2) is skipped.
 
 5. **Delegate quality review** — Once implementation is complete, call the `task` tool with subagent `quality-gatekeeper`, passing the task id/path, the acceptance criteria, and the captured implementation evidence reports. The gatekeeper reruns tests and decides.
 
-6. **Validate and request approval** — If the review is incomplete, set the task back to `Refined` and send the quality-gatekeeper's findings to the appropriate development agent for further work. After implementation resumes, set the task to `Implemented` and repeat the quality review. Once the gatekeeper confirms that all acceptance criteria and definition-of-done items pass, set the status to `Validated`, present the review result, and ask the user for explicit approval. Set the status to `Done` only after the user approves. If the user requests changes or withholds approval, gather actionable feedback and set the task back to `Initiated`. Depending on the feedback, repeat refinement or proceed directly to implementation, then resume implementation, quality review, and approval.
+6. **Validate and request approval** — If the review is incomplete, set the task back to `Refined` and send the quality-gatekeeper's findings to the appropriate development agent for further work. After implementation resumes, set the task to `Implemented` and repeat the quality review. Once the gatekeeper confirms that all acceptance criteria and definition-of-done items pass, set the status to `Validated`, present the review result together with the full list of acceptance criteria (each marked pass/fail with evidence) so the user can verify they are implemented, and ask the user for explicit approval. Set the status to `Done` only after the user approves. If the user requests changes or withholds approval, gather actionable feedback and set the task back to `Initiated`. Depending on the feedback, repeat refinement or proceed directly to implementation, then resume implementation, quality review, and approval.
 
 7. **Report** — Summarize the goal of this task (list of Acceptance criteria), actions taken, agents invoked, and the quality-gatekeeper decision. If incomplete, list open items.
 
