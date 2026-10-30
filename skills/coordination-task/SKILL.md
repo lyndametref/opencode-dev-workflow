@@ -58,7 +58,28 @@ On any resume, repository preparation (step 2) is skipped.
 
 5. **Delegate quality review** — Once implementation is complete, call the `task` tool with subagent `quality-gatekeeper`, passing the task id/path, the acceptance criteria, and the captured implementation evidence reports. The gatekeeper reruns tests and decides.
 
-6. **Validate and request approval** — If the review is incomplete, set the task back to `Refined` and send the quality-gatekeeper's findings to the appropriate development agent for further work. After implementation resumes, set the task to `Implemented` and repeat the quality review. Once the gatekeeper confirms that all acceptance criteria and definition-of-done items pass, set the status to `Validated`, present the review result together with the full list of acceptance criteria (each marked pass/fail with evidence) so the user can verify they are implemented, and ask the user for explicit approval. Set the status to `Done` only after the user approves. If the user requests changes or withholds approval, gather actionable feedback and set the task back to `Initiated`. Depending on the feedback, repeat refinement or proceed directly to implementation, then resume implementation, quality review, and approval.
+6. **Validate and request approval** — If the review is incomplete, set the task back to `Refined` and send the quality-gatekeeper's findings to the appropriate development agent for further work. After implementation resumes, set the task to `Implemented` and repeat the quality review. Once the gatekeeper confirms that all acceptance criteria and definition-of-done items pass:
+   1. Set the status to `Validated`.
+   2. Re-read the task using `backlog task <id> --plain` and extract every acceptance criterion from the task itself. Do not rely only on the gatekeeper's summary or omit criteria for brevity.
+   3. Ask for approval using the required format below. Include every criterion verbatim or faithfully, with its pass status and concise evidence from the review. Include the task ID/title and quality-gatekeeper decision.
+   4. Set the status to `Done` only after the user explicitly approves. If the user requests changes or withholds approval, gather actionable feedback and set the task back to `Initiated`. Depending on the feedback, repeat refinement or proceed directly to implementation, then resume implementation, quality review, and approval.
+
+   **Required user approval prompt** (do not replace with a generic “Do you approve?”):
+
+   ```markdown
+   ## Approval requested: <task-id> — <task title>
+
+   Quality review: **Passed**
+
+   Acceptance criteria:
+   - [x] <criterion 1> — Evidence: <review evidence>
+   - [x] <criterion 2> — Evidence: <review evidence>
+   <!-- Include every acceptance criterion from the task. -->
+
+   All listed criteria passed quality review. Do you approve closing this task as Done?
+   ```
+
+   If the task has no explicit acceptance criteria, do not imply that it does. State that none are listed and ask whether the user wants to approve based on the task's definition of done, or return it for refinement.
 
 7. **Report** — Summarize the goal of this task (list of Acceptance criteria), actions taken, agents invoked, and the quality-gatekeeper decision. If incomplete, list open items.
 
@@ -70,6 +91,7 @@ On any resume, repository preparation (step 2) is skipped.
 - Each implementation unit assigned to `@android-dev`, `@backend-dev`, or `@frontend-dev` per its goals.
 - `@quality-gatekeeper` review completed with a decision.
 - A passing quality review sets the task to `Validated` and is presented to the user for explicit approval.
+- The approval request includes the task ID/title and the complete acceptance-criteria list from the task, with pass status and review evidence for each criterion; it is not a generic approval question.
 - If review is incomplete, the task returns to `Refined` while development resumes; set it to `Implemented` again after the changes are complete.
 - If the user requests changes or withholds approval, gather actionable feedback and return the task to `Initiated`; refine again or proceed directly to implementation depending on the feedback.
 - Task status is set to `Done` only after explicit user approval; a successful review alone is not approval.
