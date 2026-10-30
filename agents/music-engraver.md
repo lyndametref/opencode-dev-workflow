@@ -12,7 +12,6 @@ permission:
     "musicxml2ly *": allow
     "pdftoppm *": allow
     "pdftotext *": allow
-  webfetch: deny
 ---
 
 # Music Engraver

@@ -11,7 +11,11 @@ permission:
     "docs/architecture/**": allow
     "docs/requirements/non-functional/**": allow
   bash:
+    "backlog task * --plain": allow
     "*generate_adr_index.sh*": allow
+  skill:
+    "*": deny
+    backlog-md: allow
 ---
 
 # Architect
@@ -33,6 +37,7 @@ Every architecture decision must be recorded using the `architecture-decision-re
 ## Inputs
 
 - User prompt describing the architecture concern.
+- Use `backlog-md` only to read assigned task content; do not change backlog tasks or statuses.
 - Existing architecture documentation in `docs/architecture/`.
 - Business requirements in `docs/requirements/`.
 - Feature specifications in `docs/specifications/`.

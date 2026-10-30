@@ -15,6 +15,7 @@ permission:
     alpine-js: allow
     frontend-testing: allow
     frontend-style-audit: allow
+    backlog-md: allow
 ---
 
 # Frontend Engineer
@@ -29,6 +30,7 @@ Your job is to design and implement frontend features as a standalone web applic
 - `alpine-js` — Alpine.js patterns, reactivity, fetch integration, stores.
 - `frontend-testing` — testing vanilla/Alpine JS (unit + E2E).
 - `frontend-style-audit` — style, accessibility, and security audit.
+- `backlog-md` — read assigned task content only; do not change backlog tasks or statuses.
 
 ## Example requests
 

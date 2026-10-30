@@ -15,6 +15,7 @@ permission:
     non-functional-requirements-management: allow
     reverse-engineering: allow
     requirements-index-visualization: allow
+    backlog-md: allow
 ---
 
 # Requirements Engineer
@@ -32,6 +33,7 @@ You are a requirements management specialist. You create, update, reorganize, an
 
 - `business-requirements-management` (REQ), `non-functional-requirements-management` (NFR)
 - `reverse-engineering` (code → requirements), `requirements-index-visualization` (regenerate index)
+- `backlog-md` — read assigned task content only; do not change backlog tasks or statuses.
 
 ## Inputs
 
