@@ -52,11 +52,12 @@ On any resume, repository preparation (step 2) is skipped.
 
 2. **Prepare repository** — Skip this step if the task status is already `Initiated` or later (resume). Otherwise inspect the working tree before any task work. If already on branch `task/<task-id>` or that branch exists, reuse it and do not recreate it. If there are uncommitted changes, show them to the user and ask whether they want to clean up or explicitly approve continuing in the current repository state. Never commit, stash, discard, or otherwise alter those changes. If the user chooses cleanup, wait for confirmation and re-check that the working tree is clean; then checkout `main`, pull from `origin`, and create a branch named `task/<task-id>` (only if it does not already exist). If the user approves the current state, preserve the changes and continue on the current branch. In this case, do not checkout `main`, pull from `origin`, or create a branch.
 
-3. **Initiate and refine** — After repository preparation, if the status is not yet `Initiated` or later, set it to `Initiated` via the backlog CLI. If the status is already `Refined` or later, skip refinement. Otherwise call the `task` tool with subagent `business-analyst`, passing the task id/path and the goal of refining it (scope, assumptions, dependencies, acceptance criteria, definition of done). Wait for completion, then set the status to `Refined`.
+3. **Initiate and refine** — After repository preparation, if the status is not yet `Initiated` or later, set it to `Initiated` via the backlog CLI. If the status is already `Refined` or later, skip refinement. Otherwise call the `task` tool with subagent `business-analyst`, passing the task id/path and the goal of refining it (scope, assumptions, dependencies, acceptance criteria, definition of done). Require the analyst to return the structured handoff block. Wait for completion, then set the status to `Refined`.
+   - **UI approval gate**: before setting the status to `Refined`, inspect the refined ticket/specification for referenced mockups (`MOCK-XXXX`). If any referenced mockup has registry status other than `approved`, stop and request explicit user approval for that mockup; do not proceed to implementation until it is `approved`.
 
-4. **Delegate implementation** — Review the refined task (and any sub-tasks created by `@business-analyst`). For each implementation unit, call the `task` tool with subagent `android-dev`, `backend-dev`, or `frontend-dev` based on the goals of that unit (Android/Kotlin work → `android-dev`; server/backend work → `backend-dev`; web/frontend work → `frontend-dev`). Run independent units in parallel where possible. Capture each subagent's evidence report from its response. When all implementation units are complete, set the task status to `Implemented`.
+4. **Delegate implementation** — Review the refined task (and any sub-tasks created by `@business-analyst`). Verify that any referenced mockups are `approved` in the registry before delegating; if not, pause for approval. For each implementation unit, call the `task` tool with subagent `android-dev`, `backend-dev`, or `frontend-dev` based on the goals of that unit (Android/Kotlin work → `android-dev`; server/backend work → `backend-dev`; web/frontend work → `frontend-dev`). Run independent units in parallel where possible. Require each subagent to return the structured handoff block (ticket, artifacts changed, acceptance criteria covered, open questions/assumptions, approval status, next required action); reject or re-run a unit that omits it. Capture each subagent's evidence report from its response. When all implementation units are complete, set the task status to `Implemented`.
 
-5. **Delegate quality review** — Once implementation is complete, call the `task` tool with subagent `quality-gatekeeper`, passing the task id/path, the acceptance criteria, and the captured implementation evidence reports. The gatekeeper reruns tests and decides.
+5. **Delegate quality review** — Once implementation is complete, call the `task` tool with subagent `quality-gatekeeper`, passing the task id/path, the acceptance criteria, and the captured implementation evidence reports. Require the gatekeeper to return the per-acceptance-criterion evidence table (criterion | result | evidence). The gatekeeper reruns tests and decides. Reject or repeat the review if any criterion lacks evidence.
 
 6. **Validate and request approval** — If the review is incomplete, set the task back to `Refined` and send the quality-gatekeeper's findings to the appropriate development agent for further work. After implementation resumes, set the task to `Implemented` and repeat the quality review. Once the gatekeeper confirms that all acceptance criteria and definition-of-done items pass:
    1. Set the status to `Validated`.
@@ -71,10 +72,12 @@ On any resume, repository preparation (step 2) is skipped.
 
    Quality review: **Passed**
 
-   Acceptance criteria:
-   - [x] <criterion 1> — Evidence: <review evidence>
-   - [x] <criterion 2> — Evidence: <review evidence>
-   <!-- Include every acceptance criterion from the task. -->
+   Acceptance criteria (quality-gatekeeper evidence table):
+   | Criterion | Result | Evidence |
+   | --- | --- | --- |
+   | <criterion 1> | Pass | <review evidence> |
+   | <criterion 2> | Pass | <review evidence> |
+   <!-- Include every acceptance criterion from the task; no omissions. -->
 
    All listed criteria passed quality review. Do you approve closing this task as Done?
    ```
@@ -90,6 +93,7 @@ On any resume, repository preparation (step 2) is skipped.
 - Task status follows `Initiated` after repository preparation, `Refined` after analyst refinement, and `Implemented` after implementation.
 - Each implementation unit assigned to `@android-dev`, `@backend-dev`, or `@frontend-dev` per its goals.
 - `@quality-gatekeeper` review completed with a decision.
+- Structured handoff blocks received from `@business-analyst`, implementation subagents, and `@quality-gatekeeper`.
 - A passing quality review sets the task to `Validated` and is presented to the user for explicit approval.
 - The approval request includes the task ID/title and the complete acceptance-criteria list from the task, with pass status and review evidence for each criterion; it is not a generic approval question.
 - If review is incomplete, the task returns to `Refined` while development resumes; set it to `Implemented` again after the changes are complete.

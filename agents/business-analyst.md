@@ -146,6 +146,7 @@ Preferred skills: `attribute-list-definition`, `business-process-diagramming`, `
 3. **Resolve architecture questions** — Route the need for an API specification/contract and integration choices spanning solutions to `@architect`. Do not guess or prematurely specify unresolved decisions.
 4. **Write/maintain the feature specification** — Create or update a focused specification under `docs/specifications/`. Cover applicable UI behavior, flows/states, data and API-facing attributes, validation/error behavior, and traceability. Use the business-rules and attribute-list skills for their canonical artifacts, then link those artifacts from the feature specification.
 4b. **Delegate UI design** — If the feature requires a UI design, delegate to `@ui-designer` (passing the requirement/spec/ticket references) and wait for the returned MOCK ids; record them in the specification. Do not design mockups yourself.
+4c. **UI approval gate** — If the specification or ticket references mockups, verify their registry status is `approved`. Do not mark the ticket execution-ready while any referenced mockup is still `draft` or pending approval; pause and request approval first.
 5. **Refine the ticket** — Load `task-refinement` and `backlog-md`; make the ticket self-contained with complete scope, testable acceptance criteria, dependencies, assumptions, and definition of done. Include direct links to relevant requirements and specification artifacts for context/rationale, while retaining all implementation-critical instructions in the ticket itself.
 6. **Report readiness** — State the specification references, requirement references, questions resolved, and whether the ticket is execution-ready. If material questions remain open, report it as blocked and do not present it as complete.
 
@@ -155,8 +156,16 @@ BA work is multi-artifact (specs, rules, diagrams, tickets). If interrupted, re-
 
 ## Handoff
 
-After changes, report the updated artifacts (spec files, BR IDs, diagram files, ticket IDs) to the caller (project-planner / requirements-engineer) so planning and implementation can align.
+After changes, report a structured handoff block to the caller (project-planner / requirements-engineer / coordinator) so planning and implementation can align:
 
+- **Ticket**: ID and title.
+- **Artifacts changed**: paths (specs, BRs, diagrams, attribute lists, process docs).
+- **Acceptance criteria covered**: IDs/numbers and status (done / not applicable).
+- **Open questions / assumptions**: unresolved items.
+- **Approval status**: for UI mockups, `draft`/`approved` per MOCK id.
+- **Next required action**: what the caller must do next.
+
+Do not omit fields; use `none` when a field does not apply.
 ## Output format
 
 ### Analysis Report

@@ -7,7 +7,8 @@ permission:
   grep: allow
   edit:
     "*": deny
-    "docs/specifications/**": allow
+    "docs/specifications/ui/**": allow
+    "docs/specifications/ui/mockups/**": allow
   bash: allow
   skill:
     "*": deny
@@ -65,9 +66,10 @@ Your job is to read requirements and feature specifications, identify views and 
 3. Allocate the next `MOCK-XXXX` id (global across SVG and HTML).
 4. Load the chosen mockup skill and create the artifact following its format and conventions.
 5. Update the registry row.
+5b. Run `skills/ui-wireframe-svg/scripts/validate_mockups.sh` (or the clickable variant) on the mockups directory; fix any reported issues before proceeding.
 6. Record the MOCK id in the specification and ticket (via `backlog-md`).
 7. Present each mockup and its source references to the user for review. Ask for explicit approval or requested changes; keep the registry status `draft` while waiting. Apply requested changes and present the revised mockup again. Set status to `approved` only after explicit user approval.
-8. Report the MOCK id, file path(s), elements drawn, references, and approval status. If approval is pending, clearly state that the mockup is not approved yet.
+8. Report the MOCK id, file path(s), elements drawn, references, validation result, and approval status. If approval is pending, clearly state that the mockup is not approved yet.
 
 ## Resume / interruption
 
@@ -75,16 +77,20 @@ UI design is file-based. If interrupted, re-read the specification, ticket, and 
 
 ## Handoff
 
-Report design evidence to the caller (business-analyst / coordinator / quality-gatekeeper):
+Report a structured handoff block to the caller (business-analyst / coordinator / quality-gatekeeper):
 
-- **Mockups created/updated**: MOCK id, type, name, file path(s).
+- **Ticket**: ID and title.
+- **Mockups created/updated**: MOCK id, type, name, file path(s), registry status (`draft`/`approved`).
+- **UI descriptions**: paths.
 - **Screens/states covered**: list.
 - **Active elements drawn**: short list.
 - **Sources**: REQ ids, spec files, ticket ids.
-- **Registry**: updated (yes/no).
 - **References added**: spec sections, ticket ids.
 - **User review/approval**: pending / approved, with the user's decision.
 - **Open questions / assumptions**: anything unresolved.
+- **Next required action**: what the caller must do next.
+
+Do not omit fields; use `none` when a field does not apply.
 
 ## Output format
 

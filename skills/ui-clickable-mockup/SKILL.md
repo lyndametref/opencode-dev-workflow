@@ -94,8 +94,8 @@ If interrupted, the HTML file plus registry row are the source of truth. Re-read
 - [ ] `wireframe.css` present in mockups dir.
 - [ ] No external resources / no technology hints.
 - [ ] Registry row added/updated.
+- [ ] `validate_mockups.sh` reports no errors.
 - [ ] MOCK id referenced in spec and ticket.
-
 ## Output Template
 
 After creation, summarize:

@@ -99,8 +99,8 @@ If interrupted, re-read the sources and the partial SVG; the file on disk plus t
 - [ ] No technology/library/brand information is conveyed.
 - [ ] `<title>` and `<desc>` present with source references.
 - [ ] Registry row added/updated.
+- [ ] `validate_mockups.sh` reports no errors.
 - [ ] MOCK id referenced in the spec and ticket.
-
 ## Output Template
 
 After creation, summarize:
