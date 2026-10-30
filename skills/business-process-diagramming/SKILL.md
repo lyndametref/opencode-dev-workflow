@@ -1,3 +1,10 @@
+---
+name: business-process-diagramming
+description: 'Document end-to-end business workflows as Mermaid flowcharts in docs/business-processes/, covering actors, steps, decisions, and business rules without technical detail.'
+user-invocable: true
+disable-model-invocation: false
+---
+
 # Business Process Diagramming
 
 ## Outcome

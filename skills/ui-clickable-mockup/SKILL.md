@@ -78,7 +78,7 @@ Update `docs/specifications/ui/mockups/README.md` (see `ui-wireframe-svg` skill)
 4. **Design screens** — Enumerate screens/states and transitions; map each clickable element to its target screen.
 5. **Build HTML** — Use the base template; add one `wf-screen` section per screen with all elements positioned; wire `data-goto` navigation; include modal markup if needed.
 6. **Register** — Add/update the registry row.
-7. **Reference** — Record the MOCK id in the spec and ticket (via `backlog-md`).
+7. **Reference** — Report the MOCK id to the caller for recording in the feature specification (owner: business-analyst or tech-writer); add it to the ticket via `backlog-md`.
 8. **Verify** — Open the HTML in a browser (optional) to confirm navigation works; no console errors.
 
 ## Resume / interruption
@@ -95,7 +95,8 @@ If interrupted, the HTML file plus registry row are the source of truth. Re-read
 - [ ] No external resources / no technology hints.
 - [ ] Registry row added/updated.
 - [ ] `validate_mockups.sh` reports no errors.
-- [ ] MOCK id referenced in spec and ticket.
+- [ ] MOCK id reported for the feature specification and added to the ticket.
+
 ## Output Template
 
 After creation, summarize:

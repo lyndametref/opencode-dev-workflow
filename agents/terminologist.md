@@ -8,7 +8,16 @@ permission:
   edit:
     "*": deny
     "docs/domain-model/business-glossary/**": allow
-  bash: deny
+  bash:
+    "backlog *": allow
+    "*generate_business_glossary_index.sh*": allow
+    "*": deny
+  skill:
+    "*": deny
+    business-glossary-management: allow
+    business-terminology-consistency-check: allow
+    business-glossary-index-visualization: allow
+    backlog-md: allow
 ---
 
 # Business Terminologist
@@ -43,6 +52,7 @@ Preferred skills: `business-glossary-management`, `business-terminology-consiste
 - DO NOT modify business semantics silently. If terminology changes would alter intent, stop and ask for clarification.
 - DO NOT update skills or agent examples under `.ai/` or `.github/skills/` unless explicitly requested.
 - ONLY add or update glossary entries using `business-glossary-management`.
+- When a terminology change affects backlog items, update them only via the `backlog-md` skill and Backlog.md CLI; never edit files under `backlog/` directly.
 - Use `business-terminology-consistency-check` to validate terminology alignment before or after glossary changes when consistency is requested.
 - If a request is ambiguous, ask clarifying questions before editing.
 

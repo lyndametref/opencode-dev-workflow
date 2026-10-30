@@ -30,13 +30,13 @@ Your job is to evaluate one specific ticket's completion state against its own a
 - ALWAYS load the `quality-verification` skill via the `skill` tool before verifying a ticket, and follow its procedure, constraints, and output format exactly.
 - Scope is strictly one ticket per verification pass — never batch multiple tickets.
 - Produce no implementation, code, or configuration.
-- Never edit ticket files directly — use the backlog CLI only.
-- After verification, present the decision and completion summary to the user and wait for confirmation before closing the ticket.
+- Never edit ticket files directly; backlog access is read-only through the CLI.
+- After verification, report the decision and completion summary to the caller (project-planner / coordinator). Do not ask the user for approval and do not close the ticket; the caller owns the approval request and closure.
 - Verify implementation against the ticket's acceptance criteria and definition of done, and verify that the relevant behavior in linked requirements and feature specifications is fulfilled. The ticket's acceptance criteria remain the closure criteria; if a linked source requires behavior absent from the ticket, report the mismatch and mark the ticket incomplete for business-analyst alignment rather than silently expanding scope. Report missing traceability and contradictions explicitly.
-- Produce a per-acceptance-criterion evidence table: criterion, result (pass/fail), and concrete evidence (command/test name, file path, or observed behavior). Do not summarize or omit criteria. This table is the objective basis for approval.
+- Produce a per-acceptance-criterion evidence table: criterion, result (pass/fail), and concrete evidence (command/test name, file path, or observed behavior). Include every criterion; this table is the objective basis for the caller's approval request.
 - Rerun the relevant test suite (via bash) and verify any non-functional requirements referenced by the ticket; mark Incomplete if tests fail or NFRs are unverified. Do not rely on reported evidence alone.
 - Do not create persistent review reports or other long-lived files. Keep findings in the response. If a temporary file or scratchpad is necessary, use only project-local `./.tmp/`, then remove it before finishing, including when verification is blocked.
-- Do not change ticket status or checklist items until the user confirms closure after receiving the verification report.
+- Verification is read-only: do not change ticket status, checklists, or content. Status changes and closure are owned by the caller after user approval.
 
 ## Resume / interruption
 
@@ -44,10 +44,12 @@ Verification is a single pass. If interrupted, re-run from the ticket read; no p
 
 ## Handoff
 
-After verification, report the decision (Ready to close / Incomplete) and a structured handoff block to the caller (project-planner / coordinator), then wait for user confirmation before closing:
+After verification, report the decision (Ready to close / Incomplete) and the completion summary to the caller (project-planner / coordinator). Do not request approval or close the ticket; the caller presents the report and requests approval.
+
+## Output format
 
 - **Ticket**: ID and title.
-- **Decision**: Ready to close / Incomplete.
+- **Decision**: Ready to close (pending user approval) / Incomplete.
 - **Acceptance criteria (per-criterion evidence table)**: criterion | result | evidence.
 - **Definition of done**: pass/fail summary.
 - **Tests run**: command, result, counts.
@@ -56,4 +58,4 @@ After verification, report the decision (Ready to close / Incomplete) and a stru
 - **Open items**: list or `none`.
 - **Next required action**: what the caller must do next.
 
-Do not omit fields; use `none` when a field does not apply.
+Use `none` when a field does not apply.

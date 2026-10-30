@@ -84,7 +84,7 @@ Maintain `docs/specifications/ui/mockups/README.md` as a table:
 4. **Design layout** — Sketch regions (header, nav, content, sidebar, footer) and place every active element with realistic spacing.
 5. **Render SVG** — Write `MOCK-XXXX-<slug>.svg` following the Format, drawing all elements.
 6. **Register** — Add/update the row in `docs/specifications/ui/mockups/README.md`.
-7. **Reference** — Record the MOCK id in the feature specification and (via `backlog-md`) in the ticket's references/acceptance criteria. Do not edit ticket files directly.
+7. **Reference** — Report the MOCK id to the caller for recording in the feature specification (owner: business-analyst or tech-writer); add it to the ticket via `backlog-md`. Do not edit ticket files directly.
 8. **Report** — Return the MOCK id, file path, and references.
 
 ## Resume / interruption
@@ -100,7 +100,8 @@ If interrupted, re-read the sources and the partial SVG; the file on disk plus t
 - [ ] `<title>` and `<desc>` present with source references.
 - [ ] Registry row added/updated.
 - [ ] `validate_mockups.sh` reports no errors.
-- [ ] MOCK id referenced in the spec and ticket.
+- [ ] MOCK id reported for the feature specification and added to the ticket.
+
 ## Output Template
 
 After creation, summarize:

@@ -99,9 +99,7 @@ Report a structured evidence block so the gatekeeper can verify without re-deriv
 - **Security checks**: input validation, auth, data exposure mitigations.
 - **NFR coverage**: which referenced NFRs are addressed and how (or "none referenced").
 - **Architecture handoffs**: any `@architect` escalations and their resolution.
-- **UI mockup approval status**: for any referenced MOCK ids, `draft`/`approved` (or `none`).
 - **Gaps / open items**: anything not completed or needing follow-up.
-- **Next required action**: what the caller must do next.
 
 ## Handoff
 

@@ -77,10 +77,6 @@ Your job is to design and implement frontend features as a standalone web applic
 
 If interrupted, re-read the ticket and the partially implemented code, then continue from the last completed step; do not discard existing changes without user approval.
 
-## Handoff
-
-Report implementation and verification evidence (tests/checks run, outcomes, architecture handoffs, gaps) to the caller (quality-gatekeeper / coordinator) for review.
-
 ## Evidence reporting (for quality-gatekeeper review)
 
 Report a structured evidence block so the gatekeeper can verify without re-deriving context:
@@ -96,9 +92,7 @@ Report a structured evidence block so the gatekeeper can verify without re-deriv
 - **Security checks**: XSS, token handling, CSP, input validation.
 - **NFR coverage**: which referenced NFRs are addressed and how (or "none referenced").
 - **Architecture handoffs**: any `@architect` escalations and their resolution.
-- **UI mockup approval status**: for any referenced MOCK ids, `draft`/`approved` (or `none`).
 - **Gaps / open items**: anything not completed or needing follow-up.
-- **Next required action**: what the caller must do next.
 
 ## Handoff
 

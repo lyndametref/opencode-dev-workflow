@@ -1,6 +1,6 @@
 ---
 description: Collect reliable knowledge from the internet with source citations, neutral contradiction reporting, and bias disclosure.
-mode: subagent
+mode: primary
 permission:
   read: allow
   glob: allow
