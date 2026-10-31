@@ -9,6 +9,7 @@ This file list available agents and give general rules for the agents.
 - `android-dev`: Implement and improve Android/Kotlin code with emphasis on maintainability, testability, and security.
 - `backend-dev`: Implement backend features with Spring Boot, PostgreSQL, and REST APIs, with emphasis on maintainability, testability, and security.
 - `frontend-dev`: Implement frontend web features with Alpine.js and vanilla JavaScript, consuming REST APIs, with emphasis on simplicity, light payloads, and security.
+- `rust-dev`: Implement Rust features and fixes with emphasis on long-term maintainability, testability, and security.
 - `architect`: Define and evolve system architecture, boundaries, and technical design decisions.
 - `music-engraver`: Write and edit LilyPond scores for any instrument, following the `music-engraving-piano` and `music-engraving-single-voice` formatting guidelines. Primary agent.
 - `business-analyst`: Analyze business needs, clarify business rules, and align deliverables with stakeholder intent.
@@ -33,6 +34,7 @@ Agent frontmatter permissions are authoritative. Default write scopes:
 - `android-dev`: `apps/android/**`
 - `backend-dev`: `apps/backend/**`
 - `frontend-dev`: `apps/webFrontend/**`
+- `rust-dev`: `apps/rust/**`
 - `project-planner`: planning and backlog coordination only; no direct backlog file edits.
 - `quality-gatekeeper`: read-only.
 
@@ -49,7 +51,7 @@ Agent frontmatter permissions are authoritative. Default write scopes:
 - `business-rules-management`: Create, update, and validate business rules in the canonical format. Each business rule is a self-contained file under docs/business-rules/BR-XXX-short-name.md with unique BR-XXX ID, description, rationale grounded in requirements, and applicability statement.
 - `business-rules-index-visualization`: Regenerate docs/business-rules/index.html — a searchable list and detail view of business rules — from BR-XXX Markdown files after rule changes.
 - `business-terminology-consistency-check`: Check docs and backlog for non-canonical business terms, conflicting term variants, and missing glossary alignment. Use when validating wording consistency before or after glossary changes.
-- `coordination-task`: Coordinate end-to-end implementation of a backlog task: refine via @business-analyst, delegate UI mockups to @ui-designer when needed, move through `Initiated`/`Refined`/`Implemented`/`Validated`, delegate implementation to @android-dev, @backend-dev, or @frontend-dev per sub-task goals, review via @quality-gatekeeper, and request user approval before `Done`.
+- `coordination-task`: Coordinate end-to-end implementation of a backlog task: refine via @business-analyst, delegate UI mockups to @ui-designer when needed, move through `Initiated`/`Refined`/`Implemented`/`Validated`, delegate implementation to @android-dev, @backend-dev, @frontend-dev, or @rust-dev per sub-task goals, review via @quality-gatekeeper, and request user approval before `Done`.
 - `domain-modeling`: Create and maintain the semantic domain model of the project: Business Object Models, context maps, and business object documentation.
 - `html-template-migration`: Migrate Markdown-driven HTML index generators to standalone templates rendered by the shared typed-placeholder script.
 - `music-engraving-piano`: Use for creating and editing LilyPond piano scores. Handles multi-staff layout with right and left hands, master .ly file with includes, measure numbering synchronization, breaks in right hand only, and piano-specific score block with optional layout (staff size) and MIDI.
@@ -63,6 +65,8 @@ Agent frontmatter permissions are authoritative. Default write scopes:
 - `alpine-js`: Alpine.js patterns for lightweight reactive UIs.
 - `frontend-testing`: Test vanilla JavaScript and Alpine.js UIs.
 - `frontend-style-audit`: Audit frontend (JS, HTML, CSS, Alpine.js) for style, accessibility, and security.
+- `cargo-build`: Build, test, and inspect Rust projects with Cargo, Clippy, and rustfmt.
+- `rust-style-audit`: Audit Rust code against the official Rust Style Guide, rustfmt, and Clippy.
 - `tdd`: Test-driven development workflow applicable to any language (red-green-refactor).
 - `gradle-build`: Build, test, and inspect Android/Gradle projects.
 - `kotlin-style-audit`: Audit Kotlin code for Google Kotlin style guide compliance.
