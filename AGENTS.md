@@ -30,9 +30,9 @@ Agent frontmatter permissions are authoritative. Default write scopes:
 - `terminologist`: `docs/domain-model/business-glossary/**`
 - `tech-writer`: `docs/specifications/**`
 - `ui-designer`: `docs/specifications/ui/**`
-- `android-dev`: `apps/appAndroid/**`
-- `backend-dev`: `apps/appBackend/**`
-- `frontend-dev`: `apps/appFrontend/**`
+- `android-dev`: `apps/android/**`
+- `backend-dev`: `apps/backend/**`
+- `frontend-dev`: `apps/webFrontend/**`
 - `project-planner`: planning and backlog coordination only; no direct backlog file edits.
 - `quality-gatekeeper`: read-only.
 

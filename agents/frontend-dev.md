@@ -7,7 +7,7 @@ permission:
   grep: allow
   edit:
     "*": deny
-    "apps/appFrontend/**": allow
+    "apps/webFrontend/**": allow
   bash: allow
   skill:
     "*": deny

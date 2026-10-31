@@ -7,7 +7,7 @@ permission:
   grep: allow
   edit:
     "*": deny
-    "apps/appBackend/**": allow
+    "apps/backend/**": allow
   bash: allow
   skill:
     "*": deny

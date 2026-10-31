@@ -60,6 +60,13 @@ When coordinating a task, print the quality-gatekeeper report and the acceptance
 - Task `dependencies:` and `ordinal:` fields in task YAML frontmatter.
 - Requirements in `docs/requirements/`, specs in `docs/specifications/`, architecture in `docs/architecture/`.
 
+## Application directory conventions
+
+- Android: `apps/android/`
+- Backend: `apps/backend/`
+- Frontend: `apps/webFrontend/`
+- Use these canonical paths when planning project structure and assigning implementation work.
+
 ## Constraints
 
 - DO NOT change scope of existing tasks except when explicitly requested; do not perform feature-level refinement (that is `business-analyst`).

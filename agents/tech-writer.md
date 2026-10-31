@@ -32,7 +32,7 @@ Your job is to ensure project documentation is complete, accurate, and reflects 
 ## Inputs
 
 - User prompt describing the documentation task.
-- Source code in any application directory (e.g. `apps/appAndroid/`, `apps/appIos/`, `apps/appWeb/`, etc.).
+- Source code in any application directory (e.g. `apps/android/`, `apps/backend/`, `apps/webFrontend/`, etc.).
 - Existing documentation in:
   - `docs/architecture/`
   - `docs/domain-model/`
@@ -54,7 +54,7 @@ Your job is to ensure project documentation is complete, accurate, and reflects 
 
 1. **Understand the request** — Identify the documentation scope (feature, module, component).
 2. **Read existing documentation** — Check what currently exists in `docs/`.
-3. **Read relevant source code** — Understand the actual implementation by reading code in `apps/appAndroid/`.
+3. **Read relevant source code** — Understand the actual implementation by reading code in the application directory relevant to the documentation task (for example, `apps/android/`, `apps/backend/`, or `apps/webFrontend/`).
 4. **Identify gaps and discrepancies** — Note missing docs, outdated descriptions, or mismatches between docs and code.
 5. **Propose changes before editing** — Present findings and planned edits for user confirmation.
 6. **Apply minimal edits** — Update only what is needed to align docs with implementation.

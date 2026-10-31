@@ -7,7 +7,7 @@ permission:
   grep: allow
   edit:
     "*": deny
-    "apps/appAndroid/**": allow
+    "apps/android/**": allow
   bash: allow
   skill:
     "*": deny
