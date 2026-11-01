@@ -95,7 +95,7 @@ Requirements edits are multi-file. If interrupted, re-run a validation pass on t
 
 ## Handoff
 
-After changing requirements, report the changed REQ IDs to the caller (project-planner / business-analyst) so specs, tickets, and business rules can be aligned.
+After changing requirements, report the changed REQ IDs to the caller (planner / business-analyst / orchestrator) so specs, tickets, and business rules can be aligned.
 
 ## Example
 

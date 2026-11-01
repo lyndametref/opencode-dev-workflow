@@ -13,6 +13,15 @@ permission:
   bash:
     "backlog task * --plain": allow
     "*generate_adr_index.sh*": allow
+    "git *": deny
+    "git add *": allow
+    "git commit *": allow
+    "git status *": allow
+    "git log *": allow
+    "git diff *": allow
+    "git show *": allow
+    "git branch --show-current": allow
+    "git rev-parse *": allow
   skill:
     "*": deny
     backlog-md: allow

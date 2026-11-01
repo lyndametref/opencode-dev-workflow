@@ -10,7 +10,7 @@ disable-model-invocation: false
 
 ## Outcome
 
-One backlog ticket receives an explicit verification decision: `Ready to close` or `Incomplete`, backed by a per-criterion completion table with evidence and a scope-creep check. Verification is read-only: the caller (project-planner / coordinator) obtains explicit user approval and closes the ticket via the backlog CLI.
+One backlog ticket receives an explicit verification decision: `Ready to close` or `Incomplete`, backed by a per-criterion completion table with evidence and a scope-creep check. Verification is read-only: the caller (`orchestrator`) obtains explicit user approval and closes the ticket via the backlog CLI.
 
 ## When To Use
 
@@ -46,14 +46,14 @@ Do not use this skill for:
 ## Procedure
 
 1. **Read the target ticket** — Use the backlog CLI to read the full ticket. Extract scope, acceptance criteria, dependencies, definition of done, and the implementation plan.
-2. **Gather evidence** — Search the repository for the files, features, and configuration the ticket's changes should have produced. Cross-map the ticket's acceptance criteria and implementation to relevant linked requirement and feature-specification behavior. The ticket's acceptance criteria remain the closure criteria; if a linked source requires behavior absent from the ticket, report the mismatch and mark verification incomplete for business-analyst alignment. Do not silently expand scope or invent acceptance criteria.
+2. **Gather evidence** — Search the repository for the files, features, and configuration the ticket's changes should have produced. Cross-map the ticket's acceptance criteria and implementation to relevant linked requirement and feature-specification behavior. The ticket's acceptance criteria remain the closure criteria; if a linked source requires behavior absent from the ticket, report the mismatch and mark verification incomplete for task-refiner alignment. Do not silently expand scope or invent acceptance criteria.
 3. **Scope creep check** — Cross-reference the implementation plan against the actual changes. Verify that every file, feature, component, and configuration change is traceable to a documented AC, DoD item, or implementation-plan entry. Flag any additions not justified by the plan.
 4. **Validate each acceptance criterion** — Mark each AC pass/fail/inconclusive with evidence references. If a criterion cannot be assessed unambiguously, mark it inconclusive and report the ambiguity to the caller.
 5. **Rerun tests** — Execute the relevant test suite (via bash) for the changed code (e.g., `./gradlew test`, `npm test`, `pytest`) and record pass/fail results. Do not rely on reported evidence alone. If tests fail, cannot run, or no tests exist, mark the ticket Incomplete and report the failure/gap; do not accept "manual verification" as sufficient unless the ticket explicitly allows it.
 6. **Verify NFR coverage** — If the ticket references non-functional requirements, verify each is addressed (performance, security, usability, etc.) with evidence; flag any unverified NFR.
 7. **Validate definition of done** — Mark each DoD item pass/fail/inconclusive with evidence references. If a point cannot be assessed unambiguously, mark it inconclusive and report it to the caller.
 8. **Report** — Produce the Decision and Completion summary table (see Output Format).
-9. **Report to caller** — Return the verification report to the caller (project-planner / coordinator). Do not ask the user for confirmation and do not close the ticket; the caller requests approval and performs closure.
+9. **Report to caller** — Return the verification report to the caller (`orchestrator`). Do not ask the user for confirmation and do not close the ticket; the caller requests approval and performs closure.
 
 ## Output Format
 

@@ -1,12 +1,12 @@
 ---
-name: coordination-task
-description: 'Coordinate a backlog task through Initiated, Refined, Implemented, Validated, and user-approved Done statuses, delegating refinement, implementation, and quality review.'
-argument-hint: 'Optionally provide a task id or path to coordinate (e.g. "task-0042" or "backlog/tasks/task-0042"). If omitted, resume the highest-priority in-progress task, otherwise take the first item returned by `backlog task list --ready --plain`.'
+name: task-orchestration
+description: 'Orchestrate a single backlog task through Initiated, Refined, Implemented, Validated, and user-approved Done statuses, delegating refinement, implementation, and quality review.'
+argument-hint: 'Optionally provide a task id or path to orchestrate (e.g. "task-0042" or "backlog/tasks/task-0042"). If omitted, resume the highest-priority in-progress task, otherwise take the first item returned by `backlog task list --ready --plain`.'
 user-invocable: true
 disable-model-invocation: false
 ---
 
-# Coordination Task
+# Task Orchestration
 
 ## Outcome
 
@@ -20,16 +20,16 @@ Task state lives in the backlog (task status) and the repository (branch). If a 
 - Do not recreate a branch or discard changes if already on `task/<id>` or if the branch exists; preserve existing changes.
 - Each step is idempotent: check status before acting and skip phases already completed.
 
-For a user-facing explanation and workflow diagram, see [Coordination Task Workflow](references/workflow.md).
+This skill is invoked by the `orchestrator` agent, which owns execution, status transitions, and approval requests. For the task, milestone, and release workflows and diagrams, see [Orchestrator Workflow](../../workflows/orchestrator/README.md).
 
 ## Prerequisites
 
 - **backlog-md skill (REQUIRED)** — All ticket reads and status changes go through the backlog CLI.
-- Available subagents: `@business-analyst`, `@ui-designer`, `@android-dev`, `@backend-dev`, `@frontend-dev`, `@quality-gatekeeper`.
+- Available subagents: `@task-refiner`, `@ui-designer`, `@android-dev`, `@backend-dev`, `@frontend-dev`, `@rust-dev`, `@quality-gatekeeper`.
 
 ## When To Use
 
-- The user asks to coordinate implementation of a backlog task end to end.
+- The orchestrator needs to drive a single backlog task end to end.
 - A task needs refinement, implementation, and quality review in sequence.
 
 Do not use this skill for:
@@ -53,13 +53,13 @@ On any resume, repository preparation (step 2) is skipped.
    - Only when no task is in progress, run `backlog task list --ready --plain` and take the first returned item. Do not choose a different item, reorder the list, or ask the user to pick among candidates.
    - If the list is empty, report that no eligible task is available and stop.
 
-2. **Prepare repository** — Skip this step if the task status is already `Initiated` or later (resume). Otherwise inspect the working tree before any task work. If already on branch `task/<task-id>` or that branch exists, reuse it and do not recreate it. If there are uncommitted changes, show them to the user and ask whether they want to clean up or explicitly approve continuing in the current repository state. Never commit, stash, discard, or otherwise alter those changes. If the user chooses cleanup, wait for confirmation and re-check that the working tree is clean; then checkout `main`, pull from `origin`, and create a branch named `task/<task-id>` (only if it does not already exist). If the user approves the current state, preserve the changes and continue on the current branch. In this case, do not checkout `main`, pull from `origin`, or create a branch.
+2. **Prepare repository** — Skip this step if the task status is already `Initiated` or later (resume). Otherwise inspect the working tree before any task work. If already on branch `task/<task-id>` or that branch exists, reuse it and do not recreate it. If there are uncommitted changes, show them to the user and ask whether they want to clean up or explicitly approve continuing in the current repository state. Never commit, stash, discard, or otherwise alter those changes. If the user chooses cleanup, wait for confirmation and re-check that the working tree is clean; then checkout `main`, pull from `origin`, and create a branch named `task/<task-id>` (only if it does not already exist). If the user approves the current state, preserve the changes and continue on the current branch. In this case, do not checkout `main`, pull from `origin`, or create a branch. If Git operations are denied by policy or fail, stop and ask the user to prepare the branch and working tree; never bypass the policy.
 
-3. **Initiate and refine** — After repository preparation, if the status is not yet `Initiated` or later, set it to `Initiated` via the backlog CLI. If the status is already `Refined` or later, skip refinement. Otherwise call the `subagent` tool with agent `business-analyst`, passing the task id/path and the goal of refining it (scope, assumptions, dependencies, acceptance criteria, definition of done). Require the analyst to report the updated artifacts and whether the ticket is execution-ready. Wait for completion, then set the status to `Refined`.
+3. **Initiate and refine** — After repository preparation, if the status is not yet `Initiated` or later, set it to `Initiated` via the backlog CLI. If the status is already `Refined` or later, skip refinement. Otherwise call the `subagent` tool with agent `task-refiner`, passing the task id/path and the goal of refining it (scope, assumptions, dependencies, acceptance criteria, definition of done). Require the refiner to report the updated artifacts and whether the ticket is execution-ready. Wait for completion, then set the status to `Refined`.
    - **UI mockups**: if the refined task needs UI design or changes to a view/screen, call the `subagent` tool with agent `ui-designer` before setting `Refined`. Require the MOCK id(s), registry status, and the reported spec/ticket references. `ui-designer` records the MOCK id on the ticket via `backlog-md`; the specification owner records it in the feature specification.
    - **UI approval gate**: before setting the status to `Refined`, inspect the refined ticket/specification for referenced mockups (`MOCK-XXXX`). If any referenced mockup has registry status other than `approved`, present it to the user and request explicit approval; do not proceed to implementation until it is `approved`.
 
-4. **Delegate implementation** — Review the refined task (and any sub-tasks created by `@business-analyst`). Verify that any referenced mockups are `approved` in the registry before delegating; if not, pause for approval. For each implementation unit, call the `subagent` tool with agent `android-dev`, `backend-dev`, or `frontend-dev` based on the goals of that unit (Android/Kotlin work → `android-dev`; server/backend work → `backend-dev`; web/frontend work → `frontend-dev`). Run independent units in parallel where possible. Require each subagent to return the structured evidence block defined in its agent instructions (ticket, scope/ACs covered, files changed, tests, static/security checks, NFR coverage, gaps); reject or re-run a unit that omits it. Capture each subagent's evidence report from its response. When all implementation units are complete, set the task status to `Implemented`.
+4. **Delegate implementation** — Review the refined task (and any sub-tasks created by `@task-refiner`). Verify that any referenced mockups are `approved` in the registry before delegating; if not, pause for approval. For each implementation unit, call the `subagent` tool with agent `android-dev`, `backend-dev`, `frontend-dev`, or `rust-dev` based on the goals of that unit (Android/Kotlin work → `android-dev`; server/backend work → `backend-dev`; web/frontend work → `frontend-dev`; Rust work → `rust-dev`). Run independent units in parallel where possible. Require each subagent to return the structured evidence block defined in its agent instructions (ticket, scope/ACs covered, files changed, tests, static/security checks, NFR coverage, gaps); reject or re-run a unit that omits it. Capture each subagent's evidence report from its response. When all implementation units are complete, set the task status to `Implemented`.
 
 5. **Delegate quality review** — Once implementation is complete, call the `subagent` tool with agent `quality-gatekeeper`, passing the task id/path, the acceptance criteria, and the captured implementation evidence reports. Require the gatekeeper to return the per-acceptance-criterion evidence table (criterion | result | evidence). The gatekeeper reruns tests and decides. Reject or repeat the review if any criterion lacks evidence.
 
@@ -70,7 +70,7 @@ On any resume, repository preparation (step 2) is skipped.
    4. Ask for approval with a short question only (e.g. "Approve closing <task-id> — <task title> as Done? (yes/no)"). Do not paste the full report or criterion list into the question text.
    5. Set the status to `Done` only after the user explicitly approves. If the user requests changes or withholds approval, gather actionable feedback and set the task back to `Initiated`. Depending on the feedback, repeat refinement or proceed directly to implementation, then resume implementation, quality review, and approval.
 
-   The quality-gatekeeper only produces reports; the coordinator (project-planner) is responsible for presenting the report and requesting approval. Do not ask the quality-gatekeeper to ask for approval or to close the ticket.
+   The quality-gatekeeper only produces reports; the orchestrator is responsible for presenting the report and requesting approval. Do not ask the quality-gatekeeper to ask for approval or to close the ticket.
 
    If the task has no explicit acceptance criteria, do not imply that it does. State in the printed report that none are listed and ask in the short approval question whether the user wants to approve based on the task's definition of done, or return it for refinement.
 
@@ -79,10 +79,10 @@ On any resume, repository preparation (step 2) is skipped.
 ## Completion Checks
 
 - Repository prepared before work: either clean, on `main`, pulled, and on a task branch, or continuing on the current branch with existing changes explicitly approved by the user and preserved.
-- Task refined by `@business-analyst` before implementation.
+- Task refined by `@task-refiner` before implementation.
 - If the task needs UI design, mockups created by `@ui-designer` and every referenced `MOCK-XXXX` is `approved` in the registry before implementation.
 - Task status follows `Initiated` after repository preparation, `Refined` after analyst refinement, and `Implemented` after implementation.
-- Each implementation unit assigned to `@android-dev`, `@backend-dev`, or `@frontend-dev` per its goals.
+- Each implementation unit assigned to `@android-dev`, `@backend-dev`, `@frontend-dev`, or `@rust-dev` per its goals.
 - Structured evidence received from each implementation subagent and passed to `@quality-gatekeeper`.
 - `@quality-gatekeeper` review completed with a decision and a per-acceptance-criterion evidence table.
 - A passing quality review sets the task to `Validated` and is presented to the user for explicit approval.

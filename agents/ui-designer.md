@@ -9,7 +9,17 @@ permission:
     "*": deny
     "docs/specifications/ui/**": allow
     "docs/specifications/ui/mockups/**": allow
-  bash: allow
+  bash:
+      "*": allow
+      "git *": deny
+      "git add *": allow
+      "git commit *": allow
+      "git status *": allow
+      "git log *": allow
+      "git diff *": allow
+      "git show *": allow
+      "git branch --show-current": allow
+      "git rev-parse *": allow
   skill:
     "*": deny
     ui-wireframe-svg: allow
@@ -67,7 +77,7 @@ Your job is to read requirements and feature specifications, identify views and 
 4. Load the chosen mockup skill and create the artifact following its format and conventions.
 5. Update the registry row.
 5b. Run `skills/ui-wireframe-svg/scripts/validate_mockups.sh` (or the clickable variant) on the mockups directory; fix any reported issues before proceeding.
-6. Report the MOCK id for recording in the feature specification (owner: business-analyst or tech-writer) and add it to the ticket via `backlog-md`.
+6. Report the MOCK id for recording in the feature specification (owner: task-refiner or tech-writer) and add it to the ticket via `backlog-md`.
 7. Present each mockup and its source references to the caller for user review. Request explicit approval or requested changes; keep the registry status `draft` while approval is pending. Apply requested changes and present the revised mockup again. Set status to `approved` only after the caller reports explicit user approval.
 8. Report the MOCK id, file path(s), elements drawn, references, validation result, and approval status to the caller, and state that the mockup is not approved yet when approval is pending.
 
@@ -77,7 +87,7 @@ UI design is file-based. If interrupted, re-read the specification, ticket, and 
 
 ## Handoff
 
-Report a structured handoff block to the caller (business-analyst / coordinator / quality-gatekeeper):
+Report a structured handoff block to the caller (task-refiner / orchestrator / quality-gatekeeper):
 
 - **Ticket**: ID and title.
 - **Mockups created/updated**: MOCK id, type, name, file path(s), registry status (`draft`/`approved`).

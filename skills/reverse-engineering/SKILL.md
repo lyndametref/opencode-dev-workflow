@@ -79,7 +79,7 @@ This skill runs inside the Requirements Engineering agent and may invoke the ski
 - `non-functional-requirements-management` — create, update, and validate NFR-XX.XXX files. Always used to produce non-functional requirements.
 - `requirements-index-visualization` — regenerate the HTML requirements index after requirement files change.
 
-Additional artifacts implied by the code (business rules, attribute lists, domain model, state diagrams, process diagrams, glossary terms) are **not** produced here; hand them off to `business-analyst`, `terminologist`, and `architect` (via the `business-rules-management`, `attribute-list-definition`, `domain-modeling`, `state-diagram-creation`, `business-process-diagramming`, `business-glossary-management`, and `business-terminology-consistency-check` skills).
+Additional artifacts implied by the code (business rules, attribute lists, domain model, state diagrams, process diagrams, glossary terms) are **not** produced here; hand them off to `business-analyst` (business rules), `domain-modeler` (attribute lists, state diagrams, process diagrams), `terminologist`, and `architect` (via the `business-rules-management`, `attribute-list-definition`, `domain-modeling`, `state-diagram-creation`, `business-process-diagramming`, `business-glossary-management`, and `business-terminology-consistency-check` skills).
 
 ## Resume / interruption
 

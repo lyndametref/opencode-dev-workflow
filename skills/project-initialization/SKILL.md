@@ -28,7 +28,7 @@ This skill is for project bootstrap, not ordinary backlog planning. It does not 
 
 ### 1. Confirm the initialization target and scope
 
-Confirm the target root and whether this is a new, existing, or partially initialized project. Ask whether the user also expects a delivery plan now or only project bootstrap. Do not create any folders or run modifying setup commands until the user approves the proposed structure in step 4. Do not create milestones or feature tickets as part of bootstrap unless separately requested and a validated planning baseline exists.
+Confirm the target root and whether this is a new, existing, or partially initialized project. Ask whether the user also expects a delivery plan now or only project bootstrap. Do not create any folders or run modifying setup commands until the user approves the proposed structure in step 4. Do not create milestones or feature tickets as part of bootstrap unless separately requested and a validated planning baseline exists. Exception: a domain-modeling task (context map and business object model) and a technical-stack definition task (delegated to `architect`) may be created via the Backlog.md CLI with explicit user approval, because they are bootstrap prerequisites rather than feature tickets.
 
 ### 2. Inspect the project before proposing changes
 
@@ -120,11 +120,11 @@ After scaffolding, re-check every planned path and confirm that only the intende
 Report:
 
 - Target root and project classification.
-- Specialist agents consulted: none during bootstrap (intake deferred to later work).
+- Specialist agents consulted: none during bootstrap (intake deferred to later work). Domain modeling (context map and business object model) and technical-stack definition (delegated to `architect`) are deferred to backlog tasks executed by `domain-modeler` and `architect`; they must be early roadmap tasks before feature work. Create these tasks via the Backlog.md CLI with explicit user approval (do not perform the work during bootstrap).
 - Folders created, reused, or intentionally deferred.
 - Documentation indexes created, preserved, or populated from existing corpus records.
 - Backlog.md version, setup action (if any), configured status list, and results of the task and milestone readiness checks.
-- Decisions still needed, blockers, and clear next handoffs to requirements-engineer, business-analyst, and architect.
+- Decisions still needed, blockers, and clear next handoffs to requirements-engineer, business-analyst, architect, and domain-modeler (for an initial context map and business object model and a technical-stack definition via backlog tasks).
 - Whether a separate project-planning step can begin. Do not mark requirements validated simply because initialization inputs were collected.
 
 ## Completion checks

@@ -8,7 +8,17 @@ permission:
   edit:
     "*": deny
     "apps/webFrontend/**": allow
-  bash: allow
+  bash:
+      "*": allow
+      "git *": deny
+      "git add *": allow
+      "git commit *": allow
+      "git status *": allow
+      "git log *": allow
+      "git diff *": allow
+      "git show *": allow
+      "git branch --show-current": allow
+      "git rev-parse *": allow
   skill:
     "*": deny
     tdd: allow
@@ -56,7 +66,7 @@ Your job is to design and implement frontend features as a standalone web applic
 - Progressive enhancement: core content usable without JavaScript where feasible.
 - Implement the complete ticket scope and satisfy every acceptance criterion; use linked specs/requirements as context, do not substitute them for missing ticket instructions.
 - If critical behavior or an AC is unclear or missing, stop and ask the user or business analyst rather than guessing.
-- If an API contract is needed but not resolved, route it to `@architect`.
+- Commit your changes on the task branch and report the branch and commit in your evidence block.
 - Practice TDD by default: write or update tests before implementation when feasible.
 - Create clean code, keep the app working, all tests passing.
 - Follow the project's coding standards.
@@ -98,7 +108,7 @@ Report a structured evidence block so the gatekeeper can verify without re-deriv
 
 ## Handoff
 
-Deliver the evidence block above as your subagent response; the coordinator passes it to `quality-gatekeeper`. Do not close the ticket; the gatekeeper reruns the tests and decides.
+Deliver the evidence block above as your subagent response; the orchestrator passes it to `quality-gatekeeper`. Do not close the ticket; the gatekeeper reruns the tests and decides.
 
 ## Output format
 

@@ -84,7 +84,7 @@ NFR edits are multi-file. If interrupted, re-run a validation pass on the affect
 
 ## Handoff
 
-After changing NFRs, report the changed NFR IDs to the caller (project-planner / architect) so specs and verification plans can be aligned.
+After changing NFRs, report the changed NFR IDs to the caller (planner / architect / orchestrator) so specs and verification plans can be aligned.
 
 ## Example
 
