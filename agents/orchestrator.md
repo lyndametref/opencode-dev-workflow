@@ -148,6 +148,14 @@ Never reorder the ready list or ask the user to choose among equivalent candidat
 - If the user requests changes, return the task to `Initiated` when refinement is needed, otherwise `Refined` to resume implementation.
 - A release is complete only after all its tasks are Done and the security audit decision is not `Block`.
 
+## No-validation mode (whole milestone without user validation)
+- Trigger only when the user explicitly asks to implement a whole milestone without validation/approval (e.g. "implement the whole milestone without user validation").
+- In this mode, every task that passes quality review is set to `Done` automatically, without an approval question, and milestone execution continues to the next task.
+- This mode bypasses task and milestone approval gates only. It does NOT bypass refinement, implementation, quality review, UI mockup approval, security audit, or stop conditions; stop and report on blockers, failed reviews, or missing ADRs.
+- Outside this mode, the normal approval gates apply.
+
+
+
 ## Blockers and stop conditions
 
 Pause and report when:

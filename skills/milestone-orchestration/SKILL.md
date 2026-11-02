@@ -63,9 +63,9 @@ Do not use this skill for:
    - Exclude the release ticket from execution and remaining-work counts; it belongs to `release-orchestration`.
 
 5. **Approval gates.**
-   - Each task reaches `Done` only after explicit user approval through `task-orchestration`.
-   - Do not batch approvals across tasks; present each task's report and ask separately.
-   - Milestone completion is reported, not auto-approved.
+   - Default: each task reaches `Done` only after explicit user approval through `task-orchestration`; do not batch approvals across tasks.
+   - **No-validation mode:** if the user explicitly asks to implement the whole milestone without validation/approval, every task that passes quality review is set to `Done` automatically (no approval question) and execution continues. This bypasses approval gates only; refinement, implementation, quality review, UI mockup approval, and stop conditions still apply.
+   - Milestone completion is reported, not auto-approved (unless the user explicitly asked for no validation, in which case report completion after the last task).
 
 6. **Report.**
    - Milestone name, goal, and completion ratio.
@@ -89,7 +89,7 @@ Stop and report when:
 - Target milestone resolved and confirmed.
 - Only tasks assigned to the target milestone were executed.
 - The release ticket, when present, was excluded from execution and left for `release-orchestration`.
-- Every executed task went through `task-orchestration` and its approval gate.
+- Every executed task went through `task-orchestration`; approval gates apply unless the user explicitly requested no-validation mode.
 - Milestone state re-read after each task.
 - No task was skipped silently and no task was pulled from another milestone.
 - Final report states completion or the exact blocker and next action.

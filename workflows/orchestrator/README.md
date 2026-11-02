@@ -152,7 +152,8 @@ flowchart TD
 3. **Refine.** Delegate to `task-refiner`; set status to `Refined` when complete. Skip if already `Refined` or later. If UI design is needed, delegate to `ui-designer` and obtain explicit user approval for every referenced `MOCK-XXXX` before `Refined`.
 4. **Implement.** Delegate units to `android-dev`, `backend-dev`, `frontend-dev`, or `rust-dev` according to the unit's goals. Capture each agent's structured evidence response; set status to `Implemented` when complete.
 5. **Review.** Delegate to `quality-gatekeeper` using OpenCode's `subagent` tool. It independently reruns relevant tests, verifies the ticket, and returns a per-criterion evidence table. If incomplete, set status to `Refined`, address findings, and review again.
-6. **Approve.** A passing review sets status to `Validated`. Print the gatekeeper report and the acceptance-criteria checklist separately, then ask a short approval question. Set status to `Done` only after explicit approval. If changes are requested, use `Initiated` if refinement is needed, otherwise `Refined` to resume implementation without repository preparation.
+6. **Approve.** A passing review sets status to `Validated`. Print the gatekeeper report and the acceptance-criteria checklist separately, then ask a short approval question. Set status to `Done` only after explicit approval (or automatically in no-validation mode). If changes are requested, use `Initiated` if refinement is needed, otherwise `Refined` to resume implementation without repository preparation.
+7. **Merge.** Once the task is `Done`, merge its branch into `main` with `--no-ff` (commit any uncommitted changes on `task/<task-id>` first; checkout `main`, pull, `git merge --no-ff task/<task-id>`; leave on `main`). Do not push.
 
 ## Milestone workflow
 
@@ -184,7 +185,7 @@ Rules:
 - Exclude the release ticket (label `release`) from execution and remaining-work counts; it belongs to `release-orchestration`.
 - Stop when the milestone has no remaining `To Do` or in-progress executable tasks.
 - If incomplete tasks remain but none is dependency-ready, report blockers and stop.
-- Pause for every user approval gate; milestone execution does not bypass task approval.
+- Pause for every user approval gate; milestone execution does not bypass task approval, unless the user explicitly requested no-validation mode.
 - Before declaring a milestone complete, delegate a lightweight architecture-consistency check to `@architect` (contracts, layering, NFR coverage, ADR status); pause if an ADR is missing.
 - Re-read milestone state after each task.
 
@@ -243,6 +244,8 @@ Rules:
 - **UI mockups:** every referenced `MOCK-XXXX` must be `approved` in the registry before implementation.
 - **Release:** completion requires a passing security audit and explicit user approval.
 - A passing review or audit is evidence, not approval.
+- **No-validation mode:** when the user explicitly asks to implement a whole milestone without validation/approval, task approval gates are bypassed (a passing review sets `Done` automatically) and execution continues; refinement, implementation, quality review, UI mockup approval, security audit, and stop conditions still apply.
+- **Task completion merge:** when a task reaches `Done`, merge its branch into `main` with `--no-ff` (commit pending changes first) and leave the repository on `main`. No push is performed.
 
 ## Stop conditions
 

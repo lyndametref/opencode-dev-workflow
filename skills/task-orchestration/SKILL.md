@@ -67,14 +67,17 @@ On any resume, repository preparation (step 2) is skipped.
    1. Set the status to `Validated`.
    2. Re-read the task using `backlog task <id> --plain` and extract every acceptance criterion from the task itself. Do not rely only on the gatekeeper's summary or omit criteria for brevity.
    3. Print the quality-gatekeeper report in the response, followed by a compact acceptance-criteria checklist with pass/fail and concise evidence for each criterion. Keep this in the printed report, not inside the approval question.
-   4. Ask for approval with a short question only (e.g. "Approve closing <task-id> — <task title> as Done? (yes/no)"). Do not paste the full report or criterion list into the question text.
-   5. Set the status to `Done` only after the user explicitly approves. If the user requests changes or withholds approval, gather actionable feedback and set the task back to `Initiated`. Depending on the feedback, repeat refinement or proceed directly to implementation, then resume implementation, quality review, and approval.
+   4. **No-validation mode:** if the user explicitly asked to implement the whole milestone without validation/approval, set the status to `Done` now (no approval question) and continue to step 6b.
+   5. Otherwise, ask for approval with a short question only (e.g. "Approve closing <task-id> — <task title> as Done? (yes/no)"). Do not paste the full report or criterion list into the question text.
+   6. Set the status to `Done` only after the user explicitly approves. If the user requests changes or withholds approval, gather actionable feedback and set the task back to `Initiated`. Depending on the feedback, repeat refinement or proceed directly to implementation, then resume implementation, quality review, and approval.
 
    The quality-gatekeeper only produces reports; the orchestrator is responsible for presenting the report and requesting approval. Do not ask the quality-gatekeeper to ask for approval or to close the ticket.
 
    If the task has no explicit acceptance criteria, do not imply that it does. State in the printed report that none are listed and ask in the short approval question whether the user wants to approve based on the task's definition of done, or return it for refinement.
 
-7. **Report** — Summarize the goal of this task (list of Acceptance criteria), actions taken, agents invoked, and the quality-gatekeeper decision. If incomplete, list open items.
+6b. **Merge on completion** — Once the task is `Done`, merge its branch into `main` with `--no-ff` before finishing: if uncommitted changes remain on `task/<task-id>`, stage and commit them first; then checkout `main`, pull, run `git merge --no-ff task/<task-id>`, and leave the repository on `main`. Do not push. Skip this step if the task is not `Done`.
+
+7. **Report** — Summarize the goal of this task (list of Acceptance criteria), actions taken, agents invoked, and the quality-gatekeeper decision. If incomplete, list open items. Include the merge result.
 
 ## Completion Checks
 
@@ -90,6 +93,7 @@ On any resume, repository preparation (step 2) is skipped.
 - The approval question is short and does not embed the full report or criterion list.
 - If review is incomplete, the task returns to `Refined` while development resumes; set it to `Implemented` again after the changes are complete.
 - If the user requests changes or withholds approval, gather actionable feedback and return the task to `Initiated`; refine again or proceed directly to implementation depending on the feedback.
-- Task status is set to `Done` only after explicit user approval; a successful review alone is not approval.
+- Task status is set to `Done` only after explicit user approval (or automatically in no-validation mode); a successful review alone is not approval outside that mode.
+- After `Done`, the task branch is merged into `main` with `--no-ff` (uncommitted changes committed first); no push is performed.
 - Target task resolved first from in-progress tasks, then as the first item returned by `backlog task list --ready --plain`, before repository preparation.
 - All backlog operations performed via the backlog CLI.
