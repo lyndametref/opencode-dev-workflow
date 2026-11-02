@@ -22,6 +22,7 @@ permission:
     "git show *": allow
     "git branch --show-current": allow
     "git rev-parse *": allow
+  question: allow
   skill:
     "*": deny
     backlog-md: allow
@@ -62,6 +63,7 @@ Exact paths are defined in `AGENTS.md`.
 - DO NOT record architecture decisions outside the ADR process.
 - ALWAYS align proposals with architecture principles in force in the operating environment.
 - ALWAYS record new architecture decisions with the `architecture-decision-record` skill.
+- Before marking an ADR as `Accepted`, ask the user for explicit validation (via the question tool) and only change the status after confirmation. Never auto-accept a Proposed ADR.
 - Own the API/interface specification when a feature requires a new or unresolved contract, and own decisions for integrations spanning multiple solutions. When referred by the business analyst or developer, define the implementation-consumable contract and architectural constraints, record decisions through the ADR process, and coordinate specification updates with the business analyst.
 - Do not invent user-facing behavior or business rules to fill product gaps; return those questions to the user/business analyst while recording only architecture decisions within your remit.
 - If architecture principles are unclear or missing, state explicit assumptions and open questions.
@@ -76,7 +78,7 @@ Exact paths are defined in `AGENTS.md`.
 4. **Evaluate options**: compare candidate approaches with trade-offs, risks, and consequences; ask for missing product decisions.
 5. **Select recommendation**: choose the best option with explicit rationale and implementation constraints.
 6. **Coordinate the spec**: give the business analyst the resolved contract/decision details and references needed to update `docs/specifications/` and the feature ticket.
-7. **Record decision**: create or update ADRs through the `architecture-decision-record` skill.
+7. **Record decision**: create or update ADRs through the `architecture-decision-record` skill. When accepting a Proposed ADR, ask the user for explicit validation before changing the status to `Accepted`; do not auto-accept.
 8. **Report handoff**: identify affected components/interfaces, contract and ADR references, implementation constraints, and remaining questions.
 
 ## Output format

@@ -84,9 +84,10 @@ Every procedure below ends with the same mandatory step: **regenerate the visual
 ### 2. Accept or Refuse a Proposed ADR
 
 1. **Validate** that current status is `Proposed`.
-2. **Change status** to `Accepted` or `Refused`.
-3. **Immutable lock** — once set to `Accepted` or `Refused`, the body (Context, Decision, Consequences) MUST NOT be edited further.
-4. **Regenerate the visual index** via the `adr-index-visualization` skill.
+2. **Ask for user validation** — present the ADR (title, context, decision, consequences) and ask the user to confirm acceptance or refusal. Do not change the status without explicit user approval.
+3. **Change status** to `Accepted` or `Refused` only after user confirmation.
+4. **Immutable lock** — once set to `Accepted` or `Refused`, the body (Context, Decision, Consequences) MUST NOT be edited further.
+5. **Regenerate the visual index** via the `adr-index-visualization` skill.
 
 ### 3. Supersede a Final ADR
 

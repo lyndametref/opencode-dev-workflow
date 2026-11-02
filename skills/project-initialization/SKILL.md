@@ -69,8 +69,8 @@ docs/
 │   ├── business-glossary/
 │   └── object-model/
 ├── business-processes/
-└── architecture/
-    └── adr/
+├── architecture/
+│   └── adr/
 ```
 
 The documentation entry points initialized by this skill are `docs/index.html`, `docs/architecture/adr/index.html`, `docs/requirements/business/index.html`, `docs/requirements/non-functional/index.html`, `docs/business-rules/index.html`, and `docs/domain-model/business-glossary/index.html`.
