@@ -24,7 +24,7 @@ This file list available agents and give general rules for the agents.
 - `requirements-engineer`: Produce and maintain clear, traceable, and consistent requirements artifacts.
 - `tech-writer`: Write and maintain technical documentation, specifications, and architecture guidance.
 - `terminologist`: Maintain canonical business terminology and enforce wording consistency across docs and backlog.
-- `ui-designer`: Design UI mockups (wireframe SVG and clickable HTML) and UI description documents from requirements and specifications: numbered MOCK-xxxx artifacts under docs/specifications/ui/mockups/ and descriptions under docs/specifications/ui/, referenced by tickets and specs. Layout only, no technology or library details.
+- `ui-designer`: Design single-file clickable HTML review packages per ticket (review landing with ticket + one button per content, design deck with view rationale, clickable per-platform prototypes) and UI description documents from requirements and specifications: numbered MOCK-xxxx artifacts under docs/specifications/ui/mockups/ and descriptions under docs/specifications/ui/, referenced by tickets and specs. Layout only, no technology or library details.
 
 ## Write Scopes
 
@@ -88,8 +88,7 @@ Agent frontmatter permissions are authoritative. Default write scopes:
 - `requirements-index-visualization`: Regenerate index.html files — the tree + detail visualization of the requirements corpus — by running the skill's bundled scripts/generate_index.sh against the project docs/requirements. Use after any change to REQ/NFR files to keep the visual indexes in sync.
 - `reverse-engineering`: Read existing source code and produce the business (REQ) and non-functional (NFR) requirements that correspond to the implemented behavior.
 - `state-diagram-creation`: Create Mermaid state diagrams for domain objects with lifecycle states, statuses, and transitions. Each diagram is stored in docs/domain-model/ and shows valid states, transitions, and the conditions that trigger them.
-- `ui-clickable-mockup`: Generate a clickable HTML mockup simulating a UI scenario in wireframe style, saved as MOCK-XXXX-<slug>.html under docs/specifications/ui/mockups/.
-- `ui-wireframe-svg`: Render a UI mockup as a wireframe SVG image, saved as MOCK-XXXX-<slug>.svg under docs/specifications/ui/mockups/.
+- `ui-clickable-mockup`: Generate one self-contained HTML review package per ticket — review landing with the ticket and one button per content, design deck with view rationale, clickable per-platform prototypes — saved as MOCK-XXXX-<slug>.html under docs/specifications/ui/mockups/.
 - `task-refinement`: Audit, clarify, and complete a single backlog ticket by removing ambiguity, filling missing structure, and aligning it with specifications. Uses the backlog CLI for all ticket modifications.
 
 ## Instructions

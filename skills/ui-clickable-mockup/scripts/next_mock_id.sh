@@ -1,5 +1,5 @@
 #!/bin/sh
-# Print the next free MOCK-XXXX id based on existing MOCK-*.svg / MOCK-*.html files.
+# Print the next free MOCK-XXXX id based on existing MOCK-*.html files.
 # Usage: next_mock_id.sh [mockups-dir]
 set -eu
 dir=${1:-docs/specifications/ui/mockups}
