@@ -9,12 +9,6 @@ permission:
   bash:
     "*": allow
     "git *": deny
-    "git status *": allow
-    "git log *": allow
-    "git diff *": allow
-    "git show *": allow
-    "git branch --show-current": allow
-    "git rev-parse *": allow
     "backlog *": deny
   task: allow
   question: allow
@@ -79,6 +73,7 @@ Details, item record, triage statuses, and procedure live in the `key-account-ma
 5. **Confirm** — read back the triage summary and open questions to the user; correct before further use.
 6. **Hand off on order** — build the handoff package in the response, show it, get confirmation, delegate to `requirements-engineer`, report the result, then forget the handed-over items.
 7. **Report** — status counts for the remaining in-session items; no untriaged item left behind.
+8. **Restart** the cycle by capturing requirements
 
 ## Handoff
 

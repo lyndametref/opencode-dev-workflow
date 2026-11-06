@@ -1,6 +1,6 @@
 #!/bin/sh
 # Create a new single-file mockup review package skeleton.
-# One file per ticket: review landing + design deck + one prototype per platform.
+# One file per ticket: review landing + one prototype per platform.
 # Usage: new_mockup.sh [mockups-dir] [slug] [name] [platform...]
 set -eu
 
@@ -26,9 +26,6 @@ out="$dir/$id-$slug.html"
 chrome=""
 cards=""
 blocks=""
-deck=""
-slide=2
-count=1
 
 for platform in $platforms; do
   label=$(printf '%s' "$platform" | sed 's/^./\U&/')
@@ -43,7 +40,7 @@ for platform in $platforms; do
   cards="$cards<article class=\"wf-box wf-card\">
         <span class=\"wf-badge\">$label · 1 view</span>
         <h3>$label prototype</h3>
-        <p>Click through every $platform view and interaction to test the usability.</p>
+        <p>Click through the $platform view and interaction to test the usability of the current feature.</p>
         <a class=\"wf-button\" href=\"#$platform\">Open $platform prototype</a>
       </article>
       "
@@ -57,33 +54,20 @@ for platform in $platforms; do
       <div class=\"wf-container\">
         <p class=\"wf-eyebrow\">$label · Main</p>
         <h2 class=\"wf-title\">Main view</h2>
-        <!-- Draw all wireframe elements here. Add data-goto on elements that navigate. -->
+        <!-- Draw only the current feature's happy path here. Add data-goto on elements that navigate. -->
       </div>
     </section>
   </div>
 </div>
 "
-  deck="$deck<article class=\"wf-slide\" data-slide=\"$slide\">
-        <p class=\"wf-eyebrow\">$label · View 1 of 1</p>
-        <h2 class=\"wf-slide-title\">Main view</h2>
-        <div class=\"wf-row\">
-          <div class=\"wf-col wf-box\"><h3>What it shows</h3><p>TODO</p></div>
-          <div class=\"wf-col wf-box\"><h3>Why this way</h3><p>TODO</p></div>
-        </div>
-        <p><a class=\"wf-link\" href=\"#$platform/main\">Open this view in the prototype →</a></p>
-      </article>
-      "
-  slide=$((slide + 1))
-  count=$((count + 1))
 done
 
 awk \
-  -v id="$id" -v name="$name" -v count="$count" \
-  -v chrome="$chrome" -v cards="$cards" -v blocks="$blocks" -v deck="$deck" '
+  -v id="$id" -v name="$name" \
+  -v chrome="$chrome" -v cards="$cards" -v blocks="$blocks" '
   function esc(s) { gsub(/\\/, "\\\\", s); gsub(/&/, "\\&", s); return s }
   {
     if ($0 ~ /^[[:space:]]*\{\{PLATFORM_CARDS\}\}[[:space:]]*$/) { print cards; next }
-    if ($0 ~ /^[[:space:]]*\{\{DECK_SLIDES\}\}[[:space:]]*$/) { print deck; next }
     if ($0 ~ /^[[:space:]]*\{\{PLATFORM_BLOCKS\}\}[[:space:]]*$/) { print blocks; next }
     line = $0
     gsub(/\{\{MOCK_ID\}\}/, id, line)
@@ -91,8 +75,6 @@ awk \
     gsub(/\{\{TICKET_ID\}\}/, "TODO-TASK", line)
     gsub(/\{\{TICKET_TITLE\}\}/, "TODO ticket title", line)
     gsub(/\{\{SOURCES\}\}/, "TODO: REQ ids, specifications, ticket", line)
-    gsub(/\{\{DECK_INTRO\}\}/, "TODO: one paragraph on the design goal of this ticket.", line)
-    gsub(/\{\{SLIDE_COUNT\}\}/, count, line)
     gsub(/\{\{PLATFORM_CHROME\}\}/, esc(chrome), line)
     print line
   }

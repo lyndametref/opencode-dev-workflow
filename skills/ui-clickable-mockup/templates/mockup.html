@@ -12,12 +12,11 @@
 <header class="wf-chrome" role="navigation" aria-label="Review navigation (not part of the design)">
   <span class="wf-chrome-label">Review</span>
   <a class="wf-chrome-btn" href="#index">Overview</a>
-  <a class="wf-chrome-btn" href="#deck">Design deck</a>
   {{PLATFORM_CHROME}}
   <span class="wf-chrome-note">Scaffolding for review only — not part of the mockup.</span>
 </header>
 
-<!-- 1. REVIEW LANDING: ticket under review + one button per review content item. -->
+<!-- 1. REVIEW LANDING: ticket under review + one button per platform prototype. -->
 <section class="wf-review wf-index is-active" data-review="index" data-screen="index">
   <div class="wf-container">
     <p class="wf-eyebrow">{{MOCK_ID}} · Wireframe review</p>
@@ -32,47 +31,16 @@
 
     <h2 class="wf-section-title">Review contents</h2>
     <div class="wf-cards">
-      <article class="wf-box wf-card">
-        <span class="wf-badge">Design deck · {{SLIDE_COUNT}} slides</span>
-        <h3>Views and design rationale</h3>
-        <p>Walk through every view, what it contains, and why it was designed this way.</p>
-        <a class="wf-button wf-button-primary" href="#deck">Open design deck</a>
-      </article>
       {{PLATFORM_CARDS}}
     </div>
   </div>
 </section>
 
-<!-- 2. DESIGN DECK: one slide per view explaining intent and rationale. -->
-<section class="wf-review wf-deck" data-review="deck" data-screen="deck">
-  <div class="wf-deck">
-    <div class="wf-deck-stage">
-      <article class="wf-slide is-active" data-slide="1">
-        <p class="wf-eyebrow">{{MOCK_ID}} · Design deck</p>
-        <h2 class="wf-slide-title">{{MOCK_NAME}}</h2>
-        <p class="wf-slide-lede">{{DECK_INTRO}}</p>
-        <p class="wf-note">Ticket: {{TICKET_ID}} — {{TICKET_TITLE}}</p>
-      </article>
-      {{DECK_SLIDES}}
-    </div>
-    <div class="wf-deck-controls">
-      <button class="wf-button" type="button" data-slide-prev>← Previous</button>
-      <span class="wf-deck-counter" aria-live="polite">Slide <b data-slide-current>1</b> / <b data-slide-total>1</b></span>
-      <button class="wf-button" type="button" data-slide-next>Next →</button>
-    </div>
-  </div>
-</section>
-
-<!-- 3. PROTOTYPES: one block per platform, each with its own clickable views. -->
+<!-- 2. PROTOTYPES: one block per platform, each with its own clickable views. -->
 {{PLATFORM_BLOCKS}}
 
 <script>
 (function () {
-  var slides = Array.prototype.slice.call(document.querySelectorAll('.wf-slide'));
-  var totalEl = document.querySelector('[data-slide-total]');
-  var currentEl = document.querySelector('[data-slide-current]');
-  if (totalEl) totalEl.textContent = String(slides.length);
-
   function all(selector, scope) {
     return Array.prototype.slice.call((scope || document).querySelectorAll(selector));
   }
@@ -88,14 +56,11 @@
     var raw = String(rawHash || '').replace(/^#\/?/, '');
     var bits = raw.split('/');
     if (!raw || bits[0] === 'index') return { mode: 'index' };
-    if (bits[0] === 'deck') return { mode: 'deck', slide: Math.max(1, parseInt(bits[1], 10) || 1) };
     return { mode: 'proto', platform: bits[0], screen: bits[1] || '' };
   }
 
-  function deckSlide() { return parse(location.hash).slide || 1; }
-
   function syncChrome(state) {
-    var key = state.mode === 'index' ? 'index' : state.mode === 'deck' ? 'deck' : state.platform;
+    var key = state.mode === 'index' ? 'index' : state.platform;
     all('.wf-chrome a').forEach(function (a) {
       var target = String(a.getAttribute('href') || '').replace(/^#\/?/, '').split('/')[0];
       var active = target === key;
@@ -107,8 +72,6 @@
   function render() {
     var state = parse(location.hash);
     var index = document.querySelector('[data-review="index"]');
-    var deck = document.querySelector('[data-review="deck"]');
-    var protos = all('.wf-proto');
 
     syncChrome(state);
 
@@ -135,41 +98,16 @@
     }
 
     toggle('.wf-proto', null);
-    toggle('[data-review]', state.mode === 'deck' ? deck : index);
-
-    if (state.mode === 'deck') {
-      var n = Math.min(Math.max(state.slide || 1, 1), slides.length);
-      slides.forEach(function (s, i) { s.classList.toggle('is-active', i + 1 === n); });
-      if (currentEl) currentEl.textContent = String(n);
-      window.scrollTo(0, 0);
-    }
-  }
-
-  function step(delta) {
-    var n = deckSlide() + delta;
-    n = Math.min(Math.max(n, 1), slides.length);
-    go('#deck/' + n);
+    toggle('[data-review]', index);
   }
 
   document.addEventListener('click', function (e) {
-    var prev = e.target.closest('[data-slide-prev]');
-    if (prev) { e.preventDefault(); step(-1); return; }
-    var next = e.target.closest('[data-slide-next]');
-    if (next) { e.preventDefault(); step(1); return; }
     var target = e.target.closest('[data-goto]');
     if (target) {
       e.preventDefault();
       var state = parse(location.hash);
       if (state.mode === 'proto') go('#' + state.platform + '/' + target.getAttribute('data-goto'));
     }
-  });
-
-  document.addEventListener('keydown', function (e) {
-    var state = parse(location.hash);
-    if (state.mode !== 'deck') return;
-    if (e.key === 'ArrowRight' || e.key === 'PageDown') { e.preventDefault(); step(1); }
-    else if (e.key === 'ArrowLeft' || e.key === 'PageUp') { e.preventDefault(); step(-1); }
-    else if (e.key === 'Escape') { e.preventDefault(); go('#index'); }
   });
 
   window.addEventListener('hashchange', render);

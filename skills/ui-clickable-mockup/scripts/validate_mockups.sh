@@ -2,9 +2,9 @@
 # Validate single-file mockup review packages in a mockups directory.
 # Usage: validate_mockups.sh [mockups-dir]
 # A valid package is ONE self-contained HTML per ticket containing:
-#   1. a review landing (ticket + one button per content item),
-#   2. a design deck (slides with view intent and rationale),
-#   3. one clickable prototype per platform.
+#   1. a review landing (ticket + one button per platform),
+#   2. one clickable prototype per platform (current feature, happy path only).
+# No design deck is allowed.
 # Also checks unique ids, registry rows, platform coverage, and link targets.
 set -eu
 
@@ -53,12 +53,9 @@ for f in $files; do
     || err "$b: missing <link> to wireframe.css"
   grep -q 'data-review="index"' "$f" \
     || err "$b: missing review landing (data-review=\"index\")"
-  grep -q 'data-review="deck"' "$f" \
-    || err "$b: missing design deck (data-review=\"deck\")"
-
-  slides=$(grep -c 'class="wf-slide' "$f" || true)
-  [ "$slides" -ge 1 ] || err "$b: design deck has no .wf-slide"
-  grep -q 'data-slide-total' "$f" || err "$b: design deck has no slide counter"
+  if grep -q 'data-review="deck"' "$f"; then
+    err "$b: design deck is not allowed (landing + prototypes only)"
+  fi
 
   platforms=$(grep -o '<[a-z][^>]*wf-proto[^>]*>' "$f" \
     | sed -n 's/.*data-platform="\([^"]*\)".*/\1/p')

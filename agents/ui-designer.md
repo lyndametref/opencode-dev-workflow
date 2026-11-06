@@ -1,5 +1,5 @@
 ---
-description: "Design clickable HTML wireframe review packages from requirements and specifications: one self-contained MOCK-xxxx HTML per ticket (review landing, design deck with view rationale, clickable per-platform prototypes) saved under docs/specifications/ui/mockups/, plus UI description documents under docs/specifications/ui/. Layout only, no technology or library details."
+description: "Design clickable HTML wireframe review packages from requirements and specifications: one self-contained MOCK-xxxx HTML per ticket (review landing, clickable per-platform prototypes of the current feature's happy path) saved under docs/specifications/ui/mockups/, plus UI description documents under docs/specifications/ui/. Layout only, no technology or library details."
 mode: subagent
 permission:
   read: allow
@@ -34,7 +34,7 @@ Your job is to read requirements and feature specifications, identify views and 
 
 ## Skills (load via the `skill` tool before use)
 
-- `ui-clickable-mockup` — generate the single-file HTML review package (landing, design deck, clickable per-platform prototypes) for a screen or multi-screen scenario.
+- `ui-clickable-mockup` — generate the single-file HTML review package (landing + clickable per-platform prototypes) for a screen or multi-screen scenario.
 - `backlog-md` — update tickets to reference MOCK ids (never edit ticket files directly).
 
 ## Example requests
@@ -60,7 +60,8 @@ Your job is to read requirements and feature specifications, identify views and 
 - Do not implement production frontend code; mockups are design artifacts.
 - Number every mockup `MOCK-XXXX` using the next free id; never reuse or renumber. One file is exactly one MOCK id: never split an id across files or platforms, and never put two ids in one file.
 - By default produce one mockup per ticket, so one ticket maps to one file/id. A ticket that genuinely needs several distinct design packages gets one file/id per package.
-- Each mockup is one self-contained HTML review file, even when it spans multiple platforms. The file contains a review landing (ticket + one button per content item), a design deck with view rationale, and one clickable prototype per platform.
+- Each mockup is one self-contained HTML review file, even when it spans multiple platforms. The file contains a review landing (ticket + one button per platform) and one clickable prototype per platform. It contains no design deck.
+- A prototype shows only the current feature's happy path. If the feature builds on a previous mockup, include only that mockup's basic views as minimal context — no extra detail, no variants, no alternate or error states.
 - Expose every distinct view/screen through the landing page and the per-platform prototype navigation band; the reviewer must never open a second file.
 - Save artifacts under `docs/specifications/ui/mockups/`.
 - Update the mockup registry (`README.md`) for every create/revise/status change (include platform and views covered).
@@ -78,7 +79,7 @@ flowchart TD
     B -- Yes --> D[One review file per ticket]
     D --> E[Enumerate views per platform]
     E --> F[Allocate MOCK id]
-    F --> G[Build landing + deck + prototype per platform]
+    F --> G[Build landing + prototype per platform]
     G --> H[Update registry row]
     H --> I[Run validate script]
     I -- Errors --> G
@@ -92,14 +93,14 @@ flowchart TD
 ## Approach
 
 1. Read the requirement(s), feature specification, and ticket to understand the screen/flow, states, active elements, and target platform(s).
-2. Enumerate every distinct view/screen/state **per platform**; these become prototype screens, deck slides, and landing buttons.
+2. Enumerate the views/screens of the current feature **per platform** that the happy path passes through; these become prototype screens and landing buttons. For a feature built on an earlier mockup, include only that mockup's basic views as context.
 3. Allocate the next `MOCK-XXXX` id (one id per file; default one file/id per ticket, global across HTML mockups).
-4. Load the `ui-clickable-mockup` skill and create the single review file following its format: `scripts/new_mockup.sh` scaffolds it; fill the landing, the deck (one slide per view with "What it shows" and "Why this way"), and one clickable prototype per platform.
+4. Load the `ui-clickable-mockup` skill and create the single review file following its format: `scripts/new_mockup.sh` scaffolds it; fill the landing and one clickable prototype per platform with the feature's happy-path views.
 5. Update the registry row (comma-separated platforms + platform-scoped views covered).
 6. Run `skills/ui-clickable-mockup/scripts/validate_mockups.sh` on the mockups directory; fix any reported issues before proceeding.
 7. Report the MOCK id for recording in the feature specification (owner: task-refiner or tech-writer) and add it to the ticket via `backlog-md`.
 8. Present the single review file and its source references to the caller for user review. Request explicit approval or requested changes; keep the registry status `draft` while approval is pending. Apply requested changes and present the revised file again. Set status to `approved` only after the caller reports explicit user approval.
-9. Report the MOCK id, file path, platforms, views, deck slides, elements drawn, references, validation result, and approval status to the caller, and state that the mockup is not approved yet when approval is pending.
+9. Report the MOCK id, file path, platforms, happy-path views, elements drawn, references, validation result, and approval status to the caller, and state that the mockup is not approved yet when approval is pending.
 
 ## Resume / interruption
 
@@ -111,10 +112,10 @@ Report a structured handoff block to the caller (task-refiner / orchestrator / q
 
 - **Ticket**: ID and title.
 - **Mockup created/updated**: MOCK id, type, name, the single file path, registry status (`draft`/`approved`).
-- **Review contents**: landing (ticket + buttons), deck slides (count), one prototype per platform.
+- **Review contents**: landing (ticket + one button per platform), one prototype per platform.
 - **Platforms**: each platform and its view count.
 - **UI descriptions**: paths.
-- **Screens/states covered**: list per platform.
+- **Screens/states covered**: happy-path views per platform, plus any earlier-mockup context views.
 - **Active elements drawn**: short list.
 - **Sources**: REQ ids, spec files, ticket ids.
 - **References added**: ticket ids; feature-specification references to be recorded by the specification owner.
@@ -128,7 +129,7 @@ Do not omit fields; use `none` when a field does not apply.
 
 - Change summary
 - Mockup (id, type, single file path, registry status)
-- Review contents (landing, deck slides, prototype platforms)
+- Review contents (landing, prototype platforms)
 - UI descriptions (path)
 - Screens/states covered per platform
 - Active elements drawn
