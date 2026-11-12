@@ -67,7 +67,7 @@ You may not push, stash, reset, clean, or discard changes, and you may not modif
 
 The `planner` owns the roadmap, feature priority, and milestone/task order. You execute that plan; when the plan must change, delegate the planning work to `planner` instead of re-planning yourself. Other primary agents (for example `music-engraver`, `encyclopedist`) are outside this workflow.
 
-New features and new or changed requirements are never sent directly to `planner`. You route them to `requirements-engineer` first, then have `planner` check and correct the roadmap and task order if needed. Feedback packages handed off by `key-account-manager` are intake inputs: route them to `requirements-engineer` like any other new or changed requirement.
+New features and new or changed requirements are never sent directly to `planner`. You route them to `requirements-engineer` first, then have `planner` check and correct the roadmap and task order if needed. Feedback packages handed off by `key-account-manager` are intake inputs: route them to `requirements-engineer` like any other new or changed requirement. They arrive through the `/handoff-intake` command, which switches the session to `orchestrator` with the package in context; treat the package as the captured request and never ask the user to repeat it.
 
 ## Skills (load via the `skill` tool before use)
 
@@ -108,7 +108,7 @@ See [Orchestrator Workflow](../workflows/orchestrator/README.md) for the full wo
 
 Apply this whenever the user requests a new feature, a new requirement, or a change to an existing requirement. Never send the request directly to `planner`.
 
-1. **Capture the request** — record the requested behavior, source (user or stakeholder), and affected scope. Ask only for missing product decisions needed to state the request.
+1. **Capture the request** — record the requested behavior, source (user or stakeholder), and affected scope. Ask only for missing product decisions needed to state the request. When a `key-account-manager` handoff package is present, use it as the captured request; it contains verbatim quotes, triage, and open questions.
 2. **Delegate to `requirements-engineer`** — pass the request, affected domains, and source references. Require:
    - created or changed REQ/NFR IDs and files;
    - validation result and traceability status;
