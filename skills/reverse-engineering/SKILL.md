@@ -10,7 +10,7 @@ disable-model-invocation: false
 
 ## Outcome
 
-Analyze existing source code and produce traceable business requirements (REQ) and non-functional requirements (NFR) that describe the behavior, rules, and quality attributes actually implemented by that code. All artifacts are written under `docs/requirements/` using the canonical REQ-XX.XXX and NFR-XX.XXX formats.
+Analyze existing source code and produce traceable business requirements (REQ) and non-functional requirements (NFR) that describe the behavior, rules, and quality attributes actually implemented by that code. All artifacts are created through the Papyrus `req` and `nfreq` commands.
 
 ## When To Use
 
@@ -27,7 +27,7 @@ Do not use this skill for:
 ## Prerequisites
 
 - Read access to the target source code (and any supporting `docs/` context).
-- The requirements-management skills listed under `## Leveraged Skills` for creating requirement files.
+- The `papyrus` skill and the requirements-management skills listed under `## Leveraged Skills` for creating requirement records.
 
 ## Procedure
 
@@ -52,20 +52,20 @@ Do not use this skill for:
 
 6. **Extract quality attributes** — Identify non-functional characteristics implied by the code: performance, security, usability, reliability, maintainability (e.g., timeouts, data encryption, offline behavior, permission handling).
 
-7. **Map to existing requirements** — Read the group and atomic requirement files under `docs/requirements/business/` and `docs/requirements/non-functional/`. These files are the source of truth. Classify each extracted item as:
+7. **Map to existing requirements** — Read requirements with `papyrus req list` / `papyrus req view` and `papyrus nfreq list` / `papyrus nfreq view`. These records are the source of truth. Classify each extracted item as:
    - **Covered** — an existing requirement already describes it.
    - **Partially covered** — extend the existing requirement.
    - **Uncovered** — a new requirement is needed.
-   Report the uncovered and partially covered items before writing files.
+   Report the uncovered and partially covered items before creating records.
 
 8. **Formulate requirements** — For each uncovered or partially covered item:
-   - Use the `business-requirements-management` skill to create or update business requirements (REQ) under `docs/requirements/business/`.
-   - Use the `non-functional-requirements-management` skill to create or update NFRs under `docs/requirements/non-functional/`.
-   - Assign the next free REQ-XX.XXX / NFR-XX.XXX number by inspecting existing requirement filenames.
-   - Write acceptance criteria that are directly testable against the observed code behavior.
+   - Use the `business-requirements-management` skill to create or update business requirements through Papyrus.
+   - Use the `non-functional-requirements-management` skill to create or update NFRs through Papyrus.
+   - Create or confirm the owning group first; Papyrus assigns the next `REQ-xxx.yyy` / `NFR-xxx.yyy` ID.
+   - Write acceptance criteria that are directly testable against the observed code behavior. Put them in the `--description` text.
    - In the description, reference the source code element(s) the requirement derives from (file path and class/function) so traceability is preserved.
 
-   Do not create or update separate Markdown indexes. After changing requirement files, invoke `requirements-index-visualization` to regenerate `docs/requirements/business/index.html` and `docs/requirements/non-functional/index.html`.
+   Do not create or update separate Markdown indexes. The Papyrus browser is the index.
 
 9. **Validate traceability** — Confirm every extracted behavior, rule, and quality attribute is reflected in at least one requirement, and that every new requirement has a source code anchor.
 
@@ -75,15 +75,15 @@ Do not use this skill for:
 
 This skill runs inside the Requirements Engineering agent and may invoke the skills available to it:
 
-- `business-requirements-management` — create, update, and validate REQ-XX.XXX business requirement files. Always used to produce business requirements.
-- `non-functional-requirements-management` — create, update, and validate NFR-XX.XXX files. Always used to produce non-functional requirements.
-- `requirements-index-visualization` — regenerate the HTML requirements index after requirement files change.
+- `business-requirements-management` — create, update, and validate `REQ` records. Always used to produce business requirements.
+- `non-functional-requirements-management` — create, update, and validate `NFR` records. Always used to produce non-functional requirements.
+- `papyrus` — all Papyrus reads and writes.
 
 Additional artifacts implied by the code (business rules, attribute lists, domain model, state diagrams, process diagrams, glossary terms) are **not** produced here; hand them off to `business-analyst` (business rules), `domain-modeler` (attribute lists, state diagrams, process diagrams), `terminologist`, and `architect` (via the `business-rules-management`, `attribute-list-definition`, `domain-modeling`, `state-diagram-creation`, `business-process-diagramming`, `business-glossary-management`, and `business-terminology-consistency-check` skills).
 
 ## Resume / interruption
 
-Reverse engineering is multi-file. If interrupted, re-run the validation pass on the affected requirements and regenerate the index before continuing.
+Reverse engineering is multi-record. If interrupted, re-run the validation pass on the affected requirements before continuing. Do not recreate records that already exist.
 
 ## Handoff
 
@@ -99,14 +99,14 @@ After producing requirements, report the new/updated REQ/NFR IDs and any handoff
 
 ## Completion Checks
 
-- [ ] Every extracted behavior maps to a REQ with user story, priority, description, and acceptance criteria.
-- [ ] Every extracted quality attribute maps to an NFR with description, rationale, and verification method.
+- [ ] Every extracted behavior maps to a `REQ` record with user story, criticality, description, and acceptance criteria.
+- [ ] Every extracted quality attribute maps to an `NFR` record with description, rationale, and verification method.
 - [ ] No duplicate requirements created for already-covered behavior.
-- [ ] New requirement numbers are the next free numbers based on existing requirement filenames.
-- [ ] `docs/requirements/business/index.html` and `docs/requirements/non-functional/index.html` are regenerated by `requirements-index-visualization` after requirement changes.
+- [ ] IDs are Papyrus-assigned; no manual numbering.
+- [ ] No `index.html` was generated or edited; records are visible through Papyrus.
 - [ ] Each new requirement references its source code element(s) for traceability.
-- [ ] No implementation code (Kotlin, SQL, Java, etc.) in requirements files.
-- [ ] No files modified outside `docs/requirements/` (unless explicitly requested).
+- [ ] No implementation code (Kotlin, SQL, Java, etc.) in requirement records.
+- [ ] No Papyrus-managed files were edited directly.
 
 ## Output Template
 

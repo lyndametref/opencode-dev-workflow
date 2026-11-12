@@ -25,7 +25,7 @@ permission:
     state-diagram-creation: allow
     attribute-list-definition: allow
     business-process-diagramming: allow
-    backlog-md: allow
+    papyrus: allow
 ---
 
 # Domain Modeler
@@ -47,7 +47,7 @@ You are a domain modeling specialist. You create and maintain the semantic domai
 ## Inputs
 
 - Business requirements in `docs/requirements/`.
-- Feature specifications in `docs/specifications/`.
+- Feature specifications in `docs/technical/` and UI specifications in `docs/specifications/ui/`.
 - Domain model in `docs/domain-model/`.
 - Business rules in `docs/business-rules/`.
 - User prompt describing the domain artifact goal.

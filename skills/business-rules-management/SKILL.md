@@ -1,7 +1,7 @@
 ---
 name: business-rules-management
-description: 'Create, update, and validate business rules in the canonical format. Each business rule is a self-contained file under docs/business-rules/BR-XXX-short-name.md with unique BR-XXX ID, description, rationale grounded in requirements, and applicability statement.'
-argument-hint: 'Examples: create a new business rule for ...; update BR-005; validate all business rules for format compliance; check BR-003 against requirements'
+description: 'Create, update, and validate business rules through Papyrus. Each rule is a RUL record with a unique ID, precise description, rationale grounded in requirements, and applicability statement.'
+argument-hint: 'Examples: create a new business rule; update RUL-005; validate all business rules for format compliance; check RUL-003 against requirements'
 user-invocable: true
 disable-model-invocation: false
 ---
@@ -10,104 +10,97 @@ disable-model-invocation: false
 
 ## Outcome
 
-Maintain a consistent, traceable set of business rules by creating, updating, and validating canonical business rule documents under `docs/business-rules/`, each grounded in requirements.
+Maintain a consistent, traceable set of business rules by creating, updating, and validating Papyrus `rule` records, each grounded in requirements.
 
 ## When To Use
 
-- Create a new business rule with a unique BR-XXX ID
-- Update an existing business rule (description, rationale, or applicability)
-- Validate all business rules for canonical format compliance
-- Check a specific business rule against its referenced requirements
-- List business rules and their source requirements
+- Create a new business rule with a unique `RUL` ID.
+- Update an existing business rule (description, rationale, or applicability).
+- Validate all business rules for canonical format compliance.
+- Check a specific business rule against its referenced requirements.
+- List business rules and their source requirements.
 
 Do not use this skill for implementation logic (no Kotlin, SQL, XML, etc.), technical specs, or domain model definitions.
 
 ## Canonical Format
 
-Business rules live in `docs/business-rules/BR-XXX-short-name.md` following this structure:
+Papyrus owns the record format. Do not create or edit business-rule files directly.
 
-```markdown
-# BR-XXX: Short descriptive name
-
-## Description
-
-Unambiguous statement of the business rule.
-
-## Rationale
-
-Based on requirement(s) REQ-XX.XXX — Requirement Name (and REQ-YY.YYY — Other Requirement Name if applicable), this rule exists because...
-
-## Applicability
-
-When and where this rule applies (creation time, state transitions, entity types).
-```
+- **Title** — short descriptive name.
+- **Description** — one unambiguous statement of the business rule.
+- **Rationale** — why the rule exists, grounded in at least one requirement.
+- **Applicability** — when and where the rule applies (creation time, state transitions, entity types).
+- **Requirement references** — at least one `REQ-xxx` / `REQ-xxx.yyy`.
 
 ### Conventions
 
-- BR IDs are zero-padded 3-digit numbers (BR-001, BR-002, ..., BR-019)
-- File name matches the pattern `BR-XXX-short-kebab-case-name.md`
-- Every BR MUST reference at least one requirement (REQ-XX.XXX or REQ-XX)
-- Rationale MUST be grounded in the referenced requirement — it explains WHY the rule exists based on the requirement text
-- Description is a single, precise statement of what the rule IS
-- Applicability describes WHEN and WHERE the rule applies
-- The browsable index is `docs/business-rules/index.html`, generated from BR files by the `business-rules-index-visualization` skill
-- Do not create or update a separate Markdown index; BR files are the source of truth
-- DO NOT generate implementation code (no Kotlin, SQL, Java, XML, etc.)
+- Papyrus assigns IDs such as `RUL-001`.
+- Never choose, rename, or renumber an ID by hand.
+- Every rule MUST reference at least one requirement.
+- Rationale MUST explain WHY based on requirement text, not just WHAT.
+- Description is a single, precise statement of what the rule IS.
+- Applicability describes WHEN and WHERE the rule applies.
+- The browsable index is `papyrus browser`. Do not generate or edit `index.html`.
+- DO NOT generate implementation code (no Kotlin, SQL, Java, XML, etc.).
 
 ## Procedure
 
-1. **Classify request** — Determine whether the request is: `create`, `update`, `validate`, or `list`.
+1. **Classify request** — Determine whether the request is `create`, `update`, `validate`, or `list`.
 
-2. **Read baseline** — Read the existing BR files under `docs/business-rules/` to understand current rules and avoid duplication.
+2. **Read baseline** — Use `papyrus rule list` and `papyrus rule view <ID>` to understand current rules and avoid duplication.
 
-3. **Check for duplicates** — Search existing BRs for rules covering the same topic to avoid overlap.
+3. **Check for duplicates** — Search existing rules for the same topic to avoid overlap.
 
-4. **Assign next BR ID** — For a `create` action, find the highest existing BR-XXX number in the filenames and increment by one.
+4. **Create or update through Papyrus**:
+   ```bash
+   papyrus rule create "<Title>" \
+     --description "<rule>" \
+     --rationale "Based on REQ-xxx.yyy — <reason>" \
+     --applicability "<when and where>" \
+     --requirement REQ-xxx.yyy
+   papyrus rule edit <RUL-ID> --title "<title>" --description "<rule>" \
+     --requirement REQ-xxx.yyy
+   ```
+   Ensure the description is a single precise statement, the rationale references at least one requirement, and the applicability states when and where the rule applies.
 
-5. **Create/update file** — Write or modify the BR file following the canonical format above. Ensure:
-   - Description is a single, precise statement
-   - Rationale references at least one requirement and explains the reasoning
-   - Applicability states when and where the rule applies
+   Papyrus 0.1.0 has no `--rationale` or `--applicability` flag on `rule edit`. Change those fields with `papyrus rule edit <RUL-ID> --editor` when an interactive editor is available, or deprecate the record and create a corrected replacement that references it.
 
-6. **Regenerate the visual index** — After BR files change, invoke `business-rules-index-visualization` to regenerate `docs/business-rules/index.html`.
+5. **Validate/Review** — Check each `RUL` record via `papyrus rule view <ID>`:
+   - title is present;
+   - description is a single, precise statement;
+   - rationale contains at least one `REQ-` reference;
+   - applicability is present and specific;
+   - no implementation code (code blocks only for illustrative examples, never production-ready).
 
-7. **Validate/Review** — Check that every BR file under `docs/business-rules/BR-*.md` has:
-   - A top-level H1 heading matching `# BR-XXX: Title`
-   - A `## Description` section
-   - A `## Rationale` section containing at least one `REQ-` reference
-   - An `## Applicability` section
-   - No implementation code (code blocks only for illustrative examples, never production-ready)
+6. **Deprecate when obsolete** — Use `papyrus rule deprecate <ID>`; restore with `papyrus rule restore <ID>`. Do not delete or renumber.
 
-8. **Report outcome** — Summarize the action, files changed, and any risks.
+7. **Report outcome** — Summarize the action, `RUL` IDs, validation status, and any risks. Confirm visibility with `papyrus rule list`.
 
 ## Resume / interruption
 
-BR edits are multi-file. If interrupted, re-run a validation pass on the affected rules and regenerate the index before continuing.
+Business-rule edits are multi-record. If interrupted, re-run a validation pass on the affected rules before continuing. Do not recreate records that already exist.
 
 ## Handoff
 
-After changing business rules, report the changed BR IDs and affected requirement references to the caller (business-analyst / requirements-engineer) so specs and tickets can align.
-
-## Example
-
-See `references/example-BR-005-parentage-role-semantics.md` for a well-formed business rule example.
+After changing business rules, report the changed `RUL` IDs and affected requirement references to the caller (business-analyst / requirements-engineer) so specs and tasks can align.
 
 ## Completion Checks
 
-- New BR file exists at `docs/business-rules/BR-XXX-*.md` with correct kebab-case filename
-- BR file has all required sections (Description, Rationale, Applicability)
-- Rationale references at least one REQ-XX.XXX or REQ-XX requirement
-- `docs/business-rules/index.html` is regenerated by `business-rules-index-visualization` after BR changes
-- All existing BRs still have valid format if a validation pass was requested
-- No implementation code was generated
+- The rule exists as a Papyrus record with a `RUL` ID.
+- The record has title, description, rationale, and applicability.
+- The rationale references at least one `REQ-xxx` / `REQ-xxx.yyy`.
+- The record is visible through `papyrus rule list`.
+- No `index.html` was generated or edited.
+- All existing rules still have valid format if a validation pass was requested.
+- No implementation code was generated.
 
 ## Decision Rules
 
-- If a proposed rule duplicates an existing BR, do not create it — suggest updating the existing one instead.
+- If a proposed rule duplicates an existing rule, do not create it — suggest updating the existing one.
 - If a rule references no requirement, stop and identify the missing requirement before proceeding.
-- If the request mixes business rules with implementation details, split them — business rules go in `docs/business-rules/`, implementation code stays out.
-- Use BR filenames and contents as the source of truth; do not maintain a separate Markdown index.
+- If the request mixes business rules with implementation details, split them — business rules stay in Papyrus, implementation code stays out.
 - If the request changes business intent, flag the requirement-level impact before updating the rule.
+- IDs are immutable; do not renumber or reuse deprecated IDs.
 
 ## Quality Bar
 
@@ -115,17 +108,17 @@ See `references/example-BR-005-parentage-role-semantics.md` for a well-formed bu
 - Rationale always explains WHY based on requirement text, not just WHAT.
 - Applicability is precise (entity types, lifecycle phases, data conditions).
 - No implementation code, pseudo-code, or framework-specific language.
-- BR IDs never skip numbers or use non-sequential gaps without explicit reason.
-- File names always match the `BR-XXX-short-kebab-case-name.md` pattern.
-- The HTML index is regenerated after BR file changes.
+- IDs never skip or get renumbered by hand.
+- The Papyrus browser shows the current rule corpus.
 
 ## Output Template
 
 Use this summary after updates:
 
-- **Action**: create/update/validate/list
-- **Target BR**: BR-XXX — Title
-- **Updated files**: <list>
-- **Cross-reference updates**: <list>
-- **Validation results**: <pass/fail with details>
-- **Residual risks**: <if any>
+- **Action**: create/update/deprecate/validate/list
+- **Target rule**: `RUL-xxx` — Title
+- **Updated records**: list
+- **Cross-reference updates**: list
+- **Validation results**: pass/fail with details
+- **Papyrus visibility**: confirmed via `papyrus rule list`
+- **Residual risks**: if any

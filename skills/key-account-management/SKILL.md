@@ -56,7 +56,7 @@ Each feedback item is tracked only in the conversation:
 
 Rules:
 
-- `already-done`, `in-progress`, and `duplicate` require a real ID found via the Backlog.md CLI, requirements, specs, or an earlier in-session item. No ID means the item stays `open` or becomes `needs-clarification`.
+- `already-done`, `in-progress`, and `duplicate` require a real ID found via the Papyrus CLI, requirements, specs, or an earlier in-session item. No ID means the item stays `open` or becomes `needs-clarification`.
 - Never mark something `already-done` because it "sounds implemented". Read the ticket/requirement/spec first.
 - Re-open an item if `requirements-engineer` rejects or defers it, and record why.
 
@@ -82,9 +82,9 @@ Rules:
 2. Determine the status using the table above.
 3. Search for evidence, in this order:
    - earlier items in this session (duplicates, related items);
-   - `backlog task list --plain` / `backlog task <id> --plain` (delivered, in progress, duplicate);
-   - `docs/requirements/` and `docs/specifications/` (already covered behavior).
-4. Use the Backlog.md CLI read commands only. Never create, edit, archive, or delete backlog items.
+   - `papyrus --json task list` / `papyrus task view <id>` (delivered, in progress, duplicate);
+   - `docs/technical/` and `docs/specifications/ui/` via Papyrus (already covered behavior).
+4. Use the Papyrus read commands only. Never create, edit, archive, or delete Papyrus records.
 5. If evidence is ambiguous, use `needs-clarification` and write the precise question. Do not guess.
 6. Record severity only with a stated basis (for example "blocks daily stock intake per account"); otherwise `unknown`.
 7. Present the updated triage table; it is the only record.
@@ -104,7 +104,7 @@ Trigger only on a clear instruction ("hand off", "send to requirements engineeri
 1. Select the items to hand off. Default: all remaining `open` and `needs-clarification` items. Confirm the selection.
 2. Build the package in the response using the format below.
 3. Show the package to the user and get confirmation.
-4. Delegate to `@requirements-engineer`, passing the package content, affected areas, sources, and open questions. Ask for created/changed REQ/NFR IDs, validation status, open product decisions, and index regeneration confirmation.
+4. Delegate to `@requirements-engineer`, passing the package content, affected areas, sources, and open questions. Ask for created/changed REQ/NFR IDs, validation status, open product decisions, and Papyrus visibility confirmation.
 5. Report the result.
 6. **Forget** the handed-over items: remove them from the in-session list, keep only unhanded items, and make clear they will not be referenced again.
 7. Do not edit requirements, create tickets, or reorder the backlog.
@@ -158,7 +158,7 @@ Trigger only on a clear instruction ("hand off", "send to requirements engineeri
 ## Guardrails
 
 - No file writes of any kind; the agent is read-only.
-- Backlog access is read-only; requirements, specs, code, and diagrams are read-only.
+- Papyrus access is read-only; requirements, specs, code, and diagrams are read-only.
 - Requirements-engineer is the only handoff target. Planning, prioritisation, and ticket creation go through `orchestrator` if the user asks.
 - No silent handoffs, no invented accounts, severity, or priorities.
 - No personal data or secrets beyond the minimum needed; ask before including sensitive content in a handoff.
@@ -172,4 +172,4 @@ Trigger only on a clear instruction ("hand off", "send to requirements engineeri
 - Grouping covers all open items, including `unassigned` and `NFR`.
 - Handoff occurred only on explicit order, after the user saw the package.
 - Handed-over items are dropped from the session and not referenced again.
-- No file was created or modified; no backlog write attempted.
+- No file was created or modified; no Papyrus write attempted.

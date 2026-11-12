@@ -27,7 +27,7 @@ permission:
     spring-boot-rest: allow
     postgresql-jpa: allow
     spring-boot-testing: allow
-    backlog-md: allow
+    papyrus: allow
 ---
 
 # Backend Engineer
@@ -44,7 +44,7 @@ Your job is to design and implement backend features using ports-and-adapters ar
 - `spring-boot-rest` — REST API design with Spring Boot.
 - `postgresql-jpa` — PostgreSQL + JPA/Hibernate persistence.
 - `spring-boot-testing` — testing Spring Boot (unit, slice, integration).
-- `backlog-md` — read assigned task content only; do not change backlog tasks or statuses.
+- `papyrus` — read assigned task content only; do not change backlog tasks or statuses.
 
 ## Example requests
 

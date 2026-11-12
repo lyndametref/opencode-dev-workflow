@@ -1,34 +1,29 @@
 ---
 id: TASK-EXAMPLE
-title: Repository Layer
-status: To Do
-assignee: []
-created_date: '2026-05-18 10:00'
-updated_date: '2026-05-18 10:00'
+title: "Repository Layer"
+created_date: '2026-05-18T10:00:00Z'
+updated_date: '2026-05-18T10:00:00Z'
 labels:
   - mobile
   - needs-refinement
-milestone: Iteration 1 Mobile-Only MVP
+references: []
+status: ToDo
+assignee: []
+milestone: MS-EXAMPLE
 dependencies: []
-priority: medium
 ordinal: 9999
+documentation: []
+type: feature
 ---
 
-## Description
+# TASK-EXAMPLE Repository Layer
 
-<!-- SECTION:DESCRIPTION:BEGIN -->
+## Status
+ToDo
+
+## Description
 Implement the repository layer.
-<!-- SECTION:DESCRIPTION:END -->
 
 ## Acceptance Criteria
-
-<!-- AC:BEGIN -->
-- [ ] #1 Filter and search operations are available
-- [ ] #2 Writes are transaction-safe
-<!-- AC:END -->
-
-## Definition of Done
-
-<!-- DOD:BEGIN -->
-- [ ] #1 Tests pass
-<!-- DOD:END -->
+- [ ] Filter and search operations are available
+- [ ] Writes are transaction-safe

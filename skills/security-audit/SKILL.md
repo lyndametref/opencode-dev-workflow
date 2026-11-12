@@ -1,7 +1,7 @@
 ---
 name: security-audit
 description: 'Audit a release or feature for security vulnerabilities: secrets, dependency supply chain, authentication and authorization, input handling, data protection, platform-specific risks, and security NFR coverage. Produces a read-only, severity-ranked report with a Pass / Pass with findings / Block recommendation.'
-argument-hint: 'Provide the release milestone, release ticket, feature ticket, branch, or audit target. Example: "Release 1.0" or "task-0042".'
+argument-hint: 'Provide the release ID, feature task ID, branch, or audit target. Example: "REL-001", "Release 1.0", or "TASK-0042".'
 user-invocable: true
 disable-model-invocation: false
 ---
@@ -26,14 +26,15 @@ Do not use this skill for:
 
 ## Prerequisites
 
-- **backlog-md skill (REQUIRED)** — Load it before any backlog read. All ticket reads go through the CLI.
+- **papyrus skill (REQUIRED)** — Load it before any Papyrus read. All release, milestone, task, requirement, decision, and specification reads go through the Papyrus CLI.
 - Read access to requirements, architecture, specifications, and application source.
 - Optional: available scanners and test commands for the stacks present.
 
 ## Constraints
 
-- Read-only: do not modify code, configuration, requirements, tickets, or status.
-- Never edit ticket files directly; read via the backlog CLI only.
+- Read-only: do not modify code, configuration, requirements, tasks, decisions, or status.
+- Never edit Papyrus-managed files directly; read via the Papyrus CLI only.
+- Never create the audit record; the orchestrator records the report with `papyrus audit create`.
 - Never reveal secrets, credentials, tokens, personal data, or exploit-ready payloads. Redact values and give the location.
 - Report only findings traceable to evidence. Mark unverifiable controls as `not verified`, not as passed.
 - Do not invent threats unrelated to the audited scope.
@@ -44,10 +45,10 @@ Do not use this skill for:
 
 ### 1. Establish scope
 
-1. Load `backlog-md`.
-2. Read the target release ticket and milestone, or the named feature/branch.
-3. List included tasks and confirm they are `Done`; report any exception.
-4. Read linked requirements, security/privacy NFRs, specifications, architecture documents, and ADRs.
+1. Load `papyrus`.
+2. Read the target release record, its assigned milestones, and the included tasks with `papyrus release view`, `papyrus --json milestone list`, and `papyrus --json task list`. For a feature target, use `papyrus task view <TASK-ID>`.
+3. Confirm included tasks are `Done`; report any exception.
+4. Read linked requirements and security/privacy NFRs with `papyrus req view` / `papyrus nfreq view`, specifications with `papyrus tech-spec view` / `papyrus ui-spec view`, architecture documents, and decisions with `papyrus decision view`.
 5. Record scope boundaries and anything explicitly out of scope.
 
 ### 2. Inventory the attack surface
@@ -156,7 +157,7 @@ Produce the report in the response and hand it to the orchestrator. Do not chang
 - **Release recommendation**: `Pass` / `Pass with findings` / `Block`, with rationale.
 - **Accepted risks and follow-ups**: owner and suggested ticket for each Medium/Low finding.
 - **Open questions**: missing context or unverifiable controls.
-- **Next required action**: what the orchestrator must do next.
+- **Next required action**: what the orchestrator must do next, including recording the audit with `papyrus audit create`.
 
 Use `none` when a section does not apply.
 
@@ -169,7 +170,7 @@ Use `none` when a section does not apply.
 - Secrets are redacted in the report.
 - Security/privacy NFRs mapped to evidence or reported as gaps.
 - Decision follows the severity rule; `Block` for any unresolved Critical/High.
-- No file, ticket, status, or release was modified.
+- No file, Papyrus record, status, or release was modified by the auditor.
 - Temporary artifacts under `./.tmp/` removed.
 
 ## Resume / interruption

@@ -24,7 +24,7 @@ permission:
     tdd: allow
     gradle-build: allow
     kotlin-style-audit: allow
-    backlog-md: allow
+    papyrus: allow
 ---
 
 # Android Kotlin Engineer
@@ -38,7 +38,7 @@ Your job is to design and implement Android features using ports-and-adapters ar
 - `tdd` — red-green-refactor workflow (language-agnostic).
 - `gradle-build` — build, test, lint Gradle/Android projects.
 - `kotlin-style-audit` — Google Kotlin style compliance.
-- `backlog-md` — read assigned task content only; do not change backlog tasks or statuses.
+- `papyrus` — read assigned task content only; do not change backlog tasks or statuses.
 
 ## Example requests
 

@@ -1,7 +1,7 @@
 ---
 name: business-requirements-management
-description: 'Create, update, reorganize and check consistency of business requirements under docs/requirements/.'
-argument-hint: 'Examples: create a new requirement for recording sheep color patterns; validate all requirements for consistency; reorganize requirements structure; update REQ-01.002'
+description: 'Create, update, reorganize, and check consistency of business requirements through the Papyrus req commands.'
+argument-hint: 'Examples: create a new requirement for recipe scaling; validate all requirements for consistency; update REQ-001.002'
 user-invocable: true
 disable-model-invocation: false
 ---
@@ -10,124 +10,100 @@ disable-model-invocation: false
 
 ## Outcome
 
-Maintain a consistent, traceable business requirements corpus under `docs/requirements/business/` following strict REQ-XX/REQ-XX.XXX naming and structure.
+Maintain a consistent, traceable business requirements corpus through Papyrus. Papyrus owns IDs, filenames, grouping, and metadata under `docs/requirements/business/`.
 
 ## When To Use
 
-- Create a new requirement or requirement group
-- Update, reorganize, or rename existing requirements
-- Validate all requirements for structure, naming, and content compliance
-- Reorganize requirements structure
+- Create a new requirement or requirement group.
+- Update or validate existing requirements.
+- Check consistency across requirements.
+- Reorganize requirements within Papyrus constraints.
 
 Do not use this skill for implementation logic (no Kotlin, SQL, Java, etc.), technical specs, or domain model definitions.
 
 ## Canonical Format
 
-Business requirements live in `docs/requirements/business/` following this structure:
+Papyrus creates and owns the record format. Do not create or edit requirement files directly.
 
-### Group Files (REQ-XX.md)
+- **Groups** — `papyrus req create-group --title "<Group title>" --description "<description>" --story "<user story>"`.
+- **Atomic requirements** — `papyrus req create "<title>" --group <REQ-GROUP-ID> --story "<user story>" --description "<description and acceptance criteria>"`.
 
-```markdown
-# REQ-XX Group Name
+A requirement's content should carry:
 
-## User Story
-As a..., I want to... so that...
+- title;
+- user story (when applicable);
+- group reference;
+- criticality (MoSCoW) — include it in the description or as a label;
+- description;
+- acceptance criteria — include them in the description because Papyrus has no AC flag for requirements.
 
-## Description
-A few sentences describing the requirement group.
-```
+### Naming and numbering
 
-### Atomic Requirement Files (REQ-XX.XXX.md)
-
-```markdown
-# REQ-XX.XXX Requirement Title
-
-## User Story
-As a..., I want to... so that...
-
-## Group
-REQ-XX Group Name
-
-## Criticality
-Must have / Should have / Could have / Won't have
-
-## Description
-A few sentences describing the requirement.
-
-## Acceptance Criteria
-- Criterion one
-- Criterion two
-- Criterion three
-```
-
-### Naming Rules
-
-- Group files: `REQ-XX.md` where XX is the group number (01, 02, 03, etc.)
-- Atomic files: `REQ-XX.XXX.md` where XXX is the atomic requirement number within the group
-- Numbering must be consistent: REQ-01.001, REQ-01.002, REQ-01.003, etc.
-- All files stored in: `docs/requirements/business/`
+- Papyrus assigns IDs such as `REQ-001` (group) and `REQ-001.001` (atomic).
+- Never choose, rename, or renumber an ID by hand.
+- IDs are immutable. Do not reuse or renumber a deprecated record.
 
 ### Index
 
-The browsable index is `docs/requirements/business/index.html`, generated from the business and non-functional requirement files by the `requirements-index-visualization` skill. Do not create or update a Markdown `INDEX.md`; requirement files are the source of truth.
+The browsable index is `papyrus browser`. Use `papyrus req list` / `papyrus req view <ID>` for reading. Do not generate or edit `index.html`.
 
 ## Procedure
 
-1. **Classify request** — Determine whether the request is: `create`, `update`, `validate`, or `reorganize`.
+1. **Classify request** — Determine whether the request is `create`, `update`, `validate`, or `reorganize`.
 
-2. **Read baseline** — Read the current group and atomic requirement files under `docs/requirements/business/` to understand existing requirements and grouping.
+2. **Read baseline** — Use `papyrus req list` and `papyrus req view <ID>` to understand existing requirements and grouping.
 
-3. **Identify required changes** — Determine what needs to be created, updated, or reorganized based on the request.
+3. **Identify required changes** — Determine what needs to be created, updated, or reorganized.
 
-4. **For creation/update** — Assign the next REQ-XX or REQ-XX.XXX number by finding the highest existing number in the requirement filenames and incrementing.
+4. **For creation** — Create or confirm the group first, then the atomic requirement:
+   ```bash
+   papyrus req create-group --title "<Group>" --description "<scope>" --story "<story>"
+   papyrus req create "<Title>" --group <REQ-GROUP-ID> --story "<story>" \
+     --description "<description; Criticality: Must have; Acceptance Criteria: ...>"
+   ```
 
-5. **For consistency check** — Check if the requirement creates an incoherence with other requirements.
+5. **For updates** — Use `papyrus req edit <ID> --title ... --story ... --description ... --label ... --reference ...`. Papyrus has no group-change flag; if a requirement must move to another group, do not renumber it. Deprecate the old record and create a replacement referencing it, or ask the user.
 
-6. **Make corrections** — Edit files as needed. Validate consistency of numbering, naming, and structure after changes.
+6. **For consistency checks** — Check for conflicts, gaps, and untraceable claims across the corpus. Report findings before changing meaning.
 
-7. **Regenerate the visual index** — After requirement files change, invoke the `requirements-index-visualization` skill to regenerate `docs/requirements/business/index.html`.
+7. **For deprecation** — Use `papyrus req deprecate <ID>`; restore with `papyrus req restore <ID>`.
 
-8. **Report outcome** — Summarize the action, files changed, and any risks.
+8. **Report outcome** — Summarize the action, `REQ` IDs, validation status, and any risks. Confirm visibility with `papyrus req list`.
 
 ## Resume / interruption
 
-Requirements edits are multi-file. If interrupted, re-run a validation pass on the affected group and regenerate the index before continuing.
+Requirements edits are multi-record. If interrupted, re-run a validation pass on the affected group before continuing. Do not recreate records that already exist.
 
 ## Handoff
 
-After changing requirements, report the changed REQ IDs to the caller (planner / business-analyst / orchestrator) so specs, tickets, and business rules can be aligned.
-
-## Example
-
-See `references/example-REQ-01-individual-management.md` for a well-formed requirement group example.
-See `references/example-REQ-01.001-sheep-identification.md` for a well-formed atomic requirement example.
+After changing requirements, report the changed `REQ` IDs to the caller (planner / business-analyst / orchestrator) so specs, tasks, and business rules can be aligned.
 
 ## Completion Checks
 
-- All files follow REQ-XX and REQ-XX.XXX naming pattern
-- Group numbering is consistent and sequential
-- Atomic numbering aligns with parent groups
-- Each atomic file has: title, user story, group reference, Criticality, description, acceptance criteria
-- Each group file has: title, user story, description
-- Files are in the correct location: `docs/requirements/business/`
-- `docs/requirements/business/index.html` is regenerated by `requirements-index-visualization` after requirement changes
-- No implementation code (Kotlin, SQL, Java, etc.) in requirements files
+- All records follow Papyrus-assigned `REQ-xxx` and `REQ-xxx.yyy` IDs.
+- Group numbering is consistent; no manual renumbering.
+- Each atomic requirement carries title, user story, group, criticality, description, and acceptance criteria.
+- Each group carries a title, user story, and description.
+- Records are visible through `papyrus req list`.
+- No `index.html` was generated or edited.
+- No implementation code (Kotlin, SQL, Java, etc.) appears in requirement records.
 
 ## Decision Rules
 
 - If the user's request is ambiguous, ask clarifying questions before proceeding.
-- If a requirement number already exists, propose an update rather than creating a duplicate.
-- Numbering gaps exist as the numbering is immutable.
-- If a change would break cross-references (e.g., from business rules), flag the impact before updating.
-- Use requirement filenames and contents as the source of truth; do not maintain a separate Markdown index.
+- If a requirement already exists, propose an update rather than creating a duplicate.
+- IDs are immutable; do not fill numbering gaps by renumbering.
+- If a change would break cross-references (e.g., from business rules or tasks), flag the impact before updating.
+- Use Papyrus records as the source of truth; do not maintain a separate Markdown index.
 
 ## Output Template
 
 Use this summary after updates:
 
-- **Action**: create/update/reorganize/check consistency
-- **Target**: <list of requirement files>
-- **Updated files**: <list>
-- **Cross-reference updates**: <list>
-- **Validation results**: <pass/fail with details>
-- **Residual risks**: <if any>
+- **Action**: create/update/deprecate/check consistency
+- **Target**: `REQ` IDs
+- **Updated records**: list
+- **Cross-reference updates**: list
+- **Validation results**: pass/fail with details
+- **Papyrus visibility**: confirmed via `papyrus req list`
+- **Residual risks**: if any

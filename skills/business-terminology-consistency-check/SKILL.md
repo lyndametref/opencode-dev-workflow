@@ -18,16 +18,17 @@ Detect inconsistent business terminology and propose precise replacements aligne
 - Before release documentation reviews
 
 ## Canonical Source
-- Canonical business glossary directory: `docs/domain-model/business-glossary/`
-- Each term is defined in its own file: `docs/domain-model/business-glossary/<kebab-case-term>.md`
+- Papyrus glossary records, read with `papyrus glossary list` and `papyrus glossary view <GLO-ID>`.
+- Records live in `docs/glossary/`; Papyrus owns the IDs and files.
 
 ## Scope
 - Include:
-  - `docs/requirements/`
+  - Papyrus requirements (`papyrus req list`, `papyrus nfreq list`)
+  - Papyrus rules (`papyrus rule list`)
+  - Papyrus specifications (`papyrus tech-spec list`, `papyrus ui-spec list`, `papyrus ui-mockup list`)
+  - Papyrus tasks, milestones, releases, decisions, and audits
   - `docs/domain-model/`
   - `docs/architecture/`
-  - `docs/specs/`
-  - `backlog/`
 - Exclude by default:
   - `.ai/`
   - `.github/skills/`
@@ -35,27 +36,29 @@ Detect inconsistent business terminology and propose precise replacements aligne
 
 ## Procedure
 1. Collect canonical terms.
-- Read glossary terms and definitions from the canonical source.
-- Build preferred labels and allowed aliases.
+- Read `papyrus glossary list` and `papyrus glossary view <GLO-ID>`.
+- Build preferred labels and allowed aliases from the definitions.
 
 2. Scan for variants.
 - Find case variants, plural variants, legacy names, and near-synonyms.
-- Detect terms used without glossary entry when they appear repeatedly.
+- Use `papyrus search "<term>"` for the Papyrus corpus and repository search for plain docs.
+- Detect terms used without a glossary record when they appear repeatedly.
 
 3. Classify findings.
 - `conflict`: same term used with different meanings.
 - `variant`: different labels for same meaning.
-- `orphan`: repeated term not present in glossary.
-- `drift`: wording diverges from current glossary definition.
+- `orphan`: repeated term not present in the glossary.
+- `drift`: wording diverges from the current glossary definition.
 
 4. Propose fixes.
-- Provide file-level replacements that preserve requirement intent.
+- Provide record-level or file-level replacements that preserve requirement intent.
 - Prefer minimal wording edits over broad rewrites.
 - Do not apply edits unless explicitly requested.
 
 5. Validate after apply (if requested).
-- Re-scan target files.
+- Re-scan target records and files.
 - Confirm conflicts and variants are resolved.
+- Confirm updates are visible through Papyrus.
 
 ## Completion Checks
 - All conflicts and variants are listed with evidence.

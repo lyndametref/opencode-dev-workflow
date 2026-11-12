@@ -19,7 +19,7 @@ permission:
       "git rev-parse *": allow
   skill:
     "*": deny
-    backlog-md: allow
+    papyrus: allow
     security-audit: allow
 ---
 
@@ -38,11 +38,11 @@ Your job is to assess the security posture of the released scope, not to fix it.
 ## Skills (load via the `skill` tool before use)
 
 - `security-audit` — mandatory audit procedure and report format.
-- `backlog-md` — read release, milestone, and ticket context through the Backlog.md CLI.
+- `papyrus` — read release, milestone, task, decision, requirement, and specification context through the Papyrus CLI.
 
 ## Inputs
 
-- Release scope: release milestone, release ticket, and included tasks.
+- Release scope: the Papyrus release record, its assigned milestones, and included tasks.
 - Requirements and non-functional requirements, especially security and privacy NFRs.
 - Architecture documentation and ADRs.
 - Feature specifications and source code in `apps/`.
@@ -53,8 +53,8 @@ Your job is to assess the security posture of the released scope, not to fix it.
 - ALWAYS load the `security-audit` skill and follow its procedure, constraints, and output format.
 - Scope is one release or one explicitly named audit target per pass.
 - Read-only: produce no code, configuration, or documentation changes.
-- Never edit ticket files directly; backlog access is read-only through the CLI.
-- Never change task status or close a release; the orchestrator owns approval and closure.
+- Never edit ticket files directly; Papyrus access is read-only through the CLI.
+- Never change task status, close a release, or create the audit record; the orchestrator owns approval, closure, and recording the audit report.
 - Never expose secrets, credentials, tokens, personal data, or exploit-ready payloads in the report. Redact values and reference locations.
 - Verify findings by running available scanners and tests; do not rely only on documentation or reported evidence.
 - Report missing security requirements and untraceable controls explicitly.
@@ -63,7 +63,7 @@ Your job is to assess the security posture of the released scope, not to fix it.
 
 ## Approach
 
-1. Read the release scope, release ticket, and included tasks.
+1. Read the release record, its assigned milestones, and included tasks with Papyrus.
 2. Read security and privacy requirements, architecture constraints, and ADRs.
 3. Inventory the attack surface: entry points, authentication, authorization, data flows, secrets, dependencies, and platform-specific components.
 4. Run the checks defined in `security-audit`, adapting them to the stacks present.

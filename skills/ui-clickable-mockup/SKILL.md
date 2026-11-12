@@ -1,6 +1,6 @@
 ---
 name: ui-clickable-mockup
-description: 'Generate a single self-contained HTML review package per ticket: a review landing and clickable per-platform prototypes, saved as MOCK-XXXX-<slug>.html under docs/specifications/ui/mockups/, using a shared wireframe.css.'
+description: 'Generate a single self-contained HTML review package per ticket: a review landing and clickable per-platform prototypes, saved as a Papyrus MOCK record under docs/specifications/ui/mockups/, using a shared wireframe.css.'
 argument-hint: 'generate the review package for the create-order flow (MOCK-0010); simulate the checkout scenario'
 user-invocable: true
 disable-model-invocation: false
@@ -15,7 +15,7 @@ Produce **one** interactive, wireframe-styled HTML file per ticket that a review
 1. **Review landing** — the ticket under review, plus one button per platform prototype.
 2. **Platform prototypes** — one clickable prototype per platform, so usability can be tested view by view.
 
-Saved as `MOCK-XXXX-<slug>.html` under `docs/specifications/ui/mockups/`, sharing `wireframe.css`. It demonstrates layout and interaction flow only; it conveys no library, framework, or technology choice.
+Saved as a Papyrus `MOCK` record under `docs/specifications/ui/mockups/`, sharing `wireframe.css`. It demonstrates layout and interaction flow only; it conveys no library, framework, or technology choice. Papyrus owns the MOCK id and metadata comments; the designer authors the HTML body.
 
 ## When To Use
 
@@ -32,10 +32,11 @@ Do not use this skill for:
 ## Location
 
 - All mockups live in `docs/specifications/ui/mockups/`.
-- File naming convention: `MOCK-XXXX-<kebab-case-slug>.html`, one file per ticket.
+- Papyrus creates the record and file with `papyrus ui-mockup create --task <TASK-ID> --spec <UI-ID> "<title>"`.
+- Papyrus owns the MOCK id, filename, and metadata comments. The designer fills the HTML body.
 - Shared stylesheet: `docs/specifications/ui/mockups/wireframe.css` (copied from the skill assets).
 - Base template: `skills/ui-clickable-mockup/templates/mockup.html`.
-- Scaffold: `skills/ui-clickable-mockup/scripts/new_mockup.sh [mockups-dir] [slug] [name] [platform]`.
+- Stylesheet helper: `skills/ui-clickable-mockup/scripts/ensure_wireframe_css.sh [mockups-dir]`.
 
 ## Single-file rule
 
@@ -55,10 +56,10 @@ Each file follows this structure:
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'self' file: 'unsafe-inline'; script-src 'unsafe-inline'; img-src data:; base-uri 'none'; form-action 'none'">
-<title>MOCK-XXXX — <Name></title>
+<title>MOCK-xxx — <Name></title>
 <link rel="stylesheet" href="wireframe.css">
 </head>
-<body data-mock-id="MOCK-XXXX">
+<body data-mock-id="MOCK-xxx">
   <header class="wf-chrome">Review links: Overview, one per platform</header>
 
   <!-- 1. Review landing: ticket + one card/button per platform prototype -->
@@ -85,6 +86,7 @@ Conventions:
 - No external resources, no network calls, no form submission (`form-action 'none'`).
 - Neutral grayscale only; no brand colors, fonts, or component library hints.
 - The `<title>` includes the MOCK id and name.
+- Keep the Papyrus metadata comments at the top of the file unchanged. They are the record link; update them through `papyrus ui-mockup edit`, not by hand.
 
 ## 1. Review landing
 
@@ -115,45 +117,37 @@ Conventions:
 
 ## Numbering
 
-- Numbers are global across HTML mockups, one id per file. Allocate via `skills/ui-clickable-mockup/scripts/next_mock_id.sh`.
-- Never reuse or renumber an id, never split an id across files, never put two ids in one file.
+- Papyrus allocates the next `MOCK-xxx` id and filename. Never choose, reuse, or renumber an id by hand.
+- One file is exactly one MOCK id. Never split an id across files or platforms, and never put two ids in one file.
+- Default: one mockup per ticket. If a ticket genuinely needs several distinct design packages, create one Papyrus MOCK record per package.
 
 ## Registry
 
-Maintain `docs/specifications/ui/mockups/README.md` as a table:
+Papyrus is the registry. Do not create or maintain `README.md` registry tables.
 
-```markdown
-# UI Mockup Registry
-
-| ID | Type | Name | Slug | Artifacts | Platform | Views | Covers | Status | Source |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| MOCK-0001 | scenario | Order flow | order-flow | html | web,android | web:list,detail; android:list | — | draft | REQ-02.001; docs/specifications/orders.md |
-```
-
-- `Type`: `view` (single screen) or `scenario` (flow).
-- `Artifacts`: `html` (one file per ticket).
-- `Platform`: comma-separated platforms covered by the single file.
-- `Views`: platform-scoped view ids exposed by the landing prototype buttons.
-- `Covers`: comma-separated MOCK ids this mockup depends on or supersedes, or `—`.
-- `Status`: `draft` / `reviewed` / `approved`.
-- Update the registry row whenever a mockup is created, revised, or has its status changed.
+- List and inspect records with `papyrus ui-mockup list` and `papyrus ui-mockup view <MOCK-ID>`.
+- Status starts at `pending`. Set `approved` only after explicit user approval.
+- Use `papyrus ui-mockup edit <MOCK-ID> --status approved` or `--status deprecated`.
+- Record task and specification references at creation time with `--task` and `--spec`; update them with `papyrus ui-mockup edit`.
 
 ## Procedure
 
 1. **Read sources** — Read requirements, spec, and ticket to understand the feature, its happy path, screens, active elements, and target platform(s).
 2. **Enumerate views** — List the views/screens of the current feature per platform that the happy path passes through; these become prototype screens and chrome links. For a feature built on an earlier mockup, list only that mockup's basic context views.
-3. **Allocate id** — Get the next `MOCK-XXXX` (one id per file; by default one file/id per ticket).
-4. **Scaffold** — Run `scripts/new_mockup.sh` to create the file, or copy the template. Run `scripts/ensure_wireframe_css.sh` to create/update the shared stylesheet.
+3. **Create the Papyrus record** — If no `UI` specification exists for the view, create one with `papyrus ui-spec create`. Then run `papyrus ui-mockup create --task <TASK-ID> --spec <UI-ID> "<title>"`. Capture the returned `MOCK-xxx` id and file path.
+4. **Prepare the file** — Run `scripts/ensure_wireframe_css.sh`. Keep the Papyrus metadata comments at the top of the created HTML file unchanged; replace only the body content with the review landing and platform prototypes from the template.
 5. **Fill the landing** — Replace the ticket and source placeholders; add one card per platform.
 6. **Build the prototypes** — One `.wf-proto` per platform with the happy-path views, a view navigation band, a device frame, and working `data-goto`/hash links.
-7. **Register** — Add/update the registry row (platforms + views).
-8. **Reference** — Report the MOCK id to the caller for recording in the feature specification (owner: task-refiner or tech-writer); add it to the ticket via `backlog-md`.
-9. **Verify** — Run `scripts/validate_mockups.sh` and open the file to confirm landing and prototype navigation work with no console errors.
-10. **Review** — Present the single file to the user; keep status `draft` until explicit approval.
+7. **Validate** — Run `scripts/validate_mockups.sh` and open the file to confirm landing and prototype navigation work with no console errors.
+8. **Reference** — Report the MOCK id to the caller for recording in the feature specification (owner: task-refiner or tech-writer); add it to the ticket with `papyrus task edit <TASK-ID> --documentation <mockup-path>` or a task comment.
+9. **Review** — Present the single file to the user; keep Papyrus status `pending` until explicit approval.
+10. **Approve** — After explicit user approval, run `papyrus ui-mockup edit <MOCK-ID> --status approved`.
+
+Do not hand-edit the Papyrus metadata comments (`<!-- mockup-id: ... -->`, `<!-- status: ... -->`, `<!-- task: ... -->`, `<!-- specs: ... -->`, `<!-- refs: ... -->`). Update them through Papyrus.
 
 ### Migrating per-platform files
 
-If a ticket already has one file per platform, merge them into a single file under the existing lowest MOCK id: move every platform's screens into it, delete the extra files, remove their registry rows, and note the merged ids in `Covers`. Do not keep a separate index page.
+If a ticket already has one file per platform, merge them into a single file under the existing lowest MOCK id: move every platform's screens into it, deprecate the extra Papyrus `MOCK` records with `papyrus ui-mockup edit <ID> --status deprecated`, and note the merged IDs in the surviving record's references. Do not keep a separate index page.
 
 ### Removing a design deck
 
@@ -161,8 +155,9 @@ If an existing mockup still contains a design deck (`data-review="deck"`), delet
 
 ## Completion Checks
 
+- [ ] The MOCK record exists in Papyrus and is linked to the task and UI specification.
 - [ ] Each MOCK id is exactly one file, and each file carries exactly one MOCK id.
-- [ ] The ticket's mockup file exists at `MOCK-XXXX-<slug>.html` (one file per mockup).
+- [ ] The Papyrus metadata comments are intact.
 - [ ] Landing shows the ticket and one button per platform prototype.
 - [ ] No design deck section is present in the file.
 - [ ] Every platform has a clickable prototype with its happy-path views and a view navigation band.
@@ -170,7 +165,7 @@ If an existing mockup still contains a design deck (`data-review="deck"`), delet
 - [ ] All active elements are drawn; prototype actions navigate.
 - [ ] `wireframe.css` present and up to date in the mockups dir.
 - [ ] No external resources, no network calls, no technology hints.
-- [ ] Registry row updated (platforms + views) and status is correct.
+- [ ] Papyrus status is `pending` before approval and `approved` only after explicit user approval.
 - [ ] `validate_mockups.sh` reports no errors.
 - [ ] MOCK id reported for the feature specification and added to the ticket.
 
@@ -178,11 +173,11 @@ If an existing mockup still contains a design deck (`data-review="deck"`), delet
 
 After creation, summarize:
 
-- **Mockup**: MOCK-XXXX — <name>
-- **File**: `docs/specifications/ui/mockups/MOCK-XXXX-<slug>.html`
+- **Mockup**: MOCK-xxx — <name>
+- **File**: path returned by Papyrus
 - **Platforms**: <web / android / ...>
 - **Prototype views**: <platform: views>
 - **Scope**: current feature happy path; earlier-mockup context views (if any)
 - **Sources**: <REQs, specs, tickets>
-- **Registry**: updated / not updated
-- **Approval**: draft / approved
+- **Papyrus status**: pending / approved
+- **Approval**: pending / approved

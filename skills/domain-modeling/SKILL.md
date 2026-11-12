@@ -19,10 +19,10 @@ Use this skill when you need to:
 - Document business objects and their relationships
 
 ## Inputs
-- Business requirements from `docs/requirements/`
+- Business requirements from Papyrus (`papyrus req list` / `papyrus req view`)
 - Architecture documentation from `docs/architecture/`
 - Existing domain model files from `docs/domain-model/`
-- Technical specifications from `docs/specs/`
+- Technical specifications from Papyrus (`papyrus tech-spec list` / `papyrus tech-spec view`)
 
 ## Workflow
 
@@ -35,7 +35,7 @@ Use this skill when you need to:
 
 ## Output Format
 
-The output is split into 2 files: `context-map.md` in `docs/domain-model/` and `business-object-model.md` in `docs/domain-model/object-model/`.
+The output is split into 2 files: `context-map.md` and `business-object-model.md`  in `docs/domain-model/`.
 
 ### `context-map.md`
 - A title "Context Map"

@@ -1,17 +1,14 @@
 #!/bin/sh
 # Validate single-file mockup review packages in a mockups directory.
 # Usage: validate_mockups.sh [mockups-dir]
-# A valid package is ONE self-contained HTML per ticket containing:
+# A valid package is ONE self-contained HTML per Papyrus MOCK record containing:
 #   1. a review landing (ticket + one button per platform),
 #   2. one clickable prototype per platform (current feature, happy path only).
-# No design deck is allowed.
-# Also checks unique ids, registry rows, platform coverage, and link targets.
+# No design deck is allowed. Papyrus is the registry; no README table is required.
 set -eu
 
 dir=${1:-docs/specifications/ui/mockups}
-registry="$dir/README.md"
 [ -d "$dir" ] || { echo "error: mockups directory not found: $dir" >&2; exit 1; }
-[ -f "$registry" ] || { echo "error: registry not found: $registry" >&2; exit 1; }
 [ -f "$dir/wireframe.css" ] || { echo "error: shared stylesheet missing: $dir/wireframe.css" >&2; exit 1; }
 
 errors=0
@@ -22,8 +19,8 @@ for f in "$dir"/MOCK-*; do
   [ -e "$f" ] || continue
   b=${f##*/}
   case "$b" in
-    MOCK-[0-9][0-9][0-9][0-9]-*.html) files="$files $f" ;;
-    MOCK-[0-9][0-9][0-9][0-9]-*) err "unsupported artifact (one .html review file per ticket): $b" ;;
+    MOCK-[0-9][0-9][0-9]*.html) files="$files $f" ;;
+    MOCK-[0-9][0-9][0-9]*) err "unsupported artifact (one .html review file per ticket): $b" ;;
     *) err "non-conforming filename: $b" ;;
   esac
 done
@@ -32,8 +29,8 @@ done
 ids=""
 for f in $files; do
   b=${f##*/}
-  id=${b#MOCK-}
-  ids="$ids ${id%%-*}"
+  id=$(printf '%s' "$b" | sed -n 's/^\(MOCK-[0-9][0-9][0-9]*\).*/\1/p')
+  ids="$ids $id"
 done
 
 dups=$(printf '%s\n' $ids | sort | uniq -d)
@@ -41,14 +38,28 @@ dups=$(printf '%s\n' $ids | sort | uniq -d)
 
 for f in $files; do
   b=${f##*/}
-  id=${b#MOCK-}
-  id=${id%%-*}
+  id=$(printf '%s' "$b" | sed -n 's/^\(MOCK-[0-9][0-9][0-9]*\).*/\1/p')
 
-  grep -q 'data-mock-id="MOCK-'"$id"'"' "$f" \
+  grep -q "data-mock-id=\"$id\"" "$f" \
     || err "$b: data-mock-id missing or does not match the file id"
-  mid_count=$(grep -o 'data-mock-id="MOCK-[0-9][0-9][0-9][0-9]"' "$f" | sort -u | wc -l)
+  mid_count=$(grep -o 'data-mock-id="MOCK-[0-9][0-9][0-9]*"' "$f" | sort -u | wc -l)
   [ "$mid_count" -eq 1 ] \
     || err "$b: a file must carry exactly one MOCK id (found $mid_count)"
+
+  grep -q "<!-- mockup-id: $id -->" "$f" \
+    || err "$b: Papyrus metadata comment 'mockup-id' missing or does not match"
+  grep -q '<!-- status: \(pending\|approved\|deprecated\) -->' "$f" \
+    || err "$b: Papyrus metadata status must be pending, approved, or deprecated"
+  grep -q '<!-- task: ' "$f" \
+    || err "$b: Papyrus metadata task reference missing"
+  grep -q '<!-- specs: ' "$f" \
+    || err "$b: Papyrus metadata specification reference missing"
+
+  if command -v papyrus >/dev/null 2>&1; then
+    papyrus --json ui-mockup view "$id" >/dev/null 2>&1 \
+      || err "$b: no Papyrus ui-mockup record for $id"
+  fi
+
   grep -q 'href="wireframe.css"' "$f" \
     || err "$b: missing <link> to wireframe.css"
   grep -q 'data-review="index"' "$f" \
@@ -90,30 +101,6 @@ for f in $files; do
   if grep -qE '(src|href)="https?://' "$f"; then err "$b: external resource reference found"; fi
   if grep -qE '(src|href)="//' "$f"; then err "$b: protocol-relative external reference found"; fi
   if grep -q 'TODO' "$f"; then err "$b: unresolved TODO marker"; fi
-
-  row=$(grep "^| *MOCK-$id " "$registry" || true)
-  if [ -z "$row" ]; then
-    err "$b: missing registry row"
-  else
-    for p in $platforms; do
-      printf '%s' "$row" | grep -q "$p" \
-        || err "$b: registry row does not list platform '$p'"
-    done
-    case "$row" in
-      *"| draft |"*|*"| reviewed |"*|*"| approved |"*) ;;
-      *) err "$b: registry status must be draft, reviewed, or approved" ;;
-    esac
-  fi
-done
-
-reg_ids=$(sed -n 's/^| *MOCK-\([0-9][0-9][0-9][0-9]\) .*/\1/p' "$registry" | sort)
-for id in $ids; do
-  printf '%s\n' "$reg_ids" | grep -qx "$id" \
-    || err "registry row without file: MOCK-$id"
-done
-for id in $reg_ids; do
-  printf '%s\n' $ids | grep -qx "$id" \
-    || { echo "warning: registry row without mockup file: MOCK-$id" >&2; }
 done
 
 if [ "$errors" -gt 0 ]; then

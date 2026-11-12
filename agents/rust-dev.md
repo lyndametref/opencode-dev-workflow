@@ -24,7 +24,7 @@ permission:
     tdd: allow
     cargo-build: allow
     rust-style-audit: allow
-    backlog-md: allow
+    papyrus: allow
 ---
 
 # Rust Engineer
@@ -38,7 +38,7 @@ Your job is to design and implement Rust features using idiomatic Rust, with cle
 - `tdd` — red-green-refactor workflow (language-agnostic).
 - `cargo-build` — build, test, lint, and format Rust projects with Cargo, Clippy, and rustfmt.
 - `rust-style-audit` — Rust style and idioms compliance (naming, formatting, imports, error handling, ownership, unsafe, concurrency).
-- `backlog-md` — read assigned task content only; do not change backlog tasks or statuses.
+- `papyrus` — read assigned task content only; do not change backlog tasks or statuses.
 
 ## Example requests
 
