@@ -61,7 +61,7 @@ Every feature milestone contains the same task sequence. Planning decides that t
 | 1 | Architecture impact assessment | Judge architectural impact and needed decisions; blocks dependent work when unresolved | `architect` |
 | 2 | UI design | UI specification and mockup, only when the planner decides it is needed | `ui-designer` |
 | 3 | Refinement | Confirm that all information needed for development is available, and produce the development plan | `task-refiner` |
-| 4 | Implementation | Development and automated tests | Dev agents |
+| 4 | Implementation | Development and automated tests | Any `*-dev` agent |
 | 5 | Milestone validation | Carry the milestone and feature acceptance criteria, and verify the increment against them | `quality-gatekeeper` |
 
 Rules:
