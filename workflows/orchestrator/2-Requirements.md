@@ -15,15 +15,15 @@ An incomplete or missing request artifact is not worked around: it returns to Ph
 
 ### Actors
 
-| Actor | Role in Phase 2 |
-|---|---|
+| Actor                   | Role in Phase 2                                                                                               |
+| ----------------------- | ------------------------------------------------------------------------------------------------------------- |
 | `requirements-engineer` | Owner: elicits, writes, and validates business and non-functional requirements; assesses impact and delegates |
-| `business-analyst` | Updates business rules when decision logic or constraints are affected |
-| `terminologist` | Updates the glossary when domain language is new or changed |
-| `domain-modeler` | Updates the domain model when concepts, states, attributes, or processes are affected |
-| `architect` | Consumes requirements as constraints and owns architecture decisions, in the architecture step, not here |
-| `orchestrator` | Starts the phase and collects the result; never edits requirements |
-| Requester / user | Owns product decisions that requirements cannot invent |
+| `business-analyst`      | Updates business rules when decision logic or constraints are affected                                        |
+| `terminologist`         | Updates the glossary when domain language is new or changed                                                   |
+| `domain-modeler`        | Updates the domain model when concepts, states, attributes, or processes are affected                         |
+| `architect`             | Consumes requirements as constraints; owns architecture decisions in the architecture step, not here          |
+| `orchestrator`          | Starts the phase and collects the result; never edits requirements                                            |
+| Requester / user        | Owns product decisions that requirements cannot invent                                                        |
 
 `requirements-engineer` is the sole editor of business and non-functional requirements. A requirement change requested elsewhere is routed back to it.
 
@@ -35,7 +35,7 @@ flowchart LR
     ART([Request artifact: open]) --> CAT{"Category = bug?"}
     CAT -->|"Yes"| P3["Phase 3 Planning:<br/>defect"]
     CAT -->|"No"| READ["Read items, category,<br/>open questions"]
-    READ --> CHECK{"Open questions, contradictions,<br/>gaps, group resolved?"}
+    READ --> CHECK{"Open questions, contradictions,<br/>gaps, grouping resolved?"}
     CHECK -->|"No"| ASK["Ask the requester;<br/>check baseline records"]
     ASK --> CHECK
     CHECK -->|"Yes"| DRAFT["Draft or update REQ/NFR"]
@@ -75,26 +75,26 @@ Requirements contain no solution design, architecture choice, technology, task, 
 
 Run before drafting; a failure returns to the requester or to the baseline records, never to an assumption.
 
-| Check | Question | If it fails |
-|---|---|---|
-| Contradiction | Does an existing requirement, rule, or specification state a conflicting behavior, target, or constraint? | Ask for a product decision. Never silently supersede; record which requirement is changed or deprecated |
-| Definition gap | Are actor, trigger, behavior, data, error cases, quality attributes, and acceptance criteria stated, or explicitly not applicable? | Ask the requester; record the answer on the artifact or in the requirement |
-| Overlap | Is the need already covered, fully or partially? | Update the existing requirement instead of creating a duplicate |
-| Group placement | Does an existing requirement group fit the new requirement? | Create a new group with title, scope, and user story before its first requirement |
+| Check           | Question                                                                                                                           | If it fails                                                                                             |
+| --------------- | ---------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------- |
+| Contradiction   | Does an existing requirement, rule, or specification state a conflicting behavior, target, or constraint?                          | Ask for a product decision. Never silently supersede; record which requirement is changed or deprecated |
+| Definition gap  | Are actor, trigger, behavior, data, error cases, quality attributes, and acceptance criteria stated, or explicitly not applicable? | Ask the requester; record the answer on the artifact or in the requirement                              |
+| Overlap         | Is the need already covered, fully or partially?                                                                                   | Update the existing requirement instead of creating a duplicate                                         |
+| Group placement | Does an existing requirement group fit the new requirement?                                                                        | Create a new group with title, scope, and user story before its first requirement                       |
 
 Every affected requirement group is named in the phase result, including newly created ones.
 
 ### Impact assessment
 
-| Impact | Artifact | Owner | Gate |
-|---|---|---|---|
-| New or changed decision logic, formula, or constraint | Business Rules | `business-analyst` | Open business decisions block |
-| New or changed domain term | Business Glossary | `terminologist` | The term is defined before use in specs, tickets, or UI |
-| New or changed concepts, lifecycle states, attributes, or processes | Domain Model | `domain-modeler` | Conflicts are reported back and resolved with the requester |
-| New or changed behavior | Business Requirements | `requirements-engineer` | Validated before planning |
-| Quality target, constraint, integration, or cross-cutting concern | Requirements (NFR) | `requirements-engineer` | Flagged for architecture analysis in Phase 3 |
-|Technological change|Architecture/Technical specification|`architect`| Reason for current situation are reported and any change request must be approved by the requester|
-| None | — | — | Recorded explicitly as `none` |
+| Impact                                                              | Artifact                               | Owner                   | Gate                                                                                                   |
+| ------------------------------------------------------------------- | -------------------------------------- | ----------------------- | ------------------------------------------------------------------------------------------------------ |
+| New or changed decision logic, formula, or constraint               | Business Rules                         | `business-analyst`      | Open business decisions block                                                                          |
+| New or changed domain term                                          | Business Glossary                      | `terminologist`         | The term is defined before use in specs, tickets, or UI                                                |
+| New or changed concepts, lifecycle states, attributes, or processes | Domain Model                           | `domain-modeler`        | Conflicts are reported back and resolved with the requester                                            |
+| New or changed behavior                                             | Business Requirements                  | `requirements-engineer` | Validated before planning                                                                              |
+| Quality target, constraint, integration, or cross-cutting concern   | Requirements (NFR)                     | `requirements-engineer` | Flagged for architecture analysis in Phase 3                                                           |
+| Technological change                                                | Architecture (impact flag only)        | `architect`             | The reason for the current situation is recorded and reported as a flag; no architecture or specification work happens in Phase 2 |
+| None                                                                | —                                      | —                       | Recorded explicitly as `none`                                                                          |
 
 Rules:
 
@@ -105,11 +105,11 @@ Rules:
 
 ### Request categories
 
-| Category | Requirement treatment |
-|---|---|
-| `bug` | Bypasses Phase 2: routed from Phase 1 directly to Phase 3 as a defect. A requirement is created only if the defect exposes unspecified behavior |
-| `enhancement` | New or changed business requirement |
-| `technical-improvement` | NFR when a quality attribute changes; otherwise no requirement change, with the reason recorded |
+| Category                | Requirement treatment                                                                                                                           |
+| ----------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| `bug`                   | Bypasses Phase 2: routed from Phase 1 directly to Phase 3 as a defect. A requirement is created only if the defect exposes unspecified behavior |
+| `enhancement`           | New or changed business requirement                                                                                                             |
+| `technical-improvement` | NFR when a quality attribute changes; otherwise no requirement change, with the reason recorded                                                 |
 
 ### Validation
 
