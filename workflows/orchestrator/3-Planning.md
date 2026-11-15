@@ -1,6 +1,6 @@
 ## 3. Planning
 
-Phase 3 turns verified requirements, and `bug` requests, into an **ordered, dependency-safe backlog**. Each new or changed feature is packed into its own milestone; each technical improvement gets its own milestone; `bug` fixes are packed into one milestone per batch. Planning closes the request artifacts it planned and rejects those it declines.
+Phase 3 turns verified requirements, and `bug` requests, into an **ordered, dependency-safe backlog**. Each new or changed enhancement is packed into its own milestone; each technical improvement gets its own milestone; `bug` fixes are packed into one milestone per batch. Planning closes the request artifacts it planned and rejects those it declines.
 
 Phase position: `Phase 2 → Phase 3 → Phase 4 Implementation`. The `Backlog` artifact is defined in [artifacts.md](./artifacts.md).
 
@@ -46,7 +46,7 @@ flowchart LR
 | Element    | Definition                                                                             | Rule                                                                                                             |
 | ---------- | -------------------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------- |
 | Roadmap    | Ordered feature list with source requirement references and rationale                  | One position per feature; changes are recorded, never silent                                                     |
-| Milestone  | One feature, one technical improvement, or a batch of `bug` tasks, delivered as a usable increment | Has no status; completion is derived from its tasks and confirmed by verification          |
+| Milestone  | One enhancement, one technical improvement, or a batch of `bug` tasks, delivered as a usable increment | Has no status; completion is derived from its tasks and confirmed by verification          |
 | Release    | A version record, open until completed, owning one or more milestones                  | Created by the planner and stays open to new milestones; RC versioning happens in Phase 5 and the final version is chosen in Phase 6 |
 | Task       | A task inside a milestone, traceable to requirements or the `bug` request              | Outcome-level; assigned to the actor able to fulfill it; refinement completes the task's fields                  |
 | Dependency | A hard ordering constraint declared on a task                                          | Never a suggestion; cycles are defects                                                                           |
@@ -54,7 +54,7 @@ flowchart LR
 
 ### Milestone composition
 
-Every milestone contains the same tasks, in this order. Planning decides that the tasks exist and in which order; it does not plan their execution. Tasks 1 to 5 are executed in Phase 4; task 6 is the milestone check, executed at the milestone boundary, and the milestone cannot close until it passes.
+Every milestone uses the same ordered task kinds, in this order, with optional architecture and UI tasks. Planning decides that the tasks exist and in which order; it does not plan their execution. Tasks 1 to 5 are executed in Phase 4; task 6 is the milestone check, executed at the milestone boundary, and the milestone cannot close until it passes.
 
 | Order | Task                           | Purpose                                                                                            | Owner                |
 | ----- | ------------------------------ | -------------------------------------------------------------------------------------------------- | -------------------- |
@@ -67,7 +67,7 @@ Every milestone contains the same tasks, in this order. Planning decides that th
 
 Rules:
 
-- The architecture impact assessment comes first in every feature milestone; its findings are resolved by updating the affected artifact, including the Technical specification and any Decision.
+- The architecture impact assessment comes first in every feature and technical-improvement milestone; its findings are resolved by updating the affected artifact, including the Technical specification and any Decision.
 - The UI design task exists only when the planner decides the feature has UI impact.
 - Refinement does not start before the architecture impact is settled, any UI task is planned, and the test cases are approved; the test cases are input to the implementation plan.
 - Implementation does not start before refinement has completed the task.
@@ -97,7 +97,7 @@ The planner never invents priority, business value, or capacity.
 1. **Read the baseline**: verified requirements, impact flags, bug requests, roadmap, milestones, releases, and current tasks.
 2. **Confirm priority** for the incoming work; stop and ask when it is unknown.
 3. **Update the roadmap**: feature order, requirement references, rationale.
-4. **Decide the work**: pack each new or changed feature into its own milestone, pack available `bug` tasks into a shared milestone, add the tasks in the required sequence including the milestone verification task, assign each to the actor able to fulfill it, split where useful, and set dependencies and ordinals.
+4. **Decide the work**: pack each new or changed enhancement into its own milestone, pack available `bug` tasks into a shared milestone, add the tasks in the required sequence including the milestone verification task, assign each to the actor able to fulfill it, split where useful, and set dependencies and ordinals.
 5. **Validate** the plan.
 6. **Close the planned request artifacts**: status `closed`, referencing the requirements and tasks produced. Set `rejected` on artifacts whose remaining items are declined, with the reason.
 7. **Report** the plan and hand the backlog to the orchestrator, including the first eligible item.
@@ -106,7 +106,7 @@ The planner never invents priority, business value, or capacity.
 
 A plan is valid only when:
 
-- every milestone is one feature, one technical improvement, or a batch of `bug` tasks, and has the required task sequence;
+- every milestone is one enhancement, one technical improvement, or a batch of `bug` tasks, and has the required task sequence;
 - every milestone has its acceptance criteria and exactly one milestone verification task, executed at the milestone boundary;
 - the dependency graph is acyclic;
 - every dependency exists and is scheduled earlier;
@@ -152,7 +152,7 @@ Phase 3 is complete when:
 
 - a valid plan exists, ordered and dependency-ready;
 - every incoming requirement or bug request is planned or explicitly rejected;
-- every milestone carries its architecture, optional UI, refinement, implementation, and verification tasks, with its acceptance criteria on the milestone;
+- every milestone carries its architecture impact assessment, optional UI design, test design, refinement, implementation, and verification tasks, with its acceptance criteria on the milestone;
 - the request artifacts are closed with their references;
 - the orchestrator holds the backlog, the first eligible item, and any open decisions.
 

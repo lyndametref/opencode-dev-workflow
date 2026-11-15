@@ -56,7 +56,7 @@ flowchart LR
 - Fulfilment proof is recorded on the task when it becomes `Done`; its format follows the nature of the acceptance criteria (test results, document or mockup approval, review output) and is defined per task.
 - Task kinds come from the milestone composition in Phase 3: architecture impact assessment, UI design, test design, refinement, implementation, and milestone verification.
 - The milestone verification task belongs to the milestone but is not selected as a Phase 4 task; it is executed at the milestone boundary in Phase 5, and the milestone is not complete until it is `Done`.
-- Correction tasks created in Phase 5 are added to the milestone within its approved scope, executed before it is re-verified, and do not change the prioritized order; the planner decides any scope, dependency, or ordinal change.
+- Correction tasks created in Phase 5 are created by the orchestrator and added to the milestone within its approved scope; they complete the unfulfilled scope without changing it, are executed before the milestone is re-verified, and do not change the prioritized order. Scope, dependency, or ordinal changes, if ever required, go to the planner.
 
 ### Selection and order
 
@@ -82,6 +82,8 @@ Some tasks produce an artifact that must be explicitly validated before dependen
 | ------------------------------ | ------------------------------------------------------------------- | ----------------------------------- |
 | Architecture impact assessment | Architecture approved by the user; decisions accepted                 | Dependent design and implementation |
 | UI design                      | Mockup explicitly approved by the user                              | Implementing the affected UI        |
+| Test design                    | Test cases approved by the user                                     | Refinement and implementation       |
+| Technical specification        | Conformance with the architecture and decisions approved by the architect | Refinement                       |
 | Milestone verification         | Confirms the milestone acceptance criteria                          | Milestone is complete               |
 | Any task                       | None beyond its own acceptance criteria                             | —                                   |
 

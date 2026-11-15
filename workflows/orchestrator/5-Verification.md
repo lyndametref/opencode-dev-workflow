@@ -50,7 +50,7 @@ flowchart LR
 - The planner creates **one milestone verification task per milestone**; the orchestrator opens it when the milestone's execution tasks are `Done`. The criteria are on the milestone. No other verification reports are written.
 - The task is not `Done` until every check passes; the milestone is not complete before that.
 - The task records: milestone and change set, checks run, evidence, findings, the audits, the correction tasks it created, the RC version, and the final result.
-- A failed quality review or code audit creates a **correction task** in the milestone being verified with the failure description and the acceptance criteria it blocks. Correction tasks stay inside the milestone's approved scope: actors may add tasks to the milestone to specify or complete that scope, while scope, dependency, and ordinal changes go to the planner.
+- A failed quality review or code audit creates a **correction task** in the milestone being verified with the failure description and the acceptance criteria it blocks. Correction tasks stay inside the milestone's approved scope and are created by the orchestrator to complete the unfulfilled scope; they do not change the scope. Scope, dependency, or ordinal changes, if ever required, go to the planner.
 - Correction tasks follow the Phase 4 task model: assigned to an owning actor, executed, and `Done` only when their criteria are met.
 - The verification task is not `Done` until every correction task is `Done` and verification is rerun and passes.
 
@@ -71,13 +71,13 @@ Rules:
 - The code audit targets only the code and tests created or modified in the milestone; pre-existing code is not audited here.
 - Unchanged areas are not re-audited; they are covered by the release-wide inspection in Phase 6.
 
-Audits follow their own lifecycle: `issued → approved → archived`. A finding the user does not approve becomes a correction task; after the correction a new audit is issued and the old one is archived. Only one audit of a type can be `issued` or `approved` at a time.
+Audits follow their own lifecycle: `issued → approved → archived`. A finding the user does not approve becomes a correction task; after the correction a new audit is issued and the old one is archived. Only one audit of a type can be `issued` or `approved` within a single assessed scope (one milestone in Phase 5, one release in Phase 6) at a time; when a check is rerun after a correction, the new audit replaces the previous one, which is `archived`.
 
 ### Versioning (release candidate)
 
 - Each verified milestone receives an RC version, derived from the changes it contains.
 - The RC version is recorded in the verification task and becomes an input to the release.
-- RC numbering restarts when the major version increments.
+- RC numbering restarts when the major version increments. RC versions are Semantic Versioning pre-release identifiers (e.g. `1.2.0-rc.1`).
 - The final release version is chosen in Phase 6, not here.
 
 ### Failure handling
@@ -100,7 +100,7 @@ Phase 5 is complete when:
 - every correction task created by a failed check is `Done`;
 - verification ran again after the corrections and passed;
 - accepted findings have an owner and a follow-up task;
-- the verification task is `Done` with the RC version and the milestone verification result; the code audit is recorded as an Audit artifact (type: code) and approved by the user.
+- the verification task is `Done` with the RC version and the milestone verification result; the quality audit and the code audit are recorded as Audit artifacts (types: quality, code) and approved by the user.
 
 ### Boundaries
 

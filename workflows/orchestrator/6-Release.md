@@ -62,7 +62,7 @@ Phase 6 does not repeat the per-milestone checks. It inspects what only the whol
 ### Release definition
 
 - A release is a version record, open until completed, owning one or more verified milestones; milestones can be added while it is `open`.
-- The **final** version is chosen at the end, after the scope and the audit findings are approved and immediately before the final build. It is derived from all included changes and the RC versions of the verified milestones. RC versioning already happened in Phase 5; no version is assigned during planning.
+- The **final** version is chosen at the end, after the scope and the audit findings are approved and immediately before the final build. It is derived from all included changes and the RC versions of the verified milestones. RC versioning already happened in Phase 5; no version is assigned during planning. Versions follow Semantic Versioning (MAJOR.MINOR.PATCH); milestone candidates are published as RC pre-release versions (e.g. `1.2.0-rc.1`).
 - The version is recorded on the release before the final build and becomes the version of the release report.
 - The release has no acceptance criteria of its own; project-wide criteria apply.
 
@@ -185,4 +185,4 @@ Phase 6 never:
 ### Open points
 
 - Who approves a release when several stakeholders are involved is not yet fixed.
-- The major/minor/patch convention used to derive the version is not documented in this workflow.
+- Resolved: versioning follows Semantic Versioning (MAJOR.MINOR.PATCH, with RC pre-release identifiers for milestone candidates); see the release definition above.
