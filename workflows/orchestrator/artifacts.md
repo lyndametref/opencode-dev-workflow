@@ -283,15 +283,15 @@ Tasks use the same three fields: for them, `Dependencies` is an ordering constra
 | Definition       | The description of an integration test: the scenario to exercise and the outcome it must produce.                                      |
 | Goal             | State which integration test verifies a requirement and its business rules, so implementation and verification run the same test.      |
 | Granularity      | One per verification scenario, covering one requirement and the business rules attached to it.                                         |
-| Owner / approver | *not defined*                                                                                                                          |
-| Produced by      | *not defined*                                                                                                                          |
-| Lifecycle        | `draft` → `verified` when its implemented test passes; `archived` when cleaned up.                                                     |
+| Owner / approver | `test-manager` (sole editor) / user, who approves the test case                                                                        |
+| Produced by      | Phase 4, test design task kind, `test-manager`                                                                                         |
+| Lifecycle        | `draft` → `approved` → `verified` when its implemented test passes; `archived` when cleaned up.                                        |
 | Required fields  | identifier, scenario, expected outcome, covered requirement, covered business rules                                                    |
 | Dependencies     | requirement; business rules                                                                                                            |
 | Dependents       | task                                                                                                                                   |
 | Related          | none                                                                                                                                   |
 | Never contains   | Test implementation code, requirements, architecture decisions, and verification evidence.                                             |
-| Verified by      | Phase 5 milestone verification: the implemented test passes and covers its requirement.                                                |
+| Verified by      | Phase 4: the user approves the test case; Phase 5: the implemented test passes and covers its requirement.                             |
 | Notes            | A test case describes an integration test: does the feature still work. Low-level tests live with the code and are not described here. |
 
 ### Source Code
@@ -320,7 +320,7 @@ Tasks use the same three fields: for them, `Dependencies` is an ordering constra
 | Goal             | Give an evidence-based, severity-ranked verdict on the assessed scope, so the user can decide acceptance rather than rely on assumption.                                                                      |
 | Granularity      | One per check per assessed scope: change-scoped in Phase 5, release-wide in Phase 6.                                                                                                                          |
 | Owner / approver | `quality-gatekeeper` (quality), `code-analyzer` (code), `security-officer` (security) / user, who approves a finding or requests correction                                                                   |
-| Produced by      | Phase 5 (type: code); Phase 6 (types: quality, code, security)                                                                                                                                                |
+| Produced by      | Phase 5 (types: quality, code); Phase 6 (types: quality, code, security)                                                                                                                                      |
 | Lifecycle        | `issued` → `approved` → `archived`. A finding that is not approved goes to correction and a new audit is issued; the old one is `archived`. Only one audit of a type can be `issued` or `approved` at a time. |
 | Required fields  | identifier, title, type (`quality`, `code`, `security`), scope, severity-ranked findings with evidence, fix proposal, and approval status                                                                     |
 | Dependencies     | source code; requirements; technical specification, for the audited scope                                                                                                                                     |
@@ -351,7 +351,6 @@ Tasks use the same three fields: for them, `Dependencies` is an ordering constra
 
 - quality audit, checks:
   - acceptance criteria
-  - definition of done
   - scope creep
   - NFR coverage
 - code audit, checks:

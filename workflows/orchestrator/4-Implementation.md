@@ -8,7 +8,7 @@ Phase position: `Phase 3 → Phase 4 → Phase 5 Verification`.
 
 - **Prioritized backlog** from Phase 3: ordered by ordinal, with milestones, assigned actors, and dependencies.
 - **Stop boundary**: the user states up to which task execution continues automatically, or can request a stop at any time.
-- **Task statuses**: only `To Do`, `In-Progress`, and `Done`.
+- **Task statuses**: `To Do`, `In-Progress`, and `Done`; `archived` when cleaned up.
 
 A missing plan, an unassigned task, or an unordered backlog returns to Phase 3.
 
@@ -16,8 +16,9 @@ A missing plan, an unassigned task, or an unordered backlog returns to Phase 3.
 
 | Actor                                                                                      | Role in Phase 4                                                                                        |
 | ------------------------------------------------------------------------------------------ | ------------------------------------------------------------------------------------------------------ |
-| `orchestrator`                                                                             | Drives execution, selects tasks, sets statuses, records evidence, reports; never edits project content |
+| `orchestrator`                                                                             | Drives execution, selects tasks, sets statuses, records fulfilment proof, reports; never edits project content |
 | Task owners (`architect`, `ui-designer`, `task-refiner`, `tech-writer`, any `*-dev` agent) | Execute their assigned tasks                                                                           |
+| `test-manager`                                                                             | Writes the test cases for the requirements and business rules                                          |
 | `quality-gatekeeper`                                                                       | Runs the milestone verification task                                                                   |
 | `planner`                                                                                  | Owns plan repairs and priority changes; never executes                                                 |
 | User                                                                                       | Sets priority and stop boundary, and validates the artifacts that require it                           |
@@ -48,12 +49,13 @@ flowchart LR
 | `To Do`       | Planned, not started                                             |
 | `In-Progress` | Being executed, including rework after a failed acceptance check |
 | `Done`        | Every acceptance criterion of the task is fulfilled              |
+| `archived`    | Cleaned up; hidden from the backlog                              |
 
-- There are no other task statuses. A task never returns to `To Do`.
+- `archived` is terminal. A task never returns to `To Do`.
 - A task is `Done` when all its acceptance criteria are fulfilled; no user approval is required.
-- Evidence is recorded on the task when it becomes `Done`; its format follows the nature of the acceptance criteria (test results, document or mockup approval, review output) and is defined per task.
-- Task kinds come from the milestone composition in Phase 3: architecture impact assessment, UI design, refinement, implementation, and milestone verification.
-- The milestone verification task belongs to the milestone but is not selected as a Phase 4 work item; it is executed at the milestone boundary in Phase 5, and the milestone is not complete until it is `Done`.
+- Fulfilment proof is recorded on the task when it becomes `Done`; its format follows the nature of the acceptance criteria (test results, document or mockup approval, review output) and is defined per task.
+- Task kinds come from the milestone composition in Phase 3: architecture impact assessment, UI design, test design, refinement, implementation, and milestone verification.
+- The milestone verification task belongs to the milestone but is not selected as a Phase 4 task; it is executed at the milestone boundary in Phase 5, and the milestone is not complete until it is `Done`.
 - Correction tasks created in Phase 5 are added to the milestone within its approved scope, executed before it is re-verified, and do not change the prioritized order; the planner decides any scope, dependency, or ordinal change.
 
 ### Selection and order
@@ -78,18 +80,18 @@ Some tasks produce an artifact that must be explicitly validated before dependen
 
 | Task or artifact               | Required validation                                                 | Before                              |
 | ------------------------------ | ------------------------------------------------------------------- | ----------------------------------- |
-| Architecture impact assessment | Decisions accepted by the user; alternatives and rationale recorded | Dependent design and implementation |
+| Architecture impact assessment | Architecture approved by the user; decisions accepted                 | Dependent design and implementation |
 | UI design                      | Mockup explicitly approved by the user                              | Implementing the affected UI        |
-| Milestone verification         | Confirms the milestone and feature acceptance criteria              | Milestone is complete               |
+| Milestone verification         | Confirms the milestone acceptance criteria                          | Milestone is complete               |
 | Any task                       | None beyond its own acceptance criteria                             | —                                   |
 
 No end-of-task approval is requested. A passing acceptance check sets the task `Done` and execution moves to the next task.
 
 ### Milestone handling
 
-- A milestone's execution tasks are its architecture impact assessment, UI design, refinement, and implementation tasks. Phase 4 stops when the last of them is `Done`.
+- A milestone's execution tasks are its architecture impact assessment, UI design, test design, refinement, and implementation tasks. Phase 4 stops when the last of them is `Done`.
 - The milestone is not complete until its milestone verification task passes in Phase 5; the next milestone starts from a new invocation.
-- The milestone verification task carries the milestone and feature acceptance criteria.
+- The milestone carries its acceptance criteria; the verification task checks them.
 - If milestone verification fails, the implementation tasks responsible for the failing acceptance criteria return to `In-Progress` and are reworked; the failing criteria determine which tasks reopen. The milestone is not reported complete.
 - The milestone boundary is reported, not approved.
 
@@ -114,7 +116,7 @@ Phase 4 is complete when:
 - the stop boundary is reached, a milestone's execution tasks complete, the user stops execution, or the backlog is exhausted;
 - every executed task is `Done` or explicitly reported as `In-Progress` with its blocker;
 - every milestone whose execution tasks are `Done` is reported as ready for Phase 5 verification;
-- the report states tasks completed in order, evidence, milestone boundaries reached, remaining work, and the reason execution stopped.
+- the report states tasks completed in order, fulfilment proof, milestone boundaries reached, remaining work, and the reason execution stopped.
 
 Release-level verification and audits are not Phase 4 work.
 

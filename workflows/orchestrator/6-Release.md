@@ -18,7 +18,7 @@ Release work does not start while a milestone is incomplete or unverified.
 | -------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
 | `orchestrator`       | Owner: chooses the final version, runs the release process, aggregates evidence, compiles the report, records completion after approval         |
 | `quality-gatekeeper` | Release quality audit and final test results over the whole release                                                                             |
-| Code Audit owner (TBD) | Release-wide code audit of the whole codebase and test suite, including code unchanged in this release                                          |
+| `code-analyzer`      | Release-wide code audit of the whole codebase and test suite, including code unchanged in this release                                          |
 | `security-officer`   | Reports security findings with severity and a recommendation; does not decide acceptance                                                        |
 | `planner`            | Keeps the release composition and milestone assignment accurate; the version is determined in this phase                                        |
 | User                 | Approves the release scope and the audit findings, decides whether each security finding is acceptable, and gives the explicit release approval |
@@ -61,10 +61,10 @@ Phase 6 does not repeat the per-milestone checks. It inspects what only the whol
 
 ### Release definition
 
-- A release is a version record with acceptance criteria, owning one or more verified milestones.
+- A release is a version record, open until completed, owning one or more verified milestones; milestones can be added while it is `open`.
 - The **final** version is chosen at the end, after the scope and the audit findings are approved and immediately before the final build. It is derived from all included changes and the RC versions of the verified milestones. RC versioning already happened in Phase 5; no version is assigned during planning.
 - The version is recorded on the release before the final build and becomes the version of the release report.
-- When the release record has no acceptance criteria, that is stated explicitly and the definition of done is verified instead.
+- The release has no acceptance criteria of its own; project-wide criteria apply.
 
 ### Release inspection
 
@@ -83,7 +83,7 @@ Rules:
 - Security findings are reported to the user, who decides acceptance.
 - The user approves the release scope and the audit findings before the final build runs.
 - A finding the user does not accept becomes a fix task in the fix milestone.
-- An accepted finding is documented in the audit of its type with an owner and a follow-up work item.
+- An accepted finding is documented in the audit of its type with an owner and a follow-up task.
 - The release cannot be completed while a finding is neither accepted nor fixed.
 - The audits are read-only; fixes become tasks in the release's fix milestone.
 - The final build validates the approved scope; it never builds a scope the user has not approved.
@@ -104,10 +104,11 @@ When a release audit fails, the user rejects a finding or the approved scope, or
 The report contains:
 
 - version, release scope, and owned milestones;
+- implemented requests;
+- change log;
 - completed tasks and their requirements traceability;
-- release acceptance criteria and the evidence for each;
-- build and final test results;
-- verification results per milestone, and audit severity counts by type;
+- final test results;
+- per-milestone verification, and audit severity counts by type;
 - accepted risks with owners and follow-ups;
 - fix milestone and its fix tasks, if any;
 - findings, exclusions, and open questions;
@@ -173,12 +174,12 @@ Phase 6 never:
 ### Stop conditions
 
 - A milestone in scope is incomplete or unverified: stop; the release is not inspected until it is complete and verified.
-- Release acceptance criteria are missing: state it explicitly and verify the definition of done instead.
+- The release has no acceptance criteria of its own: project-wide criteria apply.
 - A release audit fails: create fix tasks in the fix milestone; no final build runs.
 - The user does not approve the scope or the audit findings: create fix tasks in the fix milestone; no final build runs.
 - Final build or tests fail: create fix tasks in the fix milestone; the release is not completed.
 - A security finding is neither accepted nor fixed: the release cannot be completed.
-- Missing evidence for a release criterion: stop; the owning milestone supplies it.
+- Missing evidence for a project-wide criterion: stop; the owning milestone supplies it.
 - Release approval withheld: stop and report.
 
 ### Open points

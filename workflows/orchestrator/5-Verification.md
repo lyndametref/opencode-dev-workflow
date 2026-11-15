@@ -1,6 +1,6 @@
 ## 5. Verification
 
-Phase 5 independently verifies a **milestone** at its boundary: its acceptance criteria, quality requirements, and code quality. Verification covers only what the milestone changed; the whole release is inspected in Phase 6. It produces one code audit, one verification task, and correction tasks; it never fixes, approves, or releases.
+Phase 5 independently verifies a **milestone** at its boundary: its acceptance criteria, quality requirements, and code quality. Verification covers only what the milestone changed; the whole release is inspected in Phase 6. It produces the quality and code audits, one verification task, and correction tasks; it never fixes, approves, or releases.
 
 Security is a design concern, handled through requirements and architecture. It is not audited per milestone; security is assessed once at release time, where the combination of features can create risks that no single milestone reveals.
 
@@ -9,8 +9,8 @@ Phase position: `Phase 4 → Phase 5 → Phase 6 Release`.
 ### Inputs and preconditions
 
 - **Milestone ready for verification**: every execution task is `Done`; the milestone verification task is not yet `Done`.
-- **Evidence from implementation**: task evidence and test and build output.
-- **Milestone and feature acceptance criteria**, plus referenced requirements (REQ/NFR) and specifications.
+- **Evidence from implementation**: task fulfilment proof and test output.
+- **Milestone acceptance criteria**, plus referenced requirements (REQ/NFR) and specifications.
 - **Change set**: the code, tests, configuration, and behavior the milestone changed.
 
 Phase 4 does not verify the increment. Phase 5 runs the milestone verification task independently and reruns the checks rather than trusting the reported evidence.
@@ -19,11 +19,11 @@ Phase 4 does not verify the increment. Phase 5 runs the milestone verification t
 
 | Actor                  | Role in Phase 5                                                                                               |
 | ---------------------- | ------------------------------------------------------------------------------------------------------------- |
-| `quality-gatekeeper`   | Milestone quality review: acceptance criteria, definition of done, rerun tests, scope creep, NFR coverage     |
-| Code audit owner (TBD) | Audits the quality of the code and tests created or modified in the milestone, and records the result as an Audit artifact (type: code) |
+| `quality-gatekeeper`   | Milestone quality review: acceptance criteria, required-field completeness, rerun tests, scope creep, NFR coverage |
+| `code-analyzer`        | Audits the code and tests changed in the milestone and records an Audit artifact (type: code)                 |
 | `orchestrator`         | Opens and runs the verification task, creates correction tasks, determines the RC version, records the result |
 | `planner`              | Creates the milestone verification task during planning, and follow-up work for accepted findings              |
-| User                   | Accepts residual risks; release approval belongs to Phase 6                                                   |
+| User                   | Approves each audit finding or requests correction; release approval belongs to Phase 6                       |
 
 Reviewers are independent of implementation and read-only. A reviewer never fixes what it finds.
 
@@ -33,7 +33,7 @@ Reviewers are independent of implementation and read-only. A reviewer never fixe
 %%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 18}}}%%
 flowchart LR
     IN([Milestone boundary reached]) --> OPEN["Open the verification task"]
-    OPEN --> QR["Quality review:<br/>criteria, DoD, tests, scope"]
+    OPEN --> QR["Quality review:<br/>criteria, completeness, tests, scope"]
     QR --> QOK{"Quality<br/>passes?"}
     QOK -->|"No"| CORR["Create a correction task<br/>describing the failure"]
     CORR --> IMPL["Phase 4 executes<br/>the corrections"]
@@ -47,9 +47,9 @@ flowchart LR
 
 ### Verification task
 
-- The planner creates **one milestone verification task per milestone**, carrying the milestone and feature acceptance criteria; the orchestrator opens it when the milestone's execution tasks are `Done`. No other verification reports are written.
+- The planner creates **one milestone verification task per milestone**; the orchestrator opens it when the milestone's execution tasks are `Done`. The criteria are on the milestone. No other verification reports are written.
 - The task is not `Done` until every check passes; the milestone is not complete before that.
-- The task records: milestone and change set, checks run, evidence, findings, the code audit, the correction tasks it created, the RC version, and the final result.
+- The task records: milestone and change set, checks run, evidence, findings, the audits, the correction tasks it created, the RC version, and the final result.
 - A failed quality review or code audit creates a **correction task** in the milestone being verified with the failure description and the acceptance criteria it blocks. Correction tasks stay inside the milestone's approved scope: actors may add tasks to the milestone to specify or complete that scope, while scope, dependency, and ordinal changes go to the planner.
 - Correction tasks follow the Phase 4 task model: assigned to an owning actor, executed, and `Done` only when their criteria are met.
 - The verification task is not `Done` until every correction task is `Done` and verification is rerun and passes.
@@ -60,16 +60,18 @@ Checks are change-scoped: they inspect the milestone's change set and the behavi
 
 | Check          | Verifies                                                                                                                                             | Result                   |
 | -------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------ |
-| Quality review | Each milestone and feature acceptance criterion, the definition of done, rerun tests, scope creep, referenced NFRs                                   | Audit (type: quality); pass or correction tasks |
+| Quality review | Each milestone acceptance criterion, required-field completeness, rerun tests, scope creep, referenced NFRs                                          | Audit (type: quality); pass or correction tasks |
 | Code audit     | Complexity, duplication, naming, structure, test coverage, style-guide compliance of code and tests created or modified in the milestone          | Audit (type: code); pass or correction tasks    |
 
 Rules:
 
 - Every check reruns or re-reads its evidence; reported results are not accepted on trust.
-- Findings are severity-ranked with evidence, location, and recommendation.
-- Accepted findings require an owner and a follow-up work item.
+- Findings are severity-ranked with evidence, location, and recommendation; the scale is `low`, `medium`, `high`, `blocker`.
+- Accepted findings require an owner and a follow-up task.
 - The code audit targets only the code and tests created or modified in the milestone; pre-existing code is not audited here.
 - Unchanged areas are not re-audited; they are covered by the release-wide inspection in Phase 6.
+
+Audits follow their own lifecycle: `issued → approved → archived`. A finding the user does not approve becomes a correction task; after the correction a new audit is issued and the old one is archived. Only one audit of a type can be `issued` or `approved` at a time.
 
 ### Versioning (release candidate)
 
@@ -97,8 +99,8 @@ Phase 5 is complete when:
 - the whole change set of the milestone is covered by the checks;
 - every correction task created by a failed check is `Done`;
 - verification ran again after the corrections and passed;
-- accepted findings have an owner and a follow-up work item;
-- the verification task is `Done` with the RC version and the milestone verification result; the code audit is recorded as an Audit artifact (type: code).
+- accepted findings have an owner and a follow-up task;
+- the verification task is `Done` with the RC version and the milestone verification result; the code audit is recorded as an Audit artifact (type: code) and approved by the user.
 
 ### Boundaries
 
@@ -123,6 +125,5 @@ Phase 5 never:
 
 ### Open points
 
-- The Code Audit owner is still TBD.
 - Whether the code audit is mandatory for every milestone or proportional to the change size is not yet fixed.
 - How the change set is delimited for a milestone is not yet fixed.
