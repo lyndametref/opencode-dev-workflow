@@ -58,18 +58,18 @@ Every milestone uses the same ordered task kinds, in this order, with optional a
 
 | Order | Task                           | Purpose                                                                                            | Owner                |
 | ----- | ------------------------------ | -------------------------------------------------------------------------------------------------- | -------------------- |
-| 1     | Architecture impact assessment | Judge architectural impact and resolve the findings by updating the Architecture, the Decisions, and the affected Technical specification sections; blocks dependent work when unresolved | `architect`          |
+| 1     | Architecture impact assessment | Judge architectural impact and resolve the findings by updating the Architecture and the Decisions, and delegating affected Technical specification sections to `tech-writer`; blocks dependent work when unresolved | `architect`          |
 | 2     | UI design                      | UI specification entries and at most one mockup for the milestone, only when the planner decides it is needed | `ui-designer`        |
-| 3     | Test design                    | Write the test cases for the changed requirements and business rules; done when every changed requirement or rule has its test cases and the user approves them | `test-manager`       |
+| 3     | Test design                    | Write the test cases for the changed requirements and business rules; done when every changed requirement or rule has its test cases and the user has verified them | `test-manager`       |
 | 4     | Refinement                     | Confirm that all information needed for development is available, and complete the task's refinement fields | `task-refiner`       |
 | 5     | Implementation                 | Development and automated tests, implementing the code and the test cases                          | Any `*-dev` agent    |
 | 6     | Milestone verification         | Verify the increment against the milestone acceptance criteria and close the milestone              | `quality-gatekeeper` |
 
 Rules:
 
-- The architecture impact assessment comes first in every feature and technical-improvement milestone; its findings are resolved by updating the affected artifact, including the Technical specification and any Decision.
+- The architecture impact assessment comes first in every feature and technical-improvement milestone; its findings are resolved by updating the affected artifact, including any Decision; Technical specification edits are delegated to `tech-writer`.
 - The UI design task exists only when the planner decides the feature has UI impact.
-- Refinement does not start before the architecture impact is settled, any UI task is planned, and the test cases are approved; the test cases are input to the implementation plan.
+- Refinement does not start before the architecture impact is settled, the technical specification conformance is verified by the `architect`, any UI task is planned, and the test cases are verified by the user; the test cases are input to the implementation plan.
 - Implementation does not start before refinement has completed the task.
 - The milestone verification task is the only check of the milestone.
 - Milestone acceptance criteria are written on the milestone when it is planned; task-level acceptance criteria belong to refinement.
@@ -112,7 +112,7 @@ A plan is valid only when:
 - every dependency exists and is scheduled earlier;
 - no dependency points forward across milestones;
 - every verified requirement maps to at least one task, or to an explicit recorded decision;
-- every task references a requirement or a `bug` request;
+- every task references a requirement, a `bug` request, or a `technical-improvement` request with the recorded reason when no requirement is produced;
 - every task is assigned to an actor able to fulfill it;
 - release assignment and milestone scope are complete;
 - ordinals are unambiguous inside each milestone;
@@ -122,7 +122,7 @@ A plan is valid only when:
 
 - A request artifact is closed **when its work is planned**, not when requirements are written.
 - Closing records the planned requirements and tasks on the artifact.
-- Bug request artifacts are closed the same way: planned, then close.
+- Planning sets a `bug` request `in-progress` when its planning starts; it is closed the same way as any request: planned, then close.
 - An artifact whose remaining items are rejected becomes `rejected`, with the reason.
 - A request artifact is never closed or rejected before its work is planned or its items are rejected.
 

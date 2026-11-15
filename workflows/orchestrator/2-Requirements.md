@@ -116,7 +116,7 @@ Rules:
 
 A phase result is `verified` only when all hold:
 
-- every artifact item is covered by a requirement or rejected with a reason;
+- every artifact item is covered by a requirement, or rejected with a reason recorded on the request artifact (the request itself is set `rejected` only in Phase 3);
 - traceability runs both ways: request artifact → REQ/NFR, and REQ/NFR → affected rules, glossary terms, and domain objects;
 - requirements are atomic, testable, and free of solution design;
 - NFR targets are observable and achievable, and their verification methods are defined;

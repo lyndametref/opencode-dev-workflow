@@ -19,11 +19,11 @@ Phase 4 does not verify the increment. Phase 5 runs the milestone verification t
 
 | Actor                  | Role in Phase 5                                                                                               |
 | ---------------------- | ------------------------------------------------------------------------------------------------------------- |
-| `quality-gatekeeper`   | Milestone quality review: acceptance criteria, required-field completeness, rerun tests, scope creep, NFR coverage |
+| `quality-gatekeeper`   | Runs the verification task's quality review: acceptance criteria, required-field completeness, rerun tests, scope creep, NFR coverage |
 | `code-analyzer`        | Audits the code and tests changed in the milestone and records an Audit artifact (type: code)                 |
-| `orchestrator`         | Opens and runs the verification task, creates correction tasks, determines the RC version, records the result |
-| `planner`              | Creates the milestone verification task during planning, and follow-up work for accepted findings              |
-| User                   | Approves each audit finding or requests correction; release approval belongs to Phase 6                       |
+| `orchestrator`         | Opens and closes the verification task, records the result and the RC version                                 |
+| `planner`              | Creates the milestone verification task during planning, and correction or follow-up tasks at the reviewers' request |
+| User                   | Reviews the milestone audits at the Phase 6 scope-and-findings review; no approval happens in this phase      |
 
 Reviewers are independent of implementation and read-only. A reviewer never fixes what it finds.
 
@@ -35,7 +35,7 @@ flowchart LR
     IN([Milestone boundary reached]) --> OPEN["Open the verification task"]
     OPEN --> QR["Quality review:<br/>criteria, completeness, tests, scope"]
     QR --> QOK{"Quality<br/>passes?"}
-    QOK -->|"No"| CORR["Create a correction task<br/>describing the failure"]
+    QOK -->|"No"| CORR["Reviewer defines the correction;<br/>planner creates the task"]
     CORR --> IMPL["Phase 4 executes<br/>the corrections"]
     IMPL --> IN
     QOK -->|"Yes"| CA["Code audit:<br/>complexity, duplication, tests"]
@@ -50,7 +50,7 @@ flowchart LR
 - The planner creates **one milestone verification task per milestone**; the orchestrator opens it when the milestone's execution tasks are `Done`. The criteria are on the milestone. No other verification reports are written.
 - The task is not `Done` until every check passes; the milestone is not complete before that.
 - The task records: milestone and change set, checks run, evidence, findings, the audits, the correction tasks it created, the RC version, and the final result.
-- A failed quality review or code audit creates a **correction task** in the milestone being verified with the failure description and the acceptance criteria it blocks. Correction tasks stay inside the milestone's approved scope and are created by the orchestrator to complete the unfulfilled scope; they do not change the scope. Scope, dependency, or ordinal changes, if ever required, go to the planner.
+- A failed quality review or code audit produces a **correction task** in the milestone being verified: the reviewer who found the failure defines its content — the failure description and the acceptance criteria it blocks — and the `planner` creates the task. Correction tasks stay inside the milestone's approved scope and complete the unfulfilled scope; they do not change the scope. Scope, dependency, or ordinal changes, if ever required, go to the planner.
 - Correction tasks follow the Phase 4 task model: assigned to an owning actor, executed, and `Done` only when their criteria are met.
 - The verification task is not `Done` until every correction task is `Done` and verification is rerun and passes.
 
@@ -71,7 +71,7 @@ Rules:
 - The code audit targets only the code and tests created or modified in the milestone; pre-existing code is not audited here.
 - Unchanged areas are not re-audited; they are covered by the release-wide inspection in Phase 6.
 
-Audits follow their own lifecycle: `issued → approved → archived`. A finding the user does not approve becomes a correction task; after the correction a new audit is issued and the old one is archived. Only one audit of a type can be `issued` or `approved` within a single assessed scope (one milestone in Phase 5, one release in Phase 6) at a time; when a check is rerun after a correction, the new audit replaces the previous one, which is `archived`.
+Audits follow their own lifecycle: `issued → approved → archived`; `approved` records the user's acceptance of the findings at the Phase 6 scope-and-findings review, so a Phase 5 audit stays `issued` until then. A finding the user does not accept becomes correction or fix work; after the correction a new audit is issued and the old one is archived. Only one audit of a type can be `issued` or `approved` within a single assessed scope (one milestone in Phase 5, one release in Phase 6) at a time; when a check is rerun after a correction, the new audit replaces the previous one, which is `archived`.
 
 ### Versioning (release candidate)
 
@@ -86,7 +86,7 @@ Audits follow their own lifecycle: `issued → approved → archived`. A finding
 | ------------------------ | ------------------------------------------------------------------------------------------------ |
 | Quality review fails     | Create correction tasks with the failure description; Phase 4 executes them; verification reruns |
 | Code audit finds defects | Create correction tasks with the failure description; Phase 4 executes them; verification reruns |
-| Accepted finding         | Planning creates follow-up work; the milestone proceeds with the risk documented                 |
+| Deferred finding         | The finding is recorded with an owner and a follow-up task created by planning; the user accepts or rejects it at the Phase 6 scope-and-findings review; the milestone proceeds with the risk documented |
 | Scope creep              | Report the unjustified change; the user decides removal or a requirements change through Phase 2 |
 
 Verification never silently lowers a criterion or accepts a failure. It records the failure and returns the work.
@@ -99,8 +99,8 @@ Phase 5 is complete when:
 - the whole change set of the milestone is covered by the checks;
 - every correction task created by a failed check is `Done`;
 - verification ran again after the corrections and passed;
-- accepted findings have an owner and a follow-up task;
-- the verification task is `Done` with the RC version and the milestone verification result; the quality audit and the code audit are recorded as Audit artifacts (types: quality, code) and approved by the user.
+- deferred findings have an owner and a follow-up task;
+- the verification task is `Done` with the RC version and the milestone verification result; the quality audit and the code audit are recorded as Audit artifacts (types: quality, code) with status `issued`; the user reviews them at the Phase 6 release gate.
 
 ### Boundaries
 

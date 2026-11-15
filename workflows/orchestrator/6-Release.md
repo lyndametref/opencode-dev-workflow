@@ -92,7 +92,7 @@ Rules:
 
 When a release audit fails, the user rejects a finding or the approved scope, or the final tests fail, the findings become fix work.
 
-- The planner creates the fix tasks and attaches them to the release's fix milestone, creating that milestone if it does not exist.
+- The planner creates the fix tasks and attaches them to the release's fix milestone, creating that milestone if it does not exist; the auditor who reported each finding defines the fix task's content.
 - The fix milestone contains only the fix work needed for the release to be releasable; no new features, no scope expansion.
 - It is executed and verified like any milestone: Phase 4 runs the tasks, Phase 5 verifies the milestone.
 - The release inspection and the scope-and-findings approval are rerun after the fix milestone is verified.
