@@ -37,10 +37,10 @@ Do not use this skill to write requirements, acceptance criteria, architecture d
 
 ## Procedure
 
-1. **Read the baseline** — read the architecture building blocks, changed `REQ`/`NFR`, `RUL`, glossary terms, domain artifacts, decisions, and existing `TECH` sections.
+1. **Read the baseline** — read the architecture building blocks, changed `REQ`/`NFR`, `BR`, glossary terms, domain artifacts, decisions, and existing `TECH` sections.
 2. **Map the change to sections** — identify the building blocks and subsections the change affects. Do not create a feature-specific document.
 3. **Draft the sections** — create or update `TECH` records (manage-tech-specs). Cover behavior, flows and states, data and API-facing attributes, validation and error behavior, interface contracts, and traceability. Keep status `draft`.
-4. **Link, do not restate** — reference `REQ`/`NFR`, `RUL`, glossary terms, domain objects, and decision IDs. Never copy requirement text or acceptance criteria.
+4. **Link, do not restate** — reference `REQ`/`NFR`, `BR`, glossary terms, domain objects, and decision IDs. Never copy requirement text or acceptance criteria.
 5. **Request conformance** — report the draft to the caller with the affected building blocks and decision references, and state that architect conformance is required before refinement. Do not mark the section `verified` yourself.
 6. **Apply corrections** — after the architect reports `not conformant`, update the section and request conformance again.
 7. **Record verification** — set the section to `verified` only after the architect reports `conformant`.
@@ -68,7 +68,7 @@ Do not use this skill to write requirements, acceptance criteria, architecture d
 - **Task/milestone**: ID and title.
 - **Sections**: `TECH`/`SPEC` IDs and titles.
 - **Content changed**: behavior, flows, data, validation, contracts, traceability.
-- **References**: `REQ`/`NFR`, `RUL`, `ADR`, glossary, domain.
+- **References**: `REQ`/`NFR`, `BR`, `ADR`, glossary, domain.
 - **Status**: draft / verified.
 - **Conformance**: requested / conformant / not conformant.
 - **Open questions**: or `none`.

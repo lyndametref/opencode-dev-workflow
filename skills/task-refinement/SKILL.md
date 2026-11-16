@@ -34,7 +34,7 @@ If a prerequisite is missing, stop and report.
 ## Procedure
 
 1. **Read the target task** — read the task (manage-tasks). Read the full description, acceptance criteria, references, dependencies, and milestone.
-2. **Read the inputs** — the linked `REQ`/`NFR`, `RUL`, Technical specification, UI specification, approved mockups, approved test cases, decisions, and domain artifacts.
+2. **Read the inputs** — the linked `REQ`/`NFR`, `BR`, Technical specification, UI specification, approved mockups, approved test cases, decisions, and domain artifacts.
 3. **Audit the task** — identify missing or weak scope, behavior, assumptions, dependencies, acceptance criteria, and definition of done. Check that the task is traceable to its requirement or request.
 4. **Ask targeted questions** — clarify user-visible behavior, boundaries, data, validation, errors, and verification. Do not mark the task execution-ready while a material question is open. Do not turn assumptions into requirements.
 5. **Complete the task fields** through Papyrus:

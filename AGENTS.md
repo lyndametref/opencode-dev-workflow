@@ -11,7 +11,7 @@ The following are managed by the Papyrus CLI. Never edit their files directly, e
 | Releases | `REL` | `backlog/releases/` |
 | Business requirements | `REQ` | `docs/requirements/business/` |
 | Non-functional requirements | `NFR` | `docs/requirements/non-functional/` |
-| Business rules | `RUL` | `docs/business-rules/` |
+| Business rules | `BR` | `docs/business-rules/` |
 | Glossary terms | `GLO` | `docs/glossary/` |
 | Decision records | `ADR` / `BDR` | `decisions/` |
 | UI specifications | `UI` | `docs/specifications/ui/` |

@@ -41,7 +41,7 @@ id: TC-001
 title: Short scenario title
 status: draft          # draft | approved | verified | archived
 covered_requirement: REQ-001.001
-covered_rules: [RUL-001]
+covered_rules: [BR-001]
 ---
 ```
 
@@ -62,12 +62,12 @@ Body:
 
 ## Traceability
 - Requirement: REQ-001.001
-- Business rules: RUL-001
+- Business rules: BR-001
 ```
 
 ## Procedure
 
-1. **Read the change set** — read the changed `REQ`/`NFR` and `RUL` records, the milestone acceptance criteria, and the affected tasks.
+1. **Read the change set** — read the changed `REQ`/`NFR` and `BR` records, the milestone acceptance criteria, and the affected tasks.
 2. **Enumerate scenarios** — one test case per verification scenario. A test case covers one requirement and the business rules attached to it. Cover the changed behavior and its relevant error and boundary outcomes.
 3. **Write the test cases** — create or update files under `docs/test-cases/`. Keep the scenario and expected outcome observable and unambiguous. Do not write test code.
 4. **Trace** — every test case names its covered requirement and business rules. Every changed requirement or rule must be covered by at least one test case.
@@ -94,7 +94,7 @@ Body:
 
 - **Task/milestone**: ID and title.
 - **Test cases**: `TC` IDs, titles, files.
-- **Coverage**: changed `REQ`/`NFR` and `RUL` IDs -> covered / missing.
+- **Coverage**: changed `REQ`/`NFR` and `BR` IDs -> covered / missing.
 - **User verification**: pending / approved / changes requested.
 - **Open questions**: or `none`.
 

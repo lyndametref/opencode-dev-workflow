@@ -42,7 +42,7 @@ For each changed requirement and business rule, produce an unambiguous integrati
 ## Skills (load before use)
 
 - `test-design` — the Phase 4 test design procedure, test case format, coverage rules, and approval gate.
-- `managed-records` — read the changed `REQ`/`NFR`, `RUL`, milestone, and task context.
+- `managed-records` — read the changed `REQ`/`NFR`, `BR`, milestone, and task context.
 
 ## Guardrails
 

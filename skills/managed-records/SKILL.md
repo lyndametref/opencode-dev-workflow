@@ -25,12 +25,12 @@ Never edit Papyrus-managed files directly. Use the CLI for every read and write.
 | Releases | `REL` | `backlog/releases/` |
 | Business requirements | `REQ` | `docs/requirements/business/` |
 | Non-functional requirements | `NFR` | `docs/requirements/non-functional/` |
-| Business rules | `RUL` | `docs/business-rules/` |
-| Glossary terms | `GLO` | `docs/glossary/` |
+| Business rules | `BR` | `docs/requirements/business-rules/` |
+| Glossary terms | `GLO` | `docs/domain-model/glossary/` |
 | Decision records | `ADR` / `BDR` | `decisions/` |
 | UI specifications | `UI` | `docs/specifications/ui/` |
 | UI mockups | `MOCK` | `docs/specifications/ui/mockups/` |
-| Technical specifications | `TECH` | `docs/technical/` |
+| Technical specifications | `TECH` | `docs/specifications/technical/` |
 | Audit records | `AUD` | `docs/audit-records/` |
 
 ## Task statuses

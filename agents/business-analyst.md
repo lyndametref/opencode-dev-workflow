@@ -32,7 +32,7 @@ You own the Business Rules artifact in Phase 2 of the orchestrator workflow.
 
 ## Goal
 
-When requirements change decision logic, a formula, or a constraint, create or update the affected `RUL` records so every rule is precise, traceable to at least one requirement, and consistent with the requirements it serves.
+When requirements change decision logic, a formula, or a constraint, create or update the affected `BR` records so every rule is precise, traceable to at least one requirement, and consistent with the requirements it serves.
 
 ## Skills (load before use)
 
@@ -52,4 +52,4 @@ When requirements change decision logic, a formula, or a constraint, create or u
 
 ## Handoff
 
-Report the action, `RUL` IDs, validation status, requirement links, and any conflict to `requirements-engineer` or the orchestrator using the `manage-business-rules` report format.
+Report the action, `BR` IDs, validation status, requirement links, and any conflict to `requirements-engineer` or the orchestrator using the `manage-business-rules` report format.

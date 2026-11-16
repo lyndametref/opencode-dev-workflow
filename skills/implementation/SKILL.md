@@ -33,7 +33,7 @@ If any prerequisite is missing, stop and report; do not invent it.
 
 ## Procedure
 
-1. **Read the task and context** — read the refined task, its acceptance criteria, the linked `REQ`/`NFR`, `RUL`, Technical specification, UI specification, mockups, test cases, and decisions.
+1. **Read the task and context** — read the refined task, its acceptance criteria, the linked `REQ`/`NFR`, `BR`, Technical specification, UI specification, mockups, test cases, and decisions.
 2. **Map acceptance criteria** — list every acceptance criterion and the implementation and verification that will satisfy it.
 3. **Work on the prepared branch** — the orchestrator has prepared `task/<TASK-ID>`. If you are not on it, stop and report; do not create, switch, or clean branches. Preserve existing changes; never discard work.
 4. **Load the stack skills** — `tdd` first, then the language/framework skills relevant to the stack.

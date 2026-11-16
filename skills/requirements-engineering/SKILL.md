@@ -92,7 +92,7 @@ Assessment is mandatory; "no impact" is an explicit decision, not a silent skip.
 
 | Impact | Artifact | Owner | Gate |
 |---|---|---|---|
-| New or changed decision logic, formula, or constraint | Business Rules (`RUL`) | `business-analyst` | Open business decisions block. |
+| New or changed decision logic, formula, or constraint | Business Rules (`BR`) | `business-analyst` | Open business decisions block. |
 | New or changed domain term | Business Glossary (`GLO`) | `terminologist` | The term is defined before use in specs, tasks, or UI. |
 | New or changed concepts, lifecycle states, attributes, or processes | Domain Model | `domain-modeler` | Conflicts are reported back and resolved with the requester. |
 | New or changed behavior | Business Requirements (`REQ`) | `requirements-engineer` | Verified before planning. |

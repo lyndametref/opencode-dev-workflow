@@ -145,9 +145,9 @@ Requirements and NFRs have no acceptance-criteria flag. Put the criteria in `--d
 |---|---|
 | Create | `papyrus rule create "<title>" --description "<rule>" --rationale "<why>" --applicability "<when and where>" [--requirement <REQ-ID>] [--label <label>] [--reference <ref>]` |
 | List | `papyrus rule list` |
-| View | `papyrus rule view <RUL-ID>` |
-| Edit | `papyrus rule edit <RUL-ID> [--title] [--description] [--requirement <REQ-ID>] [--no-requirement [<REQ-ID>]] [--label] [--reference] [--editor]` |
-| Deprecate / restore | `papyrus rule deprecate <RUL-ID>` / `papyrus rule restore <RUL-ID>` |
+| View | `papyrus rule view <BR-ID>` |
+| Edit | `papyrus rule edit <BR-ID> [--title] [--description] [--requirement <REQ-ID>] [--no-requirement [<REQ-ID>]] [--label] [--reference] [--editor]` |
+| Deprecate / restore | `papyrus rule deprecate <BR-ID>` / `papyrus rule restore <BR-ID>` |
 
 ## Glossary
 

@@ -34,7 +34,7 @@ id: TC-001
 title: Short scenario title
 status: draft          # draft | approved | verified | archived
 covered_requirement: REQ-001.001
-covered_rules: [RUL-001]
+covered_rules: [BR-001]
 ---
 ```
 

@@ -1,7 +1,7 @@
 ---
 name: manage-business-rules
-description: 'Create, update, and validate business rules through Papyrus. Each rule is a RUL record with a unique ID, precise description, rationale grounded in requirements, and applicability statement.'
-argument-hint: 'Examples: create a new business rule; update RUL-005; validate all business rules for format compliance; check RUL-003 against requirements'
+description: 'Create, update, and validate business rules through Papyrus. Each rule is a BR record with a unique ID, precise description, rationale grounded in requirements, and applicability statement.'
+argument-hint: 'Examples: create a new business rule; update BR-005; validate all business rules for format compliance; check BR-003 against requirements'
 user-invocable: true
 disable-model-invocation: false
 ---
@@ -14,7 +14,7 @@ Maintain a consistent, traceable set of business rules by creating, updating, an
 
 ## When To Use
 
-- Create a new business rule with a unique `RUL` ID.
+- Create a new business rule with a unique `BR` ID.
 - Update an existing business rule (description, rationale, or applicability).
 - Validate all business rules for canonical format compliance.
 - Check a specific business rule against its referenced requirements.
@@ -41,7 +41,7 @@ Papyrus owns the record format. Do not create or edit business-rule files direct
 
 ### Conventions
 
-- Papyrus assigns IDs such as `RUL-001`.
+- Papyrus assigns IDs such as `BR-001`.
 - Never choose, rename, or renumber an ID by hand.
 - Every rule MUST reference at least one requirement.
 - Rationale MUST explain WHY based on requirement text, not just WHAT.
@@ -65,14 +65,14 @@ Papyrus owns the record format. Do not create or edit business-rule files direct
      --rationale "Based on REQ-xxx.yyy — <reason>" \
      --applicability "<when and where>" \
      --requirement REQ-xxx.yyy
-   papyrus rule edit <RUL-ID> --title "<title>" --description "<rule>" \
+   papyrus rule edit <BR-ID> --title "<title>" --description "<rule>" \
      --requirement REQ-xxx.yyy
    ```
    Ensure the description is a single precise statement, the rationale references at least one requirement, and the applicability states when and where the rule applies.
 
-   Papyrus 0.1.0 has no `--rationale` or `--applicability` flag on `rule edit`. Change those fields with `papyrus rule edit <RUL-ID> --editor` when an interactive editor is available, or deprecate the record and create a corrected replacement that references it.
+   Papyrus 0.1.0 has no `--rationale` or `--applicability` flag on `rule edit`. Change those fields with `papyrus rule edit <BR-ID> --editor` when an interactive editor is available, or deprecate the record and create a corrected replacement that references it.
 
-5. **Validate/Review** — Check each `RUL` record via `papyrus rule view <ID>`:
+5. **Validate/Review** — Check each `BR` record via `papyrus rule view <ID>`:
    - title is present;
    - description is a single, precise statement;
    - rationale contains at least one `REQ-` reference;
@@ -81,7 +81,7 @@ Papyrus owns the record format. Do not create or edit business-rule files direct
 
 6. **Deprecate when obsolete** — Use `papyrus rule deprecate <ID>`; restore with `papyrus rule restore <ID>`. Do not delete or renumber.
 
-7. **Report outcome** — Summarize the action, `RUL` IDs, validation status, and any risks. Confirm visibility with `papyrus rule list`.
+7. **Report outcome** — Summarize the action, `BR` IDs, validation status, and any risks. Confirm visibility with `papyrus rule list`.
 
 ## Resume / interruption
 
@@ -89,11 +89,11 @@ Business-rule edits are multi-record. If interrupted, re-run a validation pass o
 
 ## Handoff
 
-After changing business rules, report the changed `RUL` IDs and affected requirement references to the caller (business-analyst / requirements-engineer) so specs and tasks can align.
+After changing business rules, report the changed `BR` IDs and affected requirement references to the caller (business-analyst / requirements-engineer) so specs and tasks can align.
 
 ## Completion Checks
 
-- The rule exists as a Papyrus record with a `RUL` ID.
+- The rule exists as a Papyrus record with a `BR` ID.
 - The record has title, description, rationale, and applicability.
 - The rationale references at least one `REQ-xxx` / `REQ-xxx.yyy`.
 - The record is visible through `papyrus rule list`.
@@ -123,7 +123,7 @@ After changing business rules, report the changed `RUL` IDs and affected require
 Use this summary after updates:
 
 - **Action**: create/update/deprecate/validate/list
-- **Target rule**: `RUL-xxx` — Title
+- **Target rule**: `BR-xxx` — Title
 - **Updated records**: list
 - **Cross-reference updates**: list
 - **Validation results**: pass/fail with details
