@@ -1,5 +1,5 @@
 ---
-name: business-rules-management
+name: manage-business-rules
 description: 'Create, update, and validate business rules through Papyrus. Each rule is a RUL record with a unique ID, precise description, rationale grounded in requirements, and applicability statement.'
 argument-hint: 'Examples: create a new business rule; update RUL-005; validate all business rules for format compliance; check RUL-003 against requirements'
 user-invocable: true

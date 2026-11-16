@@ -21,11 +21,12 @@ permission:
     "git rev-parse *": allow
   skill:
     "*": deny
+    managed-records: allow
+    manage-tasks: allow
     implementation: allow
     tdd: allow
     gradle-build: allow
     kotlin-style-audit: allow
-    papyrus: allow
 ---
 
 # Android Kotlin Engineer
@@ -42,7 +43,7 @@ Implement the assigned refined task completely with tests, keeping the domain mo
 - `tdd` — red-green-refactor.
 - `gradle-build` — build, test, and lint Gradle/Android projects.
 - `kotlin-style-audit` — Google Kotlin style compliance.
-- `papyrus` — read the assigned task and linked context only.
+- `managed-records` — read the assigned task and linked context only.
 
 ## Guardrails
 

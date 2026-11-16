@@ -23,7 +23,10 @@ permission:
     "*": deny
   skill:
     "*": deny
-    papyrus: allow
+    managed-records: allow
+    manage-tasks: allow
+    manage-requirements: allow
+    manage-business-rules: allow
     test-design: allow
 ---
 
@@ -38,7 +41,7 @@ For each changed requirement and business rule, produce an unambiguous integrati
 ## Skills (load before use)
 
 - `test-design` — the Phase 4 test design procedure, test case format, coverage rules, and approval gate.
-- `papyrus` — read the changed `REQ`/`NFR`, `RUL`, milestone, and task context.
+- `managed-records` — read the changed `REQ`/`NFR`, `RUL`, milestone, and task context.
 
 ## Guardrails
 

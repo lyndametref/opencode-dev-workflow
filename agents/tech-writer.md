@@ -19,7 +19,12 @@ permission:
     "*": deny
   skill:
     "*": deny
-    papyrus: allow
+    managed-records: allow
+    manage-tech-specs: allow
+    manage-requirements: allow
+    manage-business-rules: allow
+    manage-glossary: allow
+    manage-decisions: allow
     technical-specification: allow
 ---
 
@@ -34,7 +39,7 @@ Create and maintain the project-wide Technical specification as Papyrus `TECH` s
 ## Skills (load before use)
 
 - `technical-specification` — the specification model, required content, procedure, and conformance gate.
-- `papyrus` — create, update, and read `TECH` sections and read the linked artifacts.
+- `managed-records` — create, update, and read `TECH` sections and read the linked artifacts.
 
 ## Guardrails
 
@@ -46,7 +51,7 @@ Create and maintain the project-wide Technical specification as Papyrus `TECH` s
 - Report a needed architecture change to `architect`; do not decide it yourself.
 - Mark a section `verified` only after the architect reports `conformant`.
 - Never edit Papyrus-managed files directly; use the CLI.
-- Never generate or edit `index.html`; use `papyrus browser` or `papyrus search`.
+- Never generate or edit `index.html`; use the documentation browser (managed-records).
 - Use only project-local `./.tmp/` for drafts and remove them before finishing.
 
 ## Handoff

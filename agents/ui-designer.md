@@ -23,9 +23,11 @@ permission:
     "*": deny
   skill:
     "*": deny
-    papyrus: allow
+    managed-records: allow
+    manage-ui-specs: allow
+    manage-ui-mockups: allow
+    manage-requirements: allow
     ui-design: allow
-    ui-clickable-mockup: allow
 ---
 
 # UI Designer
@@ -39,8 +41,8 @@ For each milestone with UI impact, produce or update its UI specifications and a
 ## Skills (load before use)
 
 - `ui-design` — the Phase 4 UI design procedure, specification model, mockup limit, and approval gate.
-- `ui-clickable-mockup` — generate the single-file HTML review package.
-- `papyrus` — create and update `UI` and `MOCK` records and read requirements, rules, and tasks.
+- `manage-ui-mockups` — generate the single-file HTML review package.
+- `managed-records` — create and update `UI` and `MOCK` records and read requirements, rules, and tasks.
 
 ## Guardrails
 

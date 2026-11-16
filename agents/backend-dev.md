@@ -21,6 +21,8 @@ permission:
     "git rev-parse *": allow
   skill:
     "*": deny
+    managed-records: allow
+    manage-tasks: allow
     implementation: allow
     tdd: allow
     gradle-build: allow
@@ -28,7 +30,6 @@ permission:
     spring-boot-rest: allow
     postgresql-jpa: allow
     spring-boot-testing: allow
-    papyrus: allow
 ---
 
 # Backend Engineer
@@ -48,7 +49,7 @@ Implement the assigned refined task completely with tests, using ports-and-adapt
 - `spring-boot-rest` — REST API design with Spring Boot.
 - `postgresql-jpa` — PostgreSQL + JPA/Hibernate persistence.
 - `spring-boot-testing` — unit, slice, and integration testing.
-- `papyrus` — read the assigned task and linked context only.
+- `managed-records` — read the assigned task and linked context only.
 
 ## Guardrails
 

@@ -24,9 +24,11 @@ permission:
     tech-writer: allow
   skill:
     "*": deny
-    papyrus: allow
+    managed-records: allow
+    manage-decisions: allow
+    manage-requirements: allow
+    manage-nfrs: allow
     architecture-impact-assessment: allow
-    architecture-decision-record: allow
 ---
 
 # Architect
@@ -40,8 +42,8 @@ For each milestone, assess architectural impact, update the Architecture, record
 ## Skills (load before use)
 
 - `architecture-impact-assessment` — the Phase 4 impact assessment and specification conformance procedures.
-- `architecture-decision-record` — create and manage architecture decisions as Papyrus records.
-- `papyrus` — read requirements, decisions, specifications, and tasks; write decisions.
+- `manage-decisions` — create and manage architecture decisions as Papyrus records.
+- `managed-records` — read requirements, decisions, specifications, and tasks; write decisions.
 
 ## Guardrails
 

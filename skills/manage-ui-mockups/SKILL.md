@@ -1,5 +1,5 @@
 ---
-name: ui-clickable-mockup
+name: manage-ui-mockups
 description: 'Generate a single self-contained HTML review package for a milestone UI design task: a review landing and clickable per-platform prototypes, saved as one Papyrus MOCK record under docs/specifications/ui/mockups/, using a shared wireframe.css.'
 argument-hint: 'generate the review package for the create-order flow (MOCK-0010); simulate the checkout scenario'
 user-invocable: true
@@ -35,8 +35,8 @@ Do not use this skill for:
 - Papyrus creates the record and file with `papyrus ui-mockup create --task <TASK-ID> --spec <UI-ID> "<title>"`.
 - Papyrus owns the MOCK id, filename, and metadata comments. The designer fills the HTML body.
 - Shared stylesheet: `docs/specifications/ui/mockups/wireframe.css` (copied from the skill assets).
-- Base template: `skills/ui-clickable-mockup/templates/mockup.html`.
-- Stylesheet helper: `skills/ui-clickable-mockup/scripts/ensure_wireframe_css.sh [mockups-dir]`.
+- Base template: `skills/manage-ui-mockups/templates/mockup.html`.
+- Stylesheet helper: `skills/manage-ui-mockups/scripts/ensure_wireframe_css.sh [mockups-dir]`.
 
 ## Single-file rule
 
@@ -181,3 +181,13 @@ After creation, summarize:
 - **Sources**: <REQs, specs, tasks>
 - **Papyrus status**: pending / approved
 - **Approval**: pending / approved
+
+## Management commands
+
+- List: `ui-mockup list`
+- View: `ui-mockup view <MOCK-ID>`
+- Create: `ui-mockup create --task <TASK-ID> --spec <UI-ID> "<title>"`
+- Edit: `ui-mockup edit <MOCK-ID> --status approved` (or `deprecated`)
+- Deprecate: `ui-mockup deprecate <MOCK-ID>`
+
+Mockups start `pending`. Set `approved` only after explicit user approval. Never hand-edit metadata comments.

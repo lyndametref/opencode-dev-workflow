@@ -21,7 +21,11 @@ permission:
     "*": deny
   skill:
     "*": deny
-    papyrus: allow
+    managed-records: allow
+    manage-audits: allow
+    manage-tasks: allow
+    manage-milestones: allow
+    manage-releases: allow
     quality-audit: allow
 ---
 
@@ -36,7 +40,7 @@ Give an evidence-based, severity-ranked verdict on quality: acceptance criteria,
 ## Skills (load before use)
 
 - `quality-audit` — the Phase 5/6 quality procedure, checks, severity scale, audit record, and correction reporting.
-- `papyrus` — read the milestone/release, tasks, requirements, specifications, and audit context.
+- `managed-records` — read the milestone/release, tasks, requirements, specifications, and audit context.
 
 ## Guardrails
 
@@ -46,7 +50,7 @@ Give an evidence-based, severity-ranked verdict on quality: acceptance criteria,
 - Rerun tests and re-read evidence; never accept a reported result on trust.
 - Every acceptance criterion gets a pass/fail with evidence.
 - Every finding has severity, evidence, location, and an owner or required correction.
-- Record the audit through `papyrus audit create --audit-type quality --reference <MS/REL-ID>`; do not create tasks or fix work.
+- Record the audit (manage-audits); do not create tasks or fix work.
 - Do not ask for approval, close a milestone, or close a release. The orchestrator owns the gates.
 - Accepted findings require an owner and a follow-up task. A rejected finding becomes correction or fix work; a new audit replaces the old one, which is archived.
 - Do not write reports outside the audit record and the response.

@@ -33,15 +33,15 @@ If a prerequisite is missing, stop and report.
 
 ## Procedure
 
-1. **Read the target task** — `papyrus task view <TASK-ID>`. Read the full description, acceptance criteria, references, dependencies, and milestone.
+1. **Read the target task** — read the task (manage-tasks). Read the full description, acceptance criteria, references, dependencies, and milestone.
 2. **Read the inputs** — the linked `REQ`/`NFR`, `RUL`, Technical specification, UI specification, approved mockups, approved test cases, decisions, and domain artifacts.
 3. **Audit the task** — identify missing or weak scope, behavior, assumptions, dependencies, acceptance criteria, and definition of done. Check that the task is traceable to its requirement or request.
 4. **Ask targeted questions** — clarify user-visible behavior, boundaries, data, validation, errors, and verification. Do not mark the task execution-ready while a material question is open. Do not turn assumptions into requirements.
 5. **Complete the task fields** through Papyrus:
-   - `papyrus task edit <TASK-ID> --description "<scope, assumptions, dependencies, and definition of done>"`;
-   - `papyrus task edit <TASK-ID> --ac "<criterion>"` for each testable acceptance criterion;
-   - `papyrus task edit <TASK-ID> --reference <REQ-ID> --documentation <path>` for traceability;
-   - `papyrus task edit <TASK-ID> --depends-on <TASK-ID>` for dependencies.
+   - update the description (manage-tasks);
+   - add each acceptance criterion (manage-tasks);
+   - set references and documentation (manage-tasks);
+   - set dependencies (manage-tasks).
 6. **Split only when needed** — if the task is too broad for one implementation unit, propose an implementation split. Do not change dependencies, ordinals, or milestone scope yourself; report the proposed split to the orchestrator so `planner` can update the plan.
 7. **Report readiness** — execution-ready yes/no, changes made, assumptions, open questions, and any proposed split.
 

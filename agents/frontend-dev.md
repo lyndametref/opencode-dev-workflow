@@ -21,12 +21,13 @@ permission:
     "git rev-parse *": allow
   skill:
     "*": deny
+    managed-records: allow
+    manage-tasks: allow
     implementation: allow
     tdd: allow
     alpine-js: allow
     frontend-testing: allow
     frontend-style-audit: allow
-    papyrus: allow
 ---
 
 # Frontend Engineer
@@ -44,7 +45,7 @@ Implement the assigned refined task completely with tests as a standalone web ap
 - `alpine-js` — Alpine.js patterns, reactivity, stores, and fetch integration.
 - `frontend-testing` — unit and end-to-end testing for vanilla/Alpine JS.
 - `frontend-style-audit` — style, accessibility, and security audit.
-- `papyrus` — read the assigned task and linked context only.
+- `managed-records` — read the assigned task and linked context only.
 
 ## Guardrails
 

@@ -1,5 +1,5 @@
 ---
-name: business-glossary-management
+name: manage-glossary
 description: 'Manage the business glossary through Papyrus: add and update terms, merge duplicates, and keep wording consistent across docs and backlog. Use for business terminology only.'
 argument-hint: 'Examples: add a glossary term; update a term definition; merge duplicate terms'
 user-invocable: true

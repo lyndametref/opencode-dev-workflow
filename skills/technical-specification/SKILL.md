@@ -39,7 +39,7 @@ Do not use this skill to write requirements, acceptance criteria, architecture d
 
 1. **Read the baseline** — read the architecture building blocks, changed `REQ`/`NFR`, `RUL`, glossary terms, domain artifacts, decisions, and existing `TECH` sections.
 2. **Map the change to sections** — identify the building blocks and subsections the change affects. Do not create a feature-specific document.
-3. **Draft the sections** — create or update `TECH` records with `papyrus tech-spec create` / `papyrus tech-spec edit`. Cover behavior, flows and states, data and API-facing attributes, validation and error behavior, interface contracts, and traceability. Keep status `draft`.
+3. **Draft the sections** — create or update `TECH` records (manage-tech-specs). Cover behavior, flows and states, data and API-facing attributes, validation and error behavior, interface contracts, and traceability. Keep status `draft`.
 4. **Link, do not restate** — reference `REQ`/`NFR`, `RUL`, glossary terms, domain objects, and decision IDs. Never copy requirement text or acceptance criteria.
 5. **Request conformance** — report the draft to the caller with the affected building blocks and decision references, and state that architect conformance is required before refinement. Do not mark the section `verified` yourself.
 6. **Apply corrections** — after the architect reports `not conformant`, update the section and request conformance again.
@@ -52,7 +52,7 @@ Do not use this skill to write requirements, acceptance criteria, architecture d
 - The `architect` approves conformance; the user does not approve the specification in this phase.
 - Do not change the architecture or decisions; report a needed architecture change to the architect.
 - Do not edit requirements, business rules, glossary, domain model, UI specifications, mockups, or source code.
-- Do not generate or edit `index.html`; use `papyrus browser` or `papyrus search`.
+- Do not generate or edit `index.html`; use the managed-records skill.
 - If behavior is unclear, report the gap instead of inventing it.
 - Use only project-local `./.tmp/` for drafts; remove them before finishing.
 

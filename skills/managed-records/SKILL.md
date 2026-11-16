@@ -1,5 +1,5 @@
 ---
-name: papyrus
+name: managed-records
 description: 'Manage tasks, milestones, releases, requirements, NFRs, business rules, glossary terms, decisions, specifications, mockups, and audit records with the Papyrus CLI. Use for all backlog and Papyrus-managed document operations.'
 argument-hint: 'Optional: create or edit a task, milestone, release, requirement, rule, glossary term, decision, specification, mockup, or audit record.'
 user-invocable: true
@@ -53,28 +53,21 @@ Exact values: `ToDo → Initiated → Refined → Implemented → Validated → 
 
 Read and write these as normal files, not through Papyrus.
 
-## Command cheat sheet
+## Tool commands
 
-Global options go first: `papyrus [--json] [--dir <path>] [--config <file>] [--no-color] <command>`.
+All tool commands live in the `manage-*` artifact skills. This skill holds only the tool-agnostic rules.
 
-- Tasks: `task list`, `task view`, `task create`, `task edit`, `task archive`, `task restore`
-- Milestones/releases: `milestone list/create/view/edit/archive`, `release list/create/view/edit`
-- Requirements: `req create-group/create/list/view/edit/deprecate/restore`, `nfreq create-group/create/list/view/edit`
-- Rules/glossary: `rule create/list/view/edit/deprecate`, `glossary create/list/view/edit/deprecate`
-- Decisions/specs/mockups/audits: `decision ...`, `ui-spec ...`, `tech-spec ...`, `ui-mockup ...`, `audit create/list/view/edit`
-- Search/browser: `search`, `browser`
-
-Full syntax, JSON shapes, and caveats: `skills/papyrus/references/REFERENCE.md`.
+Full syntax, JSON shapes, and caveats: `skills/managed-records/references/REFERENCE.md`.
 
 ## Records and evidence
 
-- Task evidence, review outcomes: `papyrus task edit <id> --comment "<text>" --comment-author <agent>`.
-- Release audit summary: `papyrus audit create ... --reference <REL-ID>`.
-- Release completion: `papyrus release edit <REL-ID> --label released --description "<scope + completion note>"`.
+- Task evidence, review outcomes: record as a comment (manage-tasks).
+- Release audit summary: create an audit record (manage-audits).
+- Release completion: record completion (manage-releases).
 - Never change task scope, acceptance criteria, or dependencies outside `task-refiner` or `planner`.
 - Mockups start `pending`; set `approved` only after explicit user approval. Do not hand-edit metadata comments.
 - The security officer reports; the orchestrator records the audit.
-- `papyrus browser` is the documentation index. Never generate or edit `index.html`.
+- Use the documentation browser (managed-records) as the documentation index. Never generate or edit `index.html`.
 
 ## Notes
 

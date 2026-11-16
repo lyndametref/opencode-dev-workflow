@@ -23,7 +23,7 @@ Do not use this skill to edit requirements, write code, design UI, plan mileston
 
 ## Prerequisites
 
-- Load `papyrus` and `architecture-decision-record`.
+- Load `managed-records` and `manage-decisions`.
 - Read access to `docs/architecture/`, `docs/technical/`, `docs/requirements/`, `docs/business-rules/`, `docs/glossary/`, `docs/domain-model/`, and `decisions/`.
 - Available subagent: `tech-writer` for Technical specification sections.
 
@@ -41,7 +41,7 @@ Do not use this skill to edit requirements, write code, design UI, plan mileston
 2. **Read the baseline** — architecture files, Technical specification, business rules, glossary, domain model, current decisions, and the current stack.
 3. **Judge impact** — decide whether the change affects context boundaries, building blocks, runtime or deployment views, technology stack, external interfaces, cross-cutting concepts, or quality attributes. Record the impact as `none` when it does not.
 4. **Update the Architecture** — edit only `docs/architecture/`. Keep files marked `draft` until user verification.
-5. **Record decisions** — for each non-obvious trade-off, create or update a Decision with `architecture-decision-record`. Status starts `proposed`. Ask the user for explicit validation before setting `accepted`; never auto-accept.
+5. **Record decisions** — for each non-obvious trade-off, create or update a Decision (manage-decisions). Status starts `proposed`. Ask the user for explicit validation before setting `accepted`; never auto-accept.
 6. **Delegate specification sections** — call `tech-writer` with the affected building blocks, the architecture constraints, the decision IDs, and the requirement references. Require the returned `TECH` section IDs and a draft status. Do not edit the Technical specification yourself.
 7. **Present for verification** — present the architecture and the decisions to the user. The gate before dependent design and implementation is the user's verification of the architecture and acceptance of the decisions.
 8. **Record the result** — set architecture files to `verified` only after the user verified them. Report the changed files, decision IDs and statuses, affected building blocks, delegated `TECH` sections, and open questions.

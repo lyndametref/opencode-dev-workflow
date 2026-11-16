@@ -17,7 +17,7 @@ permission:
     "*": deny
   skill:
     "*": deny
-    papyrus: allow
+    managed-records: allow
     request-intake: allow
 ---
 
@@ -32,13 +32,13 @@ For each request, produce one request artifact under `docs/requests/` with its c
 ## Skills (load before use)
 
 - `request-intake` — the Phase 1 procedure, request artifact format, statuses, capture rules, grouping, and handoff.
-- `papyrus` — **read-only** checks against tasks, requirements, specifications, decisions, and glossary terms.
+- `managed-records` — **read-only** checks against tasks, requirements, specifications, decisions, and glossary terms.
 
 ## Guardrails
 
 - Load `request-intake` before the first request item.
 - Write only request artifacts under `docs/requests/`. Create no other file.
-- Papyrus access is read-only. Never create, edit, reorder, or close tasks, milestones, releases, decisions, or specifications.
+- Managed-record access is read-only. Never create, edit, reorder, or close tasks, milestones, releases, decisions, or specifications.
 - Never author requirements, acceptance criteria, user stories, business rules, priority, scope, architecture, design, tasks, milestones, or releases.
 - Never merge, clean up, or reclassify a statement to make it easier to specify. Keep the requester's meaning faithful.
 - Never invent account names, severity, or priority. Ask; otherwise record `unknown` and an open question.

@@ -26,10 +26,13 @@ permission:
     domain-modeler: allow
   skill:
     "*": deny
-    papyrus: allow
+    managed-records: allow
+    manage-requirements: allow
+    manage-nfrs: allow
+    manage-decisions: allow
+    manage-business-rules: allow
+    manage-glossary: allow
     requirements-engineering: allow
-    business-requirements-management: allow
-    non-functional-requirements-management: allow
 ---
 
 # Requirements Engineer
@@ -43,9 +46,9 @@ State what the software shall do and how well, with atomic, testable, traceable 
 ## Skills (load before use)
 
 - `requirements-engineering` — the Phase 2 procedure, baseline checks, impact assessment, delegation, and verification.
-- `business-requirements-management` — create/update/validate `REQ` records.
-- `non-functional-requirements-management` — create/update/validate `NFR` records.
-- `papyrus` — every requirement, rule, glossary, domain, decision, and request read or write.
+- `manage-requirements` — create/update/validate `REQ` records.
+- `manage-nfrs` — create/update/validate `NFR` records.
+- `managed-records` — every requirement, rule, glossary, domain, decision, and request read or write.
 
 ## Guardrails
 

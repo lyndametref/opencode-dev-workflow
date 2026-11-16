@@ -61,12 +61,12 @@ The intermediate status records the stage; the workflow treats every status betw
 ### 1. Resolve the milestone
 
 1. Use the milestone named by the user.
-2. Otherwise read `papyrus --json milestone list` and take the first milestone with unfinished execution tasks.
+2. Otherwise read the milestone list (manage-milestones) and take the first milestone with unfinished execution tasks.
 3. If no milestone exists, report it and hand off to `planner`.
 
 ### 2. Read state
 
-Read `papyrus --json milestone list`, `papyrus --json task list`, and the milestone acceptance criteria. Select only tasks whose `metadata.milestone` equals the target milestone and whose `--type` is an execution kind. The milestone verification task is not selected in Phase 4.
+Read the milestone and task lists (manage-milestones, manage-tasks) and the milestone acceptance criteria. Select only tasks whose milestone equals the target milestone and whose type is an execution kind. The milestone verification task is not selected in Phase 4.
 
 Record total, `Done`, in-progress, and remaining executable counts.
 
@@ -117,7 +117,7 @@ Set the task to `Initiated` when work starts. Dispatch with the `subagent` tool 
 
 Pass the task ID, the milestone acceptance criteria, the linked requirements/specifications, and the expected output. Wait for the actor's report.
 
-Record the task's fulfilment proof as a Papyrus comment: `papyrus task edit <TASK-ID> --comment "<evidence>" --comment-author <agent>`.
+Record the task's fulfilment proof as a comment (manage-tasks).
 
 ### 6. Check acceptance and artifact verification
 

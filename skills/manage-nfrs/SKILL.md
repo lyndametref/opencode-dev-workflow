@@ -1,5 +1,5 @@
 ---
-name: non-functional-requirements-management
+name: manage-nfrs
 description: 'Create, update, reorganize, and check consistency of non-functional requirements through the Papyrus nfreq commands.'
 argument-hint: 'Examples: create a new NFR for authentication timeout; validate all NFRs for consistency; update NFR-001.002'
 user-invocable: true
@@ -19,7 +19,7 @@ Maintain a consistent, traceable non-functional requirements corpus through Papy
 - Check consistency across NFRs.
 - Reorganize NFRs within Papyrus constraints.
 
-Do not use this skill for implementation logic (no Kotlin, SQL, Java, etc.), technical specs, domain model definitions, or business requirements (use `business-requirements-management`).
+Do not use this skill for implementation logic (no Kotlin, SQL, Java, etc.), technical specs, domain model definitions, or business requirements (use `manage-requirements`).
 
 ## Canonical Format
 

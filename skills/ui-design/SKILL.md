@@ -21,7 +21,7 @@ Do not use this skill to define requirements, business rules, validation semanti
 
 ## Prerequisites
 
-- Load `papyrus` and `ui-clickable-mockup`.
+- Load `managed-records` and `manage-ui-mockups`.
 - Read the changed requirements, business rules, glossary, domain model, and the affected task.
 
 ## Artifacts
@@ -34,13 +34,13 @@ Do not use this skill to define requirements, business rules, validation semanti
 ## Procedure
 
 1. **Read the scope** — read the changed `REQ`/`NFR`, business rules, glossary terms, domain artifacts, the affected task, and existing UI specifications.
-2. **Resolve the UI specification** — create or update the `UI` records that describe the views in scope. Use `papyrus ui-spec create` / `papyrus ui-spec edit`. Keep entries `draft` until the user verified the mockup.
+2. **Resolve the UI specification** — create or update the `UI` records that describe the views in scope (manage-ui-specs). Keep entries `draft` until the user verified the mockup.
 3. **Enumerate the happy path** — list the views/screens the current feature's happy path passes through, per platform. When the feature builds on an earlier mockup, include only that mockup's basic views as minimal context.
-4. **Create the MOCK record** — `papyrus ui-mockup create --task <TASK-ID> --spec <UI-ID> "<title>"`. Capture the returned `MOCK` ID and file path. Never choose, reuse, or renumber an ID by hand, and never split one ID across files or platforms.
-5. **Build the review file** — load `ui-clickable-mockup` and follow its format: a review landing (task plus one button per platform) and one clickable prototype per platform. Keep the Papyrus metadata comments intact; author only the HTML body.
-6. **Validate** — run `skills/ui-clickable-mockup/scripts/ensure_wireframe_css.sh` and `skills/ui-clickable-mockup/scripts/validate_mockups.sh`; fix every reported issue.
+4. **Create the MOCK record** — create the mockup record (manage-ui-mockups). Capture the returned `MOCK` ID and file path. Never choose, reuse, or renumber an ID by hand, and never split one ID across files or platforms.
+5. **Build the review file** — load `manage-ui-mockups` and follow its format: a review landing (task plus one button per platform) and one clickable prototype per platform. Keep the metadata comments intact; author only the HTML body.
+6. **Validate** — run `skills/manage-ui-mockups/scripts/ensure_wireframe_css.sh` and `skills/manage-ui-mockups/scripts/validate_mockups.sh`; fix every reported issue.
 7. **Present for verification** — show the single review file, its sources, and its platform/view coverage to the caller for user review. Keep the Papyrus status `pending`. Do not treat silence, another reviewer, or approval of another mockup as approval.
-8. **Record approval** — after the caller reports explicit user approval, set `papyrus ui-mockup edit <MOCK-ID> --status approved`. On requested changes, revise the file and present it again.
+8. **Record approval** — after the caller reports explicit user approval, set the mockup to `approved` (manage-ui-mockups). On requested changes, revise the file and present it again.
 9. **Report** — MOCK ID, file path, platforms, happy-path views, active elements, `UI` IDs, references, validation result, and approval status.
 
 ## Rules
@@ -53,7 +53,7 @@ Do not use this skill to define requirements, business rules, validation semanti
 - Do not implement production frontend code.
 - Do not modify `docs/requirements/`, business rules, or the Technical specification.
 - Papyrus owns the `MOCK` ID, filename, and metadata comments. Do not hand-edit the metadata comments.
-- Do not create a mockup README table; use `papyrus ui-mockup list` / `view`.
+- Do not create a mockup README table; use the manage-ui-mockups skill.
 
 ## Stop conditions
 

@@ -19,10 +19,10 @@ Use this skill when you need to:
 - Document business objects and their relationships
 
 ## Inputs
-- Business requirements from Papyrus (`papyrus req list` / `papyrus req view`)
+- Business requirements (manage-requirements)
 - Architecture documentation from `docs/architecture/`
 - Existing domain model files from `docs/domain-model/`
-- Technical specifications from Papyrus (`papyrus tech-spec list` / `papyrus tech-spec view`)
+- Technical specifications (manage-tech-specs)
 
 ## Workflow
 

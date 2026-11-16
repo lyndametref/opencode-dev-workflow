@@ -44,7 +44,7 @@ Do not use this skill to fix, rework, approve, or release.
    - in release mode: milestones are complete and verified, the change set is consistent across milestones, integration and regression pass, and cumulative change is covered.
 4. **Classify findings** — severity `low`, `medium`, `high`, or `blocker`, each with evidence, location, and recommendation.
 5. **Decide** — `pass` when no finding blocks the scope; otherwise `corrections required`. In release mode, a `blocker` or an unresolved `high` finding blocks the release.
-6. **Record the audit** — `papyrus audit create --title "<MS/REL> quality audit" --content "<structured report>" --audit-type quality --reference <MS/REL-ID> --label issued`. The workflow audit status is recorded by the `issued` and `approved` labels; use `papyrus audit deprecate` when an audit is archived. Only one quality audit may be `issued` or `approved` per assessed scope at a time; when the check is rerun after corrections, the new audit replaces the previous one, which is archived.
+6. **Record the audit** — create the audit record (manage-audits), type `quality`, with the `issued` label. Only one quality audit may be `issued` or `approved` per assessed scope at a time; when the check is rerun after corrections, the new audit replaces the previous one, which is archived.
 7. **Report corrections** — define the correction content: the failure description and the acceptance criteria it blocks. Do not create tasks; the orchestrator routes the content to `planner`, who creates the correction or fix task in the owning milestone.
 8. **Report** — the audit ID, verdict, per-criterion results, severity counts, findings, corrections, and the next action.
 

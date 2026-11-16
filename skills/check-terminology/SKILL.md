@@ -1,5 +1,5 @@
 ---
-name: business-terminology-consistency-check
+name: check-terminology
 description: 'Check docs and backlog for non-canonical business terms, conflicting term variants, and missing glossary alignment. Use when validating wording consistency before or after glossary changes.'
 argument-hint: 'Examples: check term consistency for intervention; audit terminology in docs and backlog'
 user-invocable: true

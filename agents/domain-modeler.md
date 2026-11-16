@@ -24,7 +24,7 @@ permission:
     "*": deny
   skill:
     "*": deny
-    papyrus: allow
+    managed-records: allow
     domain-modeling: allow
     state-diagram-creation: allow
     attribute-list-definition: allow
@@ -45,7 +45,7 @@ Describe the business domain independently of implementation: its contexts, busi
 - `state-diagram-creation` — Mermaid state diagrams for domain objects.
 - `attribute-list-definition` — structured attribute lists for business objects or events.
 - `business-process-diagramming` — end-to-end business process diagrams.
-- `papyrus` — read requirements, rules, glossary, and specifications.
+- `managed-records` — read requirements, rules, glossary, and specifications.
 
 ## Guardrails
 

@@ -1,6 +1,6 @@
 ---
-name: architecture-decision-record
-description: 'Create and manage Architecture Decision Records (ADRs) as Papyrus decision records in decisions/.'
+name: manage-decisions
+description: 'Create, read, update, and deprecate architecture (ADR) and business (BDR) decision records through the management tool.'
 argument-hint: 'ADR title or description of the architectural decision to record.'
 user-invocable: true
 disable-model-invocation: false

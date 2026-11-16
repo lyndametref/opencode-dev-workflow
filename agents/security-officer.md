@@ -21,7 +21,14 @@ permission:
     "*": deny
   skill:
     "*": deny
-    papyrus: allow
+    managed-records: allow
+    manage-audits: allow
+    manage-tasks: allow
+    manage-milestones: allow
+    manage-releases: allow
+    manage-requirements: allow
+    manage-nfrs: allow
+    manage-decisions: allow
     security-audit: allow
 ---
 
@@ -36,13 +43,13 @@ Report the release security posture with severity-ranked, evidence-based finding
 ## Skills (load before use)
 
 - `security-audit` — the Phase 6 audit procedure, checks, severity scale, and report format.
-- `papyrus` — read the release, milestones, tasks, requirements, decisions, and specifications.
+- `managed-records` — read the release, milestones, tasks, requirements, decisions, and specifications.
 
 ## Guardrails
 
 - Load `security-audit` before every audit.
 - Read-only: never modify code, configuration, requirements, tasks, decisions, or status.
-- Never create the audit record, change status, close the release, or request approval. The orchestrator records the report with `papyrus audit create` and owns the gate.
+- Never create the audit record, change status, close the release, or request approval. The orchestrator records the report (manage-audits) and owns the gate.
 - Never expose secrets, credentials, tokens, personal data, or exploit-ready payloads. Redact values and reference locations.
 - Report only findings traceable to evidence. Mark unverifiable controls `not verified`, not passed.
 - Run the available scanners and tests; do not rely only on documentation or reported evidence.

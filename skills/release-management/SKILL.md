@@ -28,7 +28,7 @@ Do not use this skill to verify a milestone again, fix a milestone, plan the rel
 ## Release model
 
 - A release is a Papyrus `REL` record, open until completed. Planner creates it with a working title such as `Release (pending version)`; Phase 6 renames it to `Release <version>` when the final version is chosen.
-- Milestones are assigned with `papyrus milestone edit <MS-ID> --release <REL-ID>`; the release scope is derived from them.
+- Milestones are assigned to a release through the manage-milestones skill; the release scope is derived from them.
 - The final version is chosen after the scope-and-findings approval and immediately before the final build.
 - The release has no acceptance criteria of its own; project-wide criteria apply.
 - The release report is a plain Markdown file under `docs/release-reports/<REL-ID>-<version>-report.md`.
@@ -38,9 +38,9 @@ Do not use this skill to verify a milestone again, fix a milestone, plan the rel
 ### 1. Resolve the release scope
 
 1. Use the release ID or version named by the user.
-2. Otherwise read `papyrus --json release list` and use the first release without the `released` label.
+2. Otherwise read the release list (manage-releases) and use the first release without the `released` label.
 3. If several releases are plausible, ask the user and stop.
-4. Read `papyrus release view <REL-ID>` and `papyrus --json milestone list`; select milestones whose `metadata.release` equals the release ID.
+4. Read the release and milestone lists (manage-releases, manage-milestones); select milestones whose release equals the release ID.
 5. If no release or no assigned milestone exists, report the gap and hand off to `planner`.
 
 ### 2. Verify milestones
@@ -64,7 +64,7 @@ Run the three audits over the whole release. No milestone is taken on trust.
 | Release code audit | `code-analyzer` | Whole codebase and test suite, including code unchanged in this release | `AUD` type `code` |
 | Security audit | `security-officer` | Whole release, cross-feature risks, risks created by combining features | Report; orchestrator records `AUD` type `security` |
 
-For each audit, require the structured report with severity-ranked findings and an owner or required fix. The security officer reports; the orchestrator records the security audit with `papyrus audit create ... --audit-type security --reference <REL-ID>`.
+For each audit, require the structured report with severity-ranked findings and an owner or required fix. The security officer reports; the orchestrator records the security audit (manage-audits).
 
 ### 4. Present scope and findings for approval
 
@@ -74,11 +74,11 @@ Print the release scope, the audit summaries, every finding with severity and ow
 - Reject a finding or the scope: step 6, fix milestone. No final build runs.
 - Security finding neither accepted nor fixed: the release cannot complete.
 
-Accepted findings are documented in the audit of their type with an owner and a follow-up task. Add the `approved` label to each accepted audit (`papyrus audit edit <AUD-ID> --label approved`); only one audit of a type may be `issued` or `approved` in the release scope at a time.
+Accepted findings are documented in the audit of their type with an owner and a follow-up task. Add the `approved` label to each accepted audit (manage-audits); only one audit of a type may be `issued` or `approved` in the release scope at a time.
 
 ### 5. Choose the final version
 
-Load `next-version` in release mode: derive the final version from all included changes and the RC versions of the verified milestones. Record the version on the release with `papyrus release edit <REL-ID> --title "Release <version>"`, replacing the working title. No build runs on an unversioned release.
+Load `next-version` in release mode: derive the final version from all included changes and the RC versions of the verified milestones. Record the version on the release (manage-releases), replacing the working title. No build runs on an unversioned release.
 
 ### 6. Fix work
 
@@ -122,7 +122,7 @@ Set status `issued` when the report is presented for release approval.
 Print the full release report and ask a short approval question. Do not embed the report in the question.
 
 - Withheld or changes requested: return the work to the owning milestones or the fix milestone; nothing is recorded as released.
-- Approved: set the report status `issued`, record completion with `papyrus release edit <REL-ID> --label released --description "<scope + completion note with version and approval>"`, and report the released version, milestones, accepted risks, and follow-ups.
+- Approved: set the report status `issued`, record completion (manage-releases) with the `released` label and a completion note, and report the released version, milestones, accepted risks, and follow-ups.
 
 Do not tag or push unless the user explicitly asks.
 

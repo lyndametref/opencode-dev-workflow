@@ -22,7 +22,15 @@ permission:
     "*": deny
   skill:
     "*": deny
-    papyrus: allow
+    managed-records: allow
+    manage-tasks: allow
+    manage-requirements: allow
+    manage-tech-specs: allow
+    manage-ui-specs: allow
+    manage-ui-mockups: allow
+    manage-decisions: allow
+    manage-business-rules: allow
+    manage-glossary: allow
     task-refinement: allow
 ---
 
@@ -37,7 +45,7 @@ For one task, confirm that all information needed for development is available, 
 ## Skills (load before use)
 
 - `task-refinement` — the refinement procedure, prerequisites, task fields, split rule, and readiness report.
-- `papyrus` — read the task and linked artifacts; write task fields.
+- `managed-records` — read the task and linked artifacts; write task fields.
 
 ## Guardrails
 

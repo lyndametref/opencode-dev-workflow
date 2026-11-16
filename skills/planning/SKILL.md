@@ -74,7 +74,7 @@ Rules:
 
 ## Procedure
 
-1. **Read the baseline** — verified requirements, impact flags, bug requests, roadmap, milestones, releases, and current tasks through `papyrus --json` commands.
+1. **Read the baseline** — verified requirements, impact flags, bug requests, roadmap, milestones, releases, and current tasks through the manage-* skills (manage-tasks, manage-milestones, manage-releases, manage-requirements, manage-nfrs).
 2. **Confirm priority** — for the incoming work. Stop and ask when it is unknown. Never invent priority, business value, or capacity.
 3. **Update the roadmap** — feature order, source requirement references, rationale. Create or edit the `Feature Roadmap` technical specification.
 4. **Ensure the release** — create a `REL` record with a working title such as `Release (pending version)` if none is active, or reuse the open release. Do not assign a version yet; Phase 5/6 do that.

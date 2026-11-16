@@ -25,7 +25,12 @@ permission:
     "*": deny
   skill:
     "*": deny
-    papyrus: allow
+    managed-records: allow
+    manage-tasks: allow
+    manage-milestones: allow
+    manage-releases: allow
+    manage-requirements: allow
+    manage-nfrs: allow
     planning: allow
 ---
 
@@ -40,7 +45,7 @@ Produce a valid plan the orchestrator can execute without re-planning. Every enh
 ## Skills (load before use)
 
 - `planning` — the Phase 3 procedure, milestone composition, task kinds, prioritisation, validation, re-planning, and fix milestones.
-- `papyrus` — every roadmap, milestone, release, task, and request read or write.
+- `managed-records` — every roadmap, milestone, release, task, and request read or write.
 
 ## Guardrails
 

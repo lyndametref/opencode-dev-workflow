@@ -38,7 +38,7 @@ Do not use this skill to fix code, change milestone scope, verify more than one 
    - rerun the failed check. The new audit replaces the previous one, which is archived.
 6. **Handle deferred findings** — a deferred finding is recorded with an owner and a follow-up task created by `planner`. The user accepts or rejects it at the Phase 6 scope-and-findings review. The milestone may proceed with the risk documented.
 7. **Determine the RC version** — load `next-version` in RC mode for the verified milestone. Record the recommended version in the verification task.
-8. **Record the result** — write the change set, checks run, evidence, findings, `AUD` IDs, correction tasks, deferred findings, RC version, and final result into the verification task description or comments with `papyrus task edit <TASK-ID> --comment "<result>" --comment-author orchestrator`.
+8. **Record the result** — write the change set, checks run, evidence, findings, `AUD` IDs, correction tasks, deferred findings, RC version, and final result into the verification task description or comments (manage-tasks).
 9. **Close the verification task** — set it to `Done` only when:
    - the milestone scope is complete and all execution tasks are `Done`;
    - the whole change set is covered by the checks;

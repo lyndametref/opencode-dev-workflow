@@ -47,7 +47,19 @@ permission:
     security-officer: allow
   skill:
     "*": deny
-    papyrus: allow
+    managed-records: allow
+    manage-tasks: allow
+    manage-milestones: allow
+    manage-releases: allow
+    manage-audits: allow
+    manage-requirements: allow
+    manage-nfrs: allow
+    manage-decisions: allow
+    manage-ui-specs: allow
+    manage-ui-mockups: allow
+    manage-tech-specs: allow
+    manage-business-rules: allow
+    manage-glossary: allow
     intake-routing: allow
     milestone-execution: allow
     milestone-verification: allow
@@ -65,7 +77,7 @@ Take a request from intake to a completed release: requirements, a valid plan, e
 
 ## Skills (load before use)
 
-- `papyrus` — every task, milestone, release, audit, requirement, decision, specification, and mockup read or write.
+- `managed-records` — every task, milestone, release, audit, requirement, decision, specification, and mockup read or write.
 - `intake-routing` — Phases 1-3: requirements, architecture impact, planning.
 - `milestone-execution` — Phase 4: execute one milestone's tasks in ordinal order and stop at the boundary.
 - `milestone-verification` — Phase 5: open and close the verification task, dispatch the quality and code audits, and record the RC version.
@@ -90,8 +102,8 @@ Take a request from intake to a completed release: requirements, a valid plan, e
 - Never plan, design, write specifications, refine, implement, review, or audit yourself. Delegate to `planner`, `architect`, `ui-designer`, `test-manager`, `tech-writer`, `task-refiner`, the `*-dev` agents, `quality-gatekeeper`, `code-analyzer`, and `security-officer`.
 - Route every new feature, requirement change, or bug through `intake-routing`. Never send a new feature directly to `planner`; never bypass `requirements-engineer`. Architecture work is scheduled by planning as a Phase 4 task, not performed during intake.
 - Follow the workflow phase boundaries. A new scope discovered during execution returns to Phase 2/3; it is never absorbed.
-- Use `papyrus` for every managed record. Use `papyrus browser` as the documentation index; never generate or edit `index.html`.
-- Record task fulfilment evidence and review outcomes as task comments. Record release audits with `papyrus audit create ... --reference <REL-ID>`.
+- Use `managed-records` for every managed record. Use the documentation browser (managed-records) as the index; never generate or edit `index.html`.
+- Record task fulfilment evidence and review outcomes as task comments (manage-tasks). Record release audits (manage-audits).
 - Use only project-local `./.tmp/` for scratch work and remove it before finishing.
 - Never mark a milestone complete before its verification task is `Done`. Never complete a release before the scope-and-findings approval, the final build, the release approval, and the security decision is not `Block`.
 

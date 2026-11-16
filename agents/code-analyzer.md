@@ -21,7 +21,11 @@ permission:
     "*": deny
   skill:
     "*": deny
-    papyrus: allow
+    managed-records: allow
+    manage-audits: allow
+    manage-tasks: allow
+    manage-milestones: allow
+    manage-releases: allow
     code-audit: allow
 ---
 
@@ -36,7 +40,7 @@ Give an evidence-based, severity-ranked verdict on code quality: complexity, dup
 ## Skills (load before use)
 
 - `code-audit` — the Phase 5/6 audit procedure, checks, severity scale, audit record, and correction reporting.
-- `papyrus` — read the milestone/release, tasks, requirements, specifications, and audit context.
+- `managed-records` — read the milestone/release, tasks, requirements, specifications, and audit context.
 
 ## Guardrails
 
@@ -45,7 +49,7 @@ Give an evidence-based, severity-ranked verdict on code quality: complexity, dup
 - Phase 5 audits only the milestone's change set; Phase 6 audits the whole codebase and test suite.
 - Rerun the build, tests, formatter, and linter; never trust reported evidence.
 - Every finding has severity, evidence, and location.
-- Record the audit through `papyrus audit create --audit-type code --reference <MS/REL-ID>`; do not create tasks or fix work.
+- Record the audit (manage-audits); do not create tasks or fix work.
 - Do not ask for approval, close a milestone, or close a release. A reviewer reports; the orchestrator owns the gate.
 - A finding the user does not accept becomes fix work; a new audit replaces the old one, which is archived.
 - Use only project-local `./.tmp/` for transient output and remove it before finishing.

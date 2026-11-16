@@ -21,7 +21,7 @@ Do not use this skill to plan, prioritize, estimate, create tasks, design soluti
 
 ## Prerequisites
 
-- Load `papyrus` and the record skills: `business-requirements-management` for `REQ`, `non-functional-requirements-management` for `NFR`.
+- Load `managed-records` and the record skills: `manage-requirements` for `REQ`, `manage-nfrs` for `NFR`.
 - Read access to `docs/requests/` for the request artifact.
 
 ## Inputs and trigger
@@ -116,7 +116,7 @@ Delegation:
 When a trade-off is not obvious across stakeholders and an in-depth record is required:
 
 1. Ask the user to make the decision; only the user triggers a decision.
-2. Record it as a Papyrus business decision: `papyrus decision create "<title>" --decision-type bdr --decision "<decision>" --context "<context>" --consequences "<consequences>" --reference <REQ-ID>`.
+2. Record it as a business decision (manage-decisions, type `bdr`).
 3. Keep the status `proposed` until the user accepts it. A proposed decision blocks the dependent requirement from `verified`.
 4. Reference the decision from the requirement. Do not restate the decision as requirement text.
 
@@ -133,7 +133,7 @@ The result is `verified` only when all hold:
 - changed meaning was confirmed by the requester;
 - terminology is canonical and the glossary is consistent with the requirement wording;
 - requirements and delegated artifacts are consistent;
-- all records are retrievable and listable through `papyrus req list` / `papyrus nfreq list` / `papyrus search`.
+- all records are retrievable and listable through the manage-requirements, manage-nfrs, and managed-records skills.
 
 Otherwise the result is `gaps` (fixable defects) or `blocked` (a missing decision).
 

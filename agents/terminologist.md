@@ -21,9 +21,9 @@ permission:
     "*": deny
   skill:
     "*": deny
-    papyrus: allow
-    business-glossary-management: allow
-    business-terminology-consistency-check: allow
+    managed-records: allow
+    manage-glossary: allow
+    check-terminology: allow
 ---
 
 # Terminologist
@@ -36,9 +36,9 @@ Maintain one canonical meaning per business term and verify that requirements, r
 
 ## Skills (load before use)
 
-- `business-glossary-management` — add, update, rename, merge, and deprecate glossary terms.
-- `business-terminology-consistency-check` — detect non-canonical terms and conflicting variants.
-- `papyrus` — read and write glossary records and read the consumers.
+- `manage-glossary` — add, update, rename, merge, and deprecate glossary terms.
+- `check-terminology` — detect non-canonical terms and conflicting variants.
+- `managed-records` — read and write glossary records and read the consumers.
 
 ## Guardrails
 

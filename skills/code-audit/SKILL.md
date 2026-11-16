@@ -49,7 +49,7 @@ Do not use this skill to fix code, approve, or release.
 3. **Run the checks** — run the build, test suite, formatter check, and linter; inspect the changed code and tests against the checks above.
 4. **Classify findings** — severity `low`, `medium`, `high`, or `blocker`, each with evidence and location.
 5. **Decide** — `pass` when no finding blocks the scope; otherwise `corrections required`.
-6. **Record the audit** — `papyrus audit create --title "<MS/REL> code audit" --content "<structured report>" --audit-type code --reference <MS/REL-ID> --label issued`. The workflow audit status is recorded by the `issued` and `approved` labels; use `papyrus audit deprecate` when an audit is archived. Only one code audit may be `issued` or `approved` per assessed scope at a time; a rerun after corrections replaces the previous audit, which is archived.
+6. **Record the audit** — create the audit record (manage-audits), type `code`, with the `issued` label. Only one code audit may be `issued` or `approved` per assessed scope at a time; a rerun after corrections replaces the previous audit, which is archived.
 7. **Report corrections** — define the failure description and the acceptance criteria it blocks. Do not create tasks; the orchestrator routes the content to `planner`.
 8. **Report** — audit ID, verdict, checks, severity counts, findings, corrections, and next action.
 

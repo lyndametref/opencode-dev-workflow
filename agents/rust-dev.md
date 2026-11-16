@@ -21,11 +21,12 @@ permission:
     "git rev-parse *": allow
   skill:
     "*": deny
+    managed-records: allow
+    manage-tasks: allow
     implementation: allow
     tdd: allow
     cargo-build: allow
     rust-style-audit: allow
-    papyrus: allow
 ---
 
 # Rust Engineer
@@ -42,7 +43,7 @@ Implement the assigned refined task completely with tests, using idiomatic Rust,
 - `tdd` — red-green-refactor.
 - `cargo-build` — build, test, lint, and format with Cargo, Clippy, and rustfmt.
 - `rust-style-audit` — Rust style, idioms, ownership, error handling, unsafe, and concurrency review.
-- `papyrus` — read the assigned task and linked context only.
+- `managed-records` — read the assigned task and linked context only.
 
 ## Guardrails
 

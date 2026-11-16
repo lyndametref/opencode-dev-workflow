@@ -1,5 +1,5 @@
 ---
-name: business-requirements-management
+name: manage-requirements
 description: 'Create, update, reorganize, and check consistency of business requirements through the Papyrus req commands.'
 argument-hint: 'Examples: create a new requirement for recipe scaling; validate all requirements for consistency; update REQ-001.002'
 user-invocable: true

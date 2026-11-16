@@ -22,7 +22,7 @@ Produce a structured attribute list for a business object or event, documenting 
 Do not use this skill for:
 - Database schema or table column definitions.
 - State diagrams or lifecycle transitions (use `state-diagram-creation` skill).
-- Business rules (use `business-rules-management` skill).
+- Business rules (use `manage-business-rules` skill).
 
 ## Location
 
@@ -56,7 +56,7 @@ WARNING: the attribute list is about the business object description and do not 
 ## Procedure
 
 1. **Identify the entity** — Determine which business object or event needs an attribute list.
-2. **Read source docs** — Read the domain model (`docs/domain-model/object-model/business-object-model.md`), relevant requirements via `papyrus req list` / `papyrus req view` and `papyrus nfreq list` / `papyrus nfreq view`, and specifications via `papyrus tech-spec view` / `papyrus ui-spec view` to extract all attributes, their types, and constraints.
+2. **Read source docs** — Read the domain model (`docs/domain-model/object-model/business-object-model.md`), relevant requirements (manage-requirements, manage-nfrs) and specifications (manage-tech-specs, manage-ui-specs) to extract all attributes, their types, and constraints.
 3. **Inventory attributes** — List every attribute of the object or event, noting:
    - Name and type
    - Whether it is mandatory or optional

@@ -27,7 +27,7 @@ Do not use this skill for:
 
 ## Prerequisites
 
-- **papyrus skill (REQUIRED)** — Load it before any Papyrus read. All release, milestone, task, requirement, decision, and specification reads go through the Papyrus CLI.
+- **managed-records skill (REQUIRED)** — Load it before any managed read. All release, milestone, task, requirement, decision, and specification reads go through the management tool.
 - Read access to requirements, architecture, specifications, and application source.
 - Optional: available scanners and test commands for the stacks present.
 
@@ -35,7 +35,7 @@ Do not use this skill for:
 
 - Read-only: do not modify code, configuration, requirements, tasks, decisions, or status.
 - Never edit Papyrus-managed files directly; read via the Papyrus CLI only.
-- Never create the audit record; the orchestrator records the report with `papyrus audit create`.
+- Never create the audit record; the orchestrator records the report (manage-audits).
 - Never reveal secrets, credentials, tokens, personal data, or exploit-ready payloads. Redact values and give the location.
 - Report only findings traceable to evidence. Mark unverifiable controls as `not verified`, not as passed.
 - Do not invent threats unrelated to the audited scope.
@@ -47,9 +47,9 @@ Do not use this skill for:
 ### 1. Establish scope
 
 1. Load `papyrus`.
-2. Read the target release record, its assigned milestones, and the included tasks with `papyrus release view`, `papyrus --json milestone list`, and `papyrus --json task list`. For a feature target, use `papyrus task view <TASK-ID>`.
+2. Read the target release record, its assigned milestones, and the included tasks (manage-releases, manage-milestones, manage-tasks). For a feature target, read the task (manage-tasks).
 3. Confirm included tasks are `Done`; report any exception.
-4. Read linked requirements and security/privacy NFRs with `papyrus req view` / `papyrus nfreq view`, specifications with `papyrus tech-spec view` / `papyrus ui-spec view`, architecture documents, and decisions with `papyrus decision view`.
+4. Read linked requirements and security/privacy NFRs (manage-requirements, manage-nfrs), specifications (manage-tech-specs, manage-ui-specs), architecture documents, and decisions (manage-decisions).
 5. Record scope boundaries and anything explicitly out of scope.
 6. Identify cross-feature risks: combinations of features delivered by the release that create a risk no single milestone reveals (combined permissions, shared data flows, chained integrations, cumulative attack surface).
 
@@ -162,7 +162,7 @@ Produce the report in the response and hand it to the orchestrator. Do not chang
 - **Release recommendation**: `Pass` / `Pass with findings` / `Block`, with rationale.
 - **Accepted risks and follow-ups**: owner and suggested task for each Medium/Low finding.
 - **Open questions**: missing context or unverifiable controls.
-- **Next required action**: what the orchestrator must do next, including recording the audit with `papyrus audit create`.
+- **Next required action**: what the orchestrator must do next, including recording the audit (manage-audits).
 
 Use `none` when a section does not apply.
 
