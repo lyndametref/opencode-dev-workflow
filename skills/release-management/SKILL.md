@@ -21,7 +21,7 @@ Do not use this skill to verify a milestone again, fix a milestone, plan the rel
 
 ## Prerequisites
 
-- Load `papyrus` and `next-version`.
+- Load `managed-records`, `manage-release-reports`, and `next-version`.
 - Read access to the repository, build files, tests, and release evidence.
 - Available subagents: `quality-gatekeeper`, `code-analyzer`, `security-officer`, `planner`, and the owning `*-dev` agents for fixes.
 

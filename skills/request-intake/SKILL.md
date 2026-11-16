@@ -22,7 +22,8 @@ Do not use this skill to write requirements, acceptance criteria, business rules
 
 ## Prerequisites
 
-- Load `papyrus` for read-only checks against tasks, requirements, specifications, decisions, and glossary terms.
+- Load `managed-records` for read-only checks against tasks, requirements, specifications, decisions, and glossary terms.
+- Use `manage-requests` for request artifact file operations.
 - Read access to `docs/` and the repository.
 
 ## Request artifact

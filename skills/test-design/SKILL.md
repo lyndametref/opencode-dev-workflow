@@ -21,7 +21,8 @@ Do not use this skill to write test implementation code, requirements, architect
 
 ## Prerequisites
 
-- Load `papyrus` for read-only reads of requirements, rules, and tasks.
+- Load `managed-records` for read-only reads of requirements, rules, and tasks.
+- Use `manage-test-cases` for test case file operations.
 - Read access to `docs/test-cases/`.
 
 ## Test case artifact

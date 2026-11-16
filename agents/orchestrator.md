@@ -49,6 +49,7 @@ permission:
     "*": deny
     managed-records: allow
     manage-tasks: allow
+    manage-release-reports: allow
     manage-milestones: allow
     manage-releases: allow
     manage-audits: allow

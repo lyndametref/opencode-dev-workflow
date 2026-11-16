@@ -25,6 +25,7 @@ permission:
     "*": deny
     managed-records: allow
     manage-tasks: allow
+    manage-test-cases: allow
     manage-requirements: allow
     manage-business-rules: allow
     test-design: allow

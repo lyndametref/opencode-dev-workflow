@@ -18,6 +18,7 @@ permission:
   skill:
     "*": deny
     managed-records: allow
+    manage-requests: allow
     request-intake: allow
 ---
 
