@@ -22,6 +22,13 @@ Maintain a consistent, traceable set of business rules by creating, updating, an
 
 Do not use this skill for implementation logic (no Kotlin, SQL, XML, etc.), technical specs, or domain model definitions.
 
+## Workflow alignment
+
+- The rule is created or updated in Phase 2 when `requirements-engineer` delegates an impact assessment to `business-analyst`.
+- A rule exists only to help fulfil a requirement; every rule references at least one `REQ`.
+- When a served requirement changes, every rule that references it must be re-validated against the new requirement before Phase 3 planning. If the rule no longer holds, update or deprecate it; never leave it silently inconsistent.
+- The rule is not an acceptance criterion, a specification, or a test. Those belong to their own artifacts.
+
 ## Canonical Format
 
 Papyrus owns the record format. Do not create or edit business-rule files directly.

@@ -1,7 +1,7 @@
 ---
 name: next-version
-description: 'Choose the next semantic version (final release or milestone RC) by analyzing Done tasks in the milestones of the current release. Classifies changes as breaking (major), feature (minor), or chore/maintenance (patch) and handles RC numbering with reset on major increment. Asks the user when classification or scope is uncertain.'
-argument-hint: 'Optionally provide the current release ID, milestone, or target ("rc" or "release"). If omitted, resolve from Papyrus and ask when ambiguous.'
+description: 'Choose a Semantic Version for a verified milestone release candidate (Phase 5) or a final release (Phase 6) from the changes it contains, handling major/minor/patch classification and RC numbering with reset on major increment.'
+argument-hint: 'Provide a milestone ID for an RC, or a release ID for the final version. If omitted, resolve from Papyrus and ask when ambiguous.'
 user-invocable: true
 disable-model-invocation: false
 ---
@@ -10,144 +10,120 @@ disable-model-invocation: false
 
 ## Outcome
 
-One recommended version string (for example `1.4.0`, `1.4.0-rc.3`, or `2.0.0-rc.1`) with a rationale, the increment class, the baseline version, the RC number (when applicable), and the list of Done tasks considered. No backlog state is changed. The recommendation is proposed to the user for confirmation; it is not recorded or tagged.
+One recommended version string (`X.Y.Z` or `X.Y.Z-rc.N`) with its rationale, increment class, baseline, RC number, and the changes considered. No backlog state, version file, or Git tag is changed. The recommendation is recorded by the orchestrator in the Phase 5 verification task or on the release in Phase 6.
 
-## When To Use
+## When to use
 
-- Before cutting a milestone RC or a final release, to decide the version number.
-- When the user asks "what should the next version be", "choose the next version", "bump version", or "next rc".
-- After a set of tasks has been completed and the version needs to be derived from the delivered work.
+- Phase 5, after a milestone verification passes: choose the milestone RC version.
+- Phase 6, after the scope-and-findings approval: choose the final release version.
 
-Do not use this skill for:
-- Closing a release or running the security audit (use `release-orchestration`).
-- Delivering milestone work (use `milestone-orchestration`).
-- Creating Git tags or modifying version files (report the recommendation only; tagging is the user's decision).
+Do not use this skill to verify a milestone, close a release, or create tags.
 
 ## Prerequisites
 
-- **papyrus skill (REQUIRED)** — Load it before any Papyrus read.
-- Read access to the repository, including Git tags and project version files.
-- Available: `git` for tags and history.
+- Load `papyrus`.
+- Read access to Git tags and the project's version files.
+- The milestone or release scope in Papyrus.
 
-## Versioning Rules
+## Versioning rules
 
-This project follows Semantic Versioning (`MAJOR.MINOR.PATCH`) with these domain rules:
+The project follows Semantic Versioning (`MAJOR.MINOR.PATCH`).
 
-- **Breaking change** — any change to a public API, file format, or command-line argument (renamed/removed/changed semantics) requires a **major** increment.
-- **New function** — a backward-compatible addition (new command, new option, new field, new capability) requires a **minor** increment.
-- **Chore / maintenance** — documentation updates, dependency/library updates, refactors with no behavior change, tests, build changes require a **patch** increment.
-- **Pre-1.0.0 (`0.x`)** — the API is unstable and may break at any time. Breaking changes before 1.0.0 are allowed, but the increment rule still applies unless the user states otherwise. When a breaking change is detected on a `0.x` baseline, ask the user whether to increment major (to `1.0.0`) or minor, because both are defensible under SemVer for `0.x`.
-- **RC (release candidate)** — at the end of each milestone an RC is released: `X.Y.Z-rc.N`. No intensive audit occurs at milestone end. The final release `X.Y.Z` is cut only after all milestones of the release are Done and the end-of-release security audit passes.
-- **RC reset** — when the computed base version (`X.Y.Z`) changes from the base of the latest RC (because a new breaking or feature change appeared after earlier RCs), the RC counter resets to `1`. When the base version is unchanged, increment the RC counter.
-- **Only Done tasks count.** A task that is not yet implemented is considered cancellable and is excluded. `ToDo`, `Initiated`, `Refined`, `Implemented`, and `Validated` tasks are ignored.
-- **Highest wins.** If the considered Done tasks include at least one breaking change, the increment is major even if other tasks are features or chores. Otherwise, if at least one new function, minor. Otherwise patch.
+- **Breaking** — a change to a public API, file format, or command-line argument (renamed, removed, or changed semantics): **major**.
+- **Feature** — a backward-compatible addition (new capability, endpoint, option, field): **minor**.
+- **Chore** — documentation, dependency updates, refactors with no behavior change, tests, build changes: **patch**.
+- **Pre-1.0.0** — breaking changes are allowed, but the increment rule still applies. When a breaking change is detected on `0.x`, ask the user whether to go to `1.0.0` or `0.(MAJOR+1).0`.
+- **Highest wins** — any breaking change makes it major; otherwise any feature makes it minor; otherwise patch.
+- **RC** — each verified milestone gets `X.Y.Z-rc.N`. The final `X.Y.Z` is chosen only in Phase 6, after all release milestones are verified and the release audits and approvals pass.
+- **RC reset** — when the base version changes from the latest RC's base, the RC number resets to 1. When the base is unchanged, increment the RC number.
 
 ## Procedure
 
-### 1. Establish the baseline version
+### 1. Establish the baseline
 
-1. Load `papyrus`.
-2. Determine the last released version:
-   - Run `git tag --list 'v*' --sort=-v:refname` (and variants without the `v` prefix). Take the highest SemVer tag.
-   - If no tags, inspect Papyrus releases: `papyrus --json release list`; pick the highest `Release <version>` record that has the `released` label.
-   - If neither exists, ask the user for the baseline version (do not guess `0.1.0` or `1.0.0` silently).
-3. Cross-check project version files when present (`package.json`, `Cargo.toml`, `build.gradle*`, `pom.xml`, `pyproject.toml`, `VERSION`, etc.). If they disagree with the Git/release baseline, report the discrepancy and ask the user which is authoritative.
-4. Record `baseline = MAJOR.MINOR.PATCH` (strip any pre-release suffix; the baseline is the last final release).
+1. Read the last released version:
+   - `git tag --list 'v*' --sort=-v:refname` and variants without the `v` prefix; take the highest SemVer tag;
+   - otherwise `papyrus --json release list` and take the highest `Release <version>` with the `released` label;
+   - otherwise ask the user; do not guess.
+2. Cross-check project version files (`package.json`, `Cargo.toml`, `build.gradle*`, `pom.xml`, `pyproject.toml`, `VERSION`, etc.). If they disagree, report the discrepancy and ask which is authoritative.
+3. Record `baseline = MAJOR.MINOR.PATCH` from the last final release.
 
-### 2. Resolve the current release scope
+### 2. Resolve the scope
 
-1. List releases with `papyrus --json release list` and milestones with `papyrus --json milestone list`.
-2. Identify completed releases (baselines already shipped) from step 1.
-3. Determine the **current release**:
-   - Prefer the release record named by the user.
-   - Otherwise use the first `REL` record without the `released` label.
-   - Its scope is every milestone whose `metadata.release` equals that `REL` ID.
-   - If multiple plausible releases exist, ask the user and stop.
-4. Read `papyrus --json task list` and select tasks whose `metadata.milestone` is in the release milestone set.
-5. Collect only tasks with status `Done`. Record their IDs, titles, labels, description, acceptance criteria, comments, and `type`.
-6. If no Done tasks exist in scope, report that and ask whether to keep the baseline version unchanged (patch with no work is meaningless) or wait.
+**RC mode (Phase 5):**
 
-### 3. Classify each Done task
+1. Read the milestone and its tasks.
+2. Consider only the milestone's `Done` tasks and the changes they delivered.
 
-For each Done task, decide one of:
+**Release mode (Phase 6):**
 
-- **breaking** — the task changes or removes a public API, file format, or command argument; renames a command/flag; changes output format consumed by users; changes on-disk schema. Evidence: labels such as `breaking`, `api`, `cli`, `format`, `schema`, `migration`; acceptance criteria or comments mentioning "breaking", "incompatible", "rename", "remove", "change argument", "format change"; modified files in public contract paths.
-- **feature** — adds new, backward-compatible functionality: new command, new option, new endpoint, new field, new capability. Evidence: labels `feature`, `enhancement`; acceptance criteria describing "add", "new", "support".
-- **chore** — documentation, dependency/library updates, refactors, tests, build/CI, internal cleanup with no user-visible behavior change.
+1. Read the release and its assigned milestones.
+2. Consider every `Done` task in every release milestone.
+3. If no `Done` task exists, report it and ask whether to keep the baseline.
 
-Rules:
-- When evidence is mixed or ambiguous, mark the task `unknown` and collect it for a user question. Do not silently classify.
-- A task touching both a breaking surface and an internal refactor is `breaking`.
-- Dependency updates that force an API change are `breaking`; pure version bumps are `chore`.
-- Documentation of a new feature does not make a chore task a feature; the feature is the task that adds the capability.
+### 3. Classify each change
 
-Produce a classification table: Task ID | Title | Class | Evidence.
+For each considered task, classify `breaking`, `feature`, or `chore` with evidence.
+
+- Evidence: labels (`breaking`, `feature`, `enhancement`, `chore`), acceptance criteria, changed public contracts, schema or format changes, comments.
+- Mixed or ambiguous evidence: mark `unknown` and ask the user; never classify silently.
+- A task touching a breaking surface and an internal refactor is `breaking`.
+- A dependency update that forces an API change is `breaking`; a pure version bump is `chore`.
+- Documentation of a new feature is `chore`; the task that adds the capability is `feature`.
+
+Produce a table: Task ID | Title | Class | Evidence.
 
 ### 4. Determine the increment
 
-1. If any task is `unknown`, ask the user to classify those tasks (breaking / feature / chore) and stop until answered.
-2. If any `breaking` → increment = **major**.
-   - Else if any `feature` → increment = **minor**.
-   - Else → increment = **patch**.
-3. Pre-1.0.0 special case: if baseline `< 1.0.0` and increment is major, ask the user whether to:
-   - increment major (to `1.0.0` or `0.(MAJOR+1).0`? clarify) — recommend `1.0.0` only if the release is intended to mark API stability; otherwise `0.(MAJOR+1).0`.
-   Stop for the answer.
-4. Compute the new base version by applying the increment to the baseline:
-   - major: `(MAJOR+1).0.0`
-   - minor: `MAJOR.(MINOR+1).0`
-   - patch: `MAJOR.MINOR.(PATCH+1)`
+1. If any task is `unknown`, ask the user and stop until answered.
+2. Any `breaking` -> major; otherwise any `feature` -> minor; otherwise patch.
+3. Apply the increment to the baseline:
+   - major: `(MAJOR+1).0.0`;
+   - minor: `MAJOR.(MINOR+1).0`;
+   - patch: `MAJOR.MINOR.(PATCH+1)`.
+4. Pre-1.0.0 breaking change: ask which base to use and stop.
 
-### 5. Determine RC vs final and RC number
+### 5. Determine RC or final
 
-1. Ask or infer the release kind:
-   - If the user named a milestone (not a release) or the run is "end of milestone" → RC.
-   - If the user named a release / "ship" / "final" → final (no suffix).
-   - If unclear, ask.
-2. For a final release: recommended version = new base version.
-3. For an RC:
-   - Find the latest RC tag or release record for the same base version and the previous base version:
-     - `git tag --list '*-rc.*' --sort=-v:refname`.
-     - Also inspect Papyrus release titles for `rc`.
-   - If the latest RC's base version equals the new base version → next RC number = latest RC number + 1.
-   - If the latest RC's base version differs from the new base version (because the increment changed, e.g. a breaking change appeared after earlier minor RCs) → reset: RC number = 1.
-   - If no prior RC for this release → RC number = 1.
-   - Recommended version = `X.Y.Z-rc.N`.
+**RC mode:**
+
+1. Find the latest RC for the same base: `git tag --list '*-rc.*' --sort=-v:refname` and Papyrus release titles.
+2. Same base -> next RC number = latest + 1. Different base -> 1. No prior RC -> 1.
+3. Recommended version = `X.Y.Z-rc.N`.
+
+**Release mode:**
+
+1. Use the RC versions recorded in the verified milestones as inputs.
+2. Recommended version = the new base version `X.Y.Z`.
+3. If the final version differs from the latest milestone RC base, report why.
 
 ### 6. Report
 
-Print:
-- Baseline version and its source.
-- Current release scope (`REL` ID and milestones included).
-- Done tasks considered (IDs and titles).
+- Baseline and its source.
+- Scope: milestone or release, and included tasks.
 - Classification table.
 - Increment class and reason.
-- RC handling (reset or increment) if applicable.
+- RC handling (reset or increment).
 - **Recommended version**.
-- Caveats: tasks not yet implemented were excluded and could still change the version if they land; if a later task is breaking, re-run this skill (the version and RC counter may reset).
+- Caveats: non-`Done` work was excluded; a later breaking change may reset the version.
 
-Do not create tags, edit files, or change Papyrus state. Ask the user to confirm the recommended version; if they request a different one, record their override as the decision (no file write).
+Do not create tags, edit version files, or change Papyrus state. The orchestrator records the recommendation in the Phase 5 verification task or on the release.
 
-## Stop Conditions
+## Stop conditions
 
-Stop and ask the user when:
-- The baseline version cannot be determined.
-- The current release scope is ambiguous.
-- Any Done task cannot be classified confidently.
+- Baseline cannot be determined.
+- Scope is ambiguous.
+- A change cannot be classified confidently.
 - A breaking change is detected on a pre-1.0.0 baseline.
-- The release kind (RC vs final) is not stated and cannot be inferred.
-- No Done tasks exist in scope.
+- No `Done` work exists in scope.
 
-## Completion Checks
+## Completion checks
 
-- Baseline version identified with source.
-- Release scope and included milestones stated.
-- Only Done tasks considered; non-Done tasks excluded and noted.
-- Classification table produced with evidence.
-- Increment class justified by the highest-severity change.
-- RC number computed with reset logic explained.
-- Recommended version printed separately from the rationale.
-- No repository, Papyrus, or version file modified.
-
-## Resume / interruption
-
-The skill is stateless. Re-run from step 1 on re-invocation; re-read releases, milestones, tasks, and tags. Do not reuse a previous recommendation without re-reading current state.
+- Baseline identified with its source.
+- Scope and included tasks stated.
+- Only `Done` work considered; excluded work noted.
+- Classification table has evidence for every task.
+- Increment justified by the highest-severity change.
+- RC numbering explains reset or increment.
+- Recommended version is printed separately from the rationale.
+- No repository, Papyrus, tag, or version file was modified.

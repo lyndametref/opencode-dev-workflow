@@ -1,7 +1,7 @@
 ---
 name: task-refinement
-description: 'Audit, clarify, and complete a single backlog ticket by removing ambiguity, filling missing structure, and aligning it with specifications. Uses the Papyrus CLI for all ticket reads and modifications.'
-argument-hint: 'Provide a task ID and goal (e.g. "TASK-0020: clarify scope and finish acceptance criteria").'
+description: 'Refine one planned task into a self-contained, implementation-ready work item after the architecture, specification, UI, and test cases are settled. Implements the refinement task kind of Phase 4.'
+argument-hint: 'Provide a task ID (e.g. TASK-0042).'
 user-invocable: true
 disable-model-invocation: false
 ---
@@ -10,106 +10,74 @@ disable-model-invocation: false
 
 ## Outcome
 
-A single backlog ticket becomes execution-ready with a clear description, explicit assumptions, tracked dependencies, concrete acceptance criteria, and a well-defined definition of done — all aligned with relevant project documentation.
+One task has a complete, self-contained description, explicit assumptions, tracked dependencies, testable acceptance criteria, and a definition of done. The task is execution-ready, or reported as blocked with the open questions.
+
+## When to use
+
+- The refinement task of a milestone is executed in Phase 4.
+- A planned task is ambiguous, incomplete, or missing structure before implementation.
+
+Do not use this skill to create tasks, plan milestones, write implementation code, or change dependencies/ordinals.
 
 ## Prerequisites
 
-- **papyrus skill (REQUIRED)** — This skill relies on the Papyrus CLI for ALL ticket operations. Load the `papyrus` skill before performing any Papyrus read or write.
+Load `papyrus`. Refinement does not start before all hold:
 
-## When To Use
+- the architecture impact assessment is settled and the architecture is user-verified;
+- the Technical specification conformance is verified by `architect`;
+- the UI design task, when planned, is `Done` and its mockup is `approved`;
+- the test design task is `Done` and its test cases are `approved`;
+- the task's dependencies are `Done`.
 
-- A ticket is vague, ambiguous, or missing key sections (description, AC, assumptions, dependencies, DoD).
-- A ticket needs to be checked for alignment with `docs/` specifications before implementation.
-- A feature needs an implementation specification and an execution-ready ticket that link the applicable requirements and specifications.
-- You need to make a single ticket execution-ready without decomposing it into sub-tasks.
-
-Do not use this skill for:
-- Creating new tickets from scratch (use the Papyrus CLI directly).
-- Decomposing a ticket into implementation sub-tasks or sprint planning.
-- Refining multiple tickets in one pass — focus on one ticket at a time.
-- Editing tickets without using the Papyrus CLI (never edit ticket files directly) — you MUST use the `papyrus` skill for all operations.
+If a prerequisite is missing, stop and report.
 
 ## Procedure
 
-1. **Read the target ticket** — Use `papyrus task view <TASK-ID> --json`. Read the full `content` and `metadata`. Identify missing or weak sections: scope, assumptions, dependencies, acceptance criteria, and definition of done.
+1. **Read the target task** — `papyrus task view <TASK-ID>`. Read the full description, acceptance criteria, references, dependencies, and milestone.
+2. **Read the inputs** — the linked `REQ`/`NFR`, `RUL`, Technical specification, UI specification, approved mockups, approved test cases, decisions, and domain artifacts.
+3. **Audit the task** — identify missing or weak scope, behavior, assumptions, dependencies, acceptance criteria, and definition of done. Check that the task is traceable to its requirement or request.
+4. **Ask targeted questions** — clarify user-visible behavior, boundaries, data, validation, errors, and verification. Do not mark the task execution-ready while a material question is open. Do not turn assumptions into requirements.
+5. **Complete the task fields** through Papyrus:
+   - `papyrus task edit <TASK-ID> --description "<scope, assumptions, dependencies, and definition of done>"`;
+   - `papyrus task edit <TASK-ID> --ac "<criterion>"` for each testable acceptance criterion;
+   - `papyrus task edit <TASK-ID> --reference <REQ-ID> --documentation <path>` for traceability;
+   - `papyrus task edit <TASK-ID> --depends-on <TASK-ID>` for dependencies.
+6. **Split only when needed** — if the task is too broad for one implementation unit, propose an implementation split. Do not change dependencies, ordinals, or milestone scope yourself; report the proposed split to the orchestrator so `planner` can update the plan.
+7. **Report readiness** — execution-ready yes/no, changes made, assumptions, open questions, and any proposed split.
 
-2. **Cross-check relevant requirements and specifications** — Review Papyrus records and linked documentation referenced by the ticket:
-   - `papyrus req view` / `papyrus nfreq view` for requirements;
-   - `papyrus tech-spec view` for feature/technical specifications;
-   - `papyrus ui-spec view` for UI specifications;
-   - `papyrus rule view` for business rules;
-   - `papyrus decision view` for decisions;
-   - `docs/domain-model/` for diagrams and attribute lists.
+## Rules
 
-   Keep the feature specification in Papyrus as a `TECH` record. Link relevant business rules and domain artifacts in their canonical locations.
+- The task and its acceptance criteria are the implementation contract. Requirement and specification links provide context and rationale; they do not substitute for task content.
+- Papyrus has no notes, plan, or definition-of-done field. Put the definition of done in the description or express it as acceptance criteria.
+- Do not change the task's milestone, ordinal, dependencies, or scope beyond refinement. Scope, dependency, and ordinal changes go to `planner`.
+- Do not delegate UI design, test design, domain artifacts, or architecture work; those are separate milestone tasks. Report a missing input instead.
+- Do not edit requirements, rules, glossary, domain model, architecture, Technical specification, UI specifications, mockups, test cases, or source code.
+- All task changes go through the Papyrus CLI; never edit task records directly.
+- Flag any requirement or behavior not traceable to documentation as an open question.
 
-3. **Check definition of done** — Determine whether the standard DoD applies or if the ticket needs a customized DoD. Papyrus has no dedicated DoD field; put the DoD in the task description as a `## Definition of Done` section or express it as acceptance criteria. If unsure, ask the user.
+## Stop conditions
 
-4. **Interact with the user** — Present findings and ask targeted questions to clarify intent, assumptions, and ambiguous wording. Do not mark the ticket execution-ready until material behavior and verification questions are answered:
-   - What exactly needs to be built or done?
-   - What are the boundaries (in scope / out of scope)?
-   - What dependencies exist?
-   - How will completion be verified?
+- A prerequisite artifact is missing or unapproved: stop and report.
+- A material behavior, scope, or verification question is unanswered: the task is not execution-ready.
+- A specification or requirement inconsistency is found: report it; do not resolve it by guessing.
+- The task needs a dependency, ordinal, or milestone change: report it to the orchestrator for `planner`.
 
-5. **Update the ticket via Papyrus** — Apply all refinements through the Papyrus CLI. Never edit ticket files directly. Ensure the refined ticket has:
-   - A clear, unambiguous description: `papyrus task edit <TASK-ID> --description "<scope, assumptions, dependencies, and definition of done>"`.
-   - Concrete, testable acceptance criteria: repeat `papyrus task edit <TASK-ID> --ac "<criterion>"`.
-   - Tracked dependencies: `papyrus task edit <TASK-ID> --depends-on <TASK-ID>`.
-   - Requirement and specification references: `papyrus task edit <TASK-ID> --reference <REQ-ID> --documentation <path>`.
-   - Milestone and order: `papyrus task edit <TASK-ID> --milestone <MS-ID> --ordinal <n>`.
+## Report format
 
-   Papyrus has no notes, plan, or final-summary fields. Use `--comment` for working notes and evidence. All implementation-critical scope and behavior must be in the ticket itself; links to requirements and specifications explain context and rationale and are not substitutes for ticket content.
+- **Task**: ID and title.
+- **Execution-ready**: yes / no, with blockers.
+- **Changes made**: description, acceptance criteria, references, dependencies.
+- **Assumptions**: list or `none`.
+- **Open questions**: list or `none`.
+- **Proposed split**: tasks and dependencies, or `none`.
+- **Next action**: who does what next.
 
-6. **Return a summary** — Provide a summary of changes made, any assumptions that were documented, open questions that remain, and suggested next actions.
+## Completion checks
 
-## Resume / interruption
-
-If interrupted, re-read the target ticket and linked docs, then continue from the last completed step; do not re-apply already-made edits.
-
-## Example
-
-See `references/` for a before/after refinement demonstration:
-- `task-rough.md` — a vague, ambiguously scoped ticket before refinement
-- `task-refined.md` — the same ticket after refinement with clear scope, AC, assumptions, and dependencies
-
-The examples are conceptual; the live ticket must be changed through Papyrus.
-
-## Completion Checks
-
-- The target ticket has a clear, unambiguous description with concrete scope.
+- The task has a clear, self-contained description with concrete scope.
 - Acceptance criteria are specific, testable, and numbered.
-- Assumptions are explicitly stated (or noted as "none").
-- Dependencies are tracked (or noted as "none").
-- A definition of done is present in the description or acceptance criteria.
-- All changes were made via the Papyrus CLI — no direct file edits.
-- The `papyrus` skill was loaded and used for all Papyrus operations.
-- Any requirements invented without traceable documentation sources are flagged as open questions.
-- No material ambiguity remains that would force a developer to seek product clarification before beginning implementation.
-
-## Decision Rules
-
-- If a ticket's scope is too broad for a single execution unit, flag it rather than expanding it — recommend splitting but do not perform the split.
-- If a ticket references specifications that no longer exist or have changed, flag the inconsistency and ask the user how to proceed.
-- If critical information cannot be found in documentation or user input, add it as an open question — never invent untraceable requirements.
-- If the standard DoD is insufficient for the ticket type, customize it and explain the custom criteria.
-- If the user asks for implementation decomposition, decline and explain this skill only refines the ticket structure.
-
-## Quality Bar
-
-- Descriptions are concise, unambiguous, and self-contained.
-- Acceptance criteria are concrete and verifiable (pass/fail), not vague aspirations.
-- Assumptions are explicit and noted as assumptions (prefixed with "Assumption:").
-- Every claim in the refined ticket is traceable to either project docs, user input, or is marked as an open question.
-- No implementation details, code snippets, or technical design decisions appear in the ticket.
-- The ticket is in a state where a developer could pick it up and start working without further clarification.
-
-## Output Template
-
-After refining a ticket, provide this summary:
-
-- **Action**: refine
-- **Target ticket**: <TASK-ID>
-- **Summary of changes**: <concise list of edits made>
-- **Assumptions documented**: <list>
-- **Open questions**: <list of unresolved items needing stakeholder input>
-- **Suggested next actions**: <e.g., "Assign stakeholder to answer open questions before sprint planning">
+- Assumptions and dependencies are explicit.
+- A definition of done is present.
+- Every claim is traceable to documentation, user input, or an open question.
+- No implementation detail, dependency change, ordinal change, or milestone change was made.
+- All changes were made through the Papyrus CLI.

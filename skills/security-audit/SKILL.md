@@ -1,6 +1,6 @@
 ---
 name: security-audit
-description: 'Audit a release or feature for security vulnerabilities: secrets, dependency supply chain, authentication and authorization, input handling, data protection, platform-specific risks, and security NFR coverage. Produces a read-only, severity-ranked report with a Pass / Pass with findings / Block recommendation.'
+description: 'Run the Phase 6 release security audit across the whole release: secrets, dependency supply chain, authentication and authorization, input handling, data protection, platform-specific and cross-feature risks, and security NFR coverage. Produces a read-only, severity-ranked report with a Pass / Pass with findings / Block recommendation.'
 argument-hint: 'Provide the release ID, feature task ID, branch, or audit target. Example: "REL-001", "Release 1.0", or "TASK-0042".'
 user-invocable: true
 disable-model-invocation: false
@@ -21,7 +21,8 @@ One release or one explicitly named target receives an independent security audi
 Do not use this skill for:
 
 - Fixing vulnerabilities or writing code/configuration.
-- Style, accessibility, or general code-quality review.
+- Style, accessibility, or general code-quality review (use `quality-audit` or `code-audit`).
+- Delivering milestone work (use `milestone-execution`) or closing the release (use `release-management`).
 - Auditing multiple unrelated releases in one pass.
 
 ## Prerequisites
@@ -50,6 +51,7 @@ Do not use this skill for:
 3. Confirm included tasks are `Done`; report any exception.
 4. Read linked requirements and security/privacy NFRs with `papyrus req view` / `papyrus nfreq view`, specifications with `papyrus tech-spec view` / `papyrus ui-spec view`, architecture documents, and decisions with `papyrus decision view`.
 5. Record scope boundaries and anything explicitly out of scope.
+6. Identify cross-feature risks: combinations of features delivered by the release that create a risk no single milestone reveals (combined permissions, shared data flows, chained integrations, cumulative attack surface).
 
 ### 2. Inventory the attack surface
 
@@ -117,6 +119,9 @@ Run every check that applies. Use available tools; if a tool is unavailable, rec
 - Map each referenced security/privacy NFR to evidence.
 - Flag NFRs with no implementation evidence as gaps.
 
+**Cross-feature risks**
+- Assess risks created by combining the release's features: privilege composition, shared secrets or sessions, data crossing feature boundaries, and cumulative exposure of entry points.
+
 ### 4. Verify
 
 - Reproduce or confirm each finding with a concrete command, test, or code path.
@@ -155,7 +160,7 @@ Produce the report in the response and hand it to the orchestrator. Do not chang
 - **Secrets check**: result and redacted locations.
 - **Dependency and supply-chain check**: result.
 - **Release recommendation**: `Pass` / `Pass with findings` / `Block`, with rationale.
-- **Accepted risks and follow-ups**: owner and suggested ticket for each Medium/Low finding.
+- **Accepted risks and follow-ups**: owner and suggested task for each Medium/Low finding.
 - **Open questions**: missing context or unverifiable controls.
 - **Next required action**: what the orchestrator must do next, including recording the audit with `papyrus audit create`.
 
