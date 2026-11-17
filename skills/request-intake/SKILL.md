@@ -28,27 +28,13 @@ Do not use this skill to write requirements, acceptance criteria, business rules
 
 ## Request artifact
 
-Store each request as a plain Markdown file under `docs/requests/`.
+Store each request as a Papyrus-managed record under `docs/requests/`.
 
-- **File** — `docs/requests/REQUEST-<nnn>-<slug>.md`, for example `REQUEST-001-bulk-export.md`.
-- **Identifier** — `REQUEST-001`, unique and stable. Allocate the next free number by listing `docs/requests/`. Never reuse or renumber.
+- **Identifier** — `RE-001`, unique and stable. Allocate the next free number with `papyrus request list`. Never reuse or renumber.
 - **Owner** — `key-account-manager` owns every field.
 - **Status and references** — the only fields another actor may update, each from the step that records it: `requirements-engineer` sets `in-progress`; `planner` sets `closed` or `rejected`.
 
-Frontmatter:
-
-```yaml
----
-id: REQUEST-001
-title: Short request title
-status: open            # open | parked | in-progress | closed | rejected
-category: enhancement   # bug | enhancement | technical-improvement
-requested_outcome: requirement-intake  # requirement-intake | defect-planning
-requester: <name or role>
-created: YYYY-MM-DD
-references: []          # REQ/NFR/TASK IDs, filled later
----
-```
+Papyrus owns the front matter and filename. The request's category, requested outcome, requester, items, grouping, open questions, and history are recorded in the record title and description body.
 
 Body:
 
@@ -132,7 +118,7 @@ Create the artifact only when all hold:
 - `open` or `parked` is agreed with the requester;
 - the requester confirms the content is faithful.
 
-Then write the file under `docs/requests/`. Never persist before confirmation.
+Then create the record with `papyrus request create "<title>" -d "<description>"` and, when the body is multi-line, `papyrus request edit <RE-ID> --editor`. Never persist before confirmation.
 
 ### 7. List and reactivate
 
@@ -185,7 +171,7 @@ Phase 1 never:
 # Request handoff
 
 ## Requests
-- REQUEST-001 — <title> — <category> — <open questions: n>
+- RE-001 — <title> — <category> — <open questions: n>
 
 ## Open questions for product
 - ...
