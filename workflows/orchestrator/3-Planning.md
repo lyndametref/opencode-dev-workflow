@@ -60,7 +60,7 @@ Every milestone uses the same ordered task kinds, in this order, with optional a
 | ----- | ------------------------------ | -------------------------------------------------------------------------------------------------- | -------------------- |
 | 1     | Architecture impact assessment | Judge architectural impact and resolve the findings by updating the Architecture and the Decisions, and delegating affected Technical specification sections to `tech-writer`; blocks dependent work when unresolved | `architect`          |
 | 2     | UI design                      | UI specification entries and at most one mockup for the milestone, only when the planner decides it is needed | `ui-designer`        |
-| 3     | Test design                    | Write the test cases for the changed requirements and business rules; done when every changed requirement or rule has its test cases and the user has verified them | `test-manager`       |
+| 3     | Test design                    | Write the Gherkin test cases for the changed requirements and business rules; done when every changed requirement or rule has its test cases and the user has verified them | `test-manager`       |
 | 4     | Refinement                     | Confirm that all information needed for development is available, and complete the task's refinement fields | `task-refiner`       |
 | 5     | Implementation                 | Development and automated tests, implementing the code and the test cases                          | Any `*-dev` agent    |
 | 6     | Milestone verification         | Verify the increment against the milestone acceptance criteria and close the milestone              | `quality-gatekeeper` |
@@ -73,7 +73,7 @@ Rules:
 - Implementation does not start before refinement has completed the task.
 - The milestone verification task is the only check of the milestone.
 - Milestone acceptance criteria are written on the milestone when it is planned; task-level acceptance criteria belong to refinement.
-- Test design is required whenever a requirement or a business rule is created or edited.
+- Test design is required whenever a requirement or a business rule is created or edited; its test cases are written as Gherkin scenarios (`GIVEN` / `WHEN` / `THEN`).
 - The planner may split a task before refinement; `task-refiner` may split implementation tasks during refinement.
 - After every addition or split, dependencies and ordinals are adjusted until the milestone is ordered and dependency-safe.
 - Bugs are planned as tasks tagged `bug`; when several are available they are packed into one milestone and follow the same sequence, with architecture and UI tasks only when the planner decides they apply.

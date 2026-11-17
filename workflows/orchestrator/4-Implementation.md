@@ -18,7 +18,7 @@ A missing plan, an unassigned task, or an unordered backlog returns to Phase 3.
 | ------------------------------------------------------------------------------------------ | -------------------------------------------------------------------------------------------------------------- |
 | `orchestrator`                                                                             | Drives execution, selects tasks, sets statuses, records fulfilment proof, reports; never edits project content |
 | Task owners (`architect`, `ui-designer`, `task-refiner`, `tech-writer`, any `*-dev` agent) | Execute their assigned tasks                                                                                   |
-| `test-manager`                                                                             | Writes the test cases for the requirements and business rules                                                  |
+| `test-manager`                                                                             | Writes the Gherkin test cases (`GIVEN` / `WHEN` / `THEN`) for the requirements and business rules              |
 | `quality-gatekeeper`                                                                       | Runs the milestone verification checks in Phase 5; not a Phase 4 executor                                      |
 | `planner`                                                                                  | Owns plan repairs and priority changes; never executes                                                         |
 | User                                                                                       | Sets priority and stop boundary, and verifies the artifacts that require it                                    |

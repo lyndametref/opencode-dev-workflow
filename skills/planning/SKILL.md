@@ -54,7 +54,7 @@ Every milestone uses the same ordered task kinds, in this order. Architecture an
 |---|---|---|---|---|
 | 1 | Architecture impact assessment | `architecture` | Judge architectural impact, update Architecture and Decisions, delegate affected Technical specification sections to `tech-writer`; blocks dependent work when unresolved. | `architect` |
 | 2 | UI design | `ui-design` | UI specification and at most one mockup for the milestone, only when the feature has UI impact. | `ui-designer` |
-| 3 | Test design | `test-design` | Test cases for every changed requirement and business rule; done when the user verified them. | `test-manager` |
+| 3 | Test design | `test-design` | Gherkin test cases for every changed requirement and business rule; done when the user verified them. | `test-manager` |
 | 4 | Refinement | `refinement` | Confirm all information for development is available and complete the task's refinement fields. | `task-refiner` |
 | 5 | Implementation | `implementation` | Code and automated tests, including the integration tests that implement the test cases. | `android-dev`, `backend-dev`, `frontend-dev`, or `rust-dev` |
 | 6 | Milestone verification | `milestone-verification` | Verify the increment against the milestone acceptance criteria and close the milestone. Not part of Phase 4 execution. | `quality-gatekeeper` |

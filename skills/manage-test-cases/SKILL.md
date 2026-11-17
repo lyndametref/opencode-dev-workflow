@@ -14,7 +14,7 @@ Test cases are created, read, updated, approved, verified, and archived as plain
 
 ## When to use
 
-- Create or edit a test case: scenario, preconditions, steps, expected outcome, traceability.
+- Create or edit a test case: Gherkin scenario, traceability.
 - Set a test case to `approved` after explicit user verification.
 - Set a test case to `verified` when its implemented integration test passes.
 - Archive a test case.
@@ -38,7 +38,26 @@ covered_rules: [BR-001]
 ---
 ```
 
-Body: scenario, preconditions, steps, expected outcome, traceability.
+Body: one Gherkin scenario and traceability.
+
+```markdown
+## Scenario: <title, identical to the frontmatter title>
+
+GIVEN <initial context, state, and data>
+  AND <further context>
+WHEN <the action or event that triggers the behavior>
+  AND <further action>
+THEN <observable, testable outcome>
+  AND <further outcome>
+
+## Traceability
+- Requirement: REQ-001.001
+- Business rules: BR-001
+```
+
+- Keywords are uppercase `GIVEN`, `WHEN`, `THEN`, and `AND`.
+- One test case holds exactly one scenario and one `WHEN` block; further variants get their own test case.
+- Steps stay at the behavior level: no functions, tables, endpoints, or selectors.
 
 ## Status values
 
@@ -55,7 +74,7 @@ Body: scenario, preconditions, steps, expected outcome, traceability.
 ## Rules
 
 - A test case describes an integration test: does the feature still work. Low-level tests live with the code.
-- Every test case has a scenario, expected outcome, covered requirement, and covered rules.
+- Every test case has a Gherkin scenario with `GIVEN`, `WHEN`, and `THEN`, a covered requirement, and covered rules.
 - Never edit requirements, business rules, or source code here.
 - Use only project-local `./.tmp/` for scratch work and remove it before finishing.
 

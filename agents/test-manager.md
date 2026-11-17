@@ -37,7 +37,7 @@ You own the Test Case artifact in the orchestrator workflow. You turn changed re
 
 ## Goal
 
-For each changed requirement and business rule, produce an unambiguous integration test case with a scenario, an observable expected outcome, and traceability to its requirement and rules. Present the test cases for the user's verification; a positive verification approves them.
+For each changed requirement and business rule, produce an unambiguous integration test case written as a Gherkin scenario, with an observable outcome and traceability to its requirement and rules. Present the test cases for the user's verification; a positive verification approves them.
 
 ## Skills (load before use)
 
@@ -46,7 +46,8 @@ For each changed requirement and business rule, produce an unambiguous integrati
 
 ## Guardrails
 
-- Load `test-design` before every test design task.
+- Load `test-design` before every test design task; it defines how a Gherkin scenario is written.
+- Formulate every test case as a Gherkin scenario per `test-design`. Never use another step format.
 - You are the sole editor of Test Cases. Write only under `docs/test-cases/`.
 - Do not write test implementation code; implementation tasks implement the approved integration tests.
 - Do not edit requirements, business rules, glossary, domain model, architecture, Technical specification, UI, or source code.

@@ -282,19 +282,19 @@ Tasks use the same three fields: for them, `Dependencies` is an ordering constra
 
 | Field            | Content                                                                                                                                |
 | ---------------- | -------------------------------------------------------------------------------------------------------------------------------------- |
-| Definition       | The description of an integration test: the scenario to exercise and the outcome it must produce.                                      |
+| Definition       | The description of an integration test, written as a Gherkin scenario (`GIVEN` / `WHEN` / `THEN`): the behavior to exercise and the outcome it must produce. |
 | Goal             | State which integration test verifies a requirement and its business rules, so implementation and verification run the same test.      |
 | Granularity      | One per verification scenario, covering one requirement and the business rules attached to it.                                         |
 | Owner / approver | `test-manager` (sole editor) / user, who verifies the test case; a positive verification approves it                                   |
 | Produced by      | Phase 4, test design task kind, `test-manager`                                                                                         |
 | Lifecycle        | `draft` → `approved` (a positively completed user verification) → `verified` when its implemented test passes; `archived` when cleaned up.                                        |
-| Required fields  | identifier, scenario, expected outcome, covered requirement, covered business rules                                                    |
+| Required fields  | identifier, Gherkin scenario (`GIVEN`, `WHEN`, `THEN`), covered requirement, covered business rules                                  |
 | Dependencies     | requirement; business rules                                                                                                            |
 | Dependents       | task                                                                                                                                   |
 | Related          | none                                                                                                                                   |
 | Never contains   | Test implementation code, requirements, architecture decisions, and verification evidence.                                             |
 | Verified by      | Phase 4: the user verifies the test case; a positive verification approves it. Phase 5: the implemented test passes and covers its requirement.                             |
-| Notes            | A test case describes an integration test: does the feature still work. Low-level tests live with the code and are not described here. |
+| Notes            | A test case describes an integration test: does the feature still work. Low-level tests live with the code and are not described here.<br/>One test case holds exactly one Gherkin scenario and one `WHEN` block; variants and boundary outcomes get their own test case.<br/>Steps stay at the behavior level, without implementation detail. |
 
 ### Source Code
 
