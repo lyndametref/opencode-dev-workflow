@@ -24,14 +24,14 @@ Do not use this skill for technical/acronym glossary maintenance unrelated to bu
 
 ## Canonical Glossary Target
 
-- Papyrus glossary records live in `docs/glossary/`.
-- Papyrus assigns IDs such as `GLO-001` and owns the file.
+- Papyrus owns glossary records and assigns IDs automatically.
 - Create, read, and update through the Papyrus CLI only:
   - `papyrus glossary create --term "<term>" --definition "<definition>"`
   - `papyrus glossary list`
   - `papyrus glossary view <GLO-ID>`
   - `papyrus glossary edit <GLO-ID> --term "<term>" --definition "<definition>"`
   - `papyrus glossary deprecate <GLO-ID>` / `papyrus glossary restore <GLO-ID>`
+  - `papyrus search "<term>"` (search the managed corpus)
 - The browsable index is `papyrus browser`. Do not create or edit `index.html`.
 
 Secondary references may exist in other docs, but new business glossary entries must be created through Papyrus.
@@ -72,7 +72,7 @@ Papyrus stores a **term** and a **definition**. Include supporting context in th
    - `papyrus tech-spec` / `papyrus ui-spec`
    - `papyrus task`
    - `papyrus decision`
-   - plain docs under `docs/domain-model/` and `docs/architecture/`.
+   - plain docs (domain model, architecture).
 
    Do not update skills or agent example files under `.ai/` or `.github/skills/` unless explicitly requested. Preserve requirement IDs and avoid changing intent while updating terminology.
 
@@ -107,7 +107,7 @@ Papyrus stores a **term** and a **definition**. Include supporting context in th
 Use this summary after updates:
 
 - **Action**: add/update/merge/rename
-- **Canonical term**: `<term>` (`GLO-xxx`)
+- **Canonical term**: `<term>` <ID>
 - **Updated records**: list
 - **Cross-reference updates**: list
 - **Papyrus visibility**: confirmed via `papyrus glossary list`

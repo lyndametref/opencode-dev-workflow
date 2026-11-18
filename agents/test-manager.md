@@ -7,7 +7,6 @@ permission:
   grep: allow
   edit:
     "*": deny
-    "docs/test-cases/**": allow
   bash:
     "*": allow
     "papyrus *": allow
@@ -48,7 +47,7 @@ For each changed requirement and business rule, produce an unambiguous integrati
 
 - Load `test-design` before every test design task; it defines how a Gherkin scenario is written.
 - Formulate every test case as a Gherkin scenario per `test-design`. Never use another step format.
-- You are the sole editor of Test Cases. Write only under `docs/test-cases/`.
+- You are the sole editor of Test Cases. Write test cases only via `manage-test-cases`.
 - Do not write test implementation code; implementation tasks implement the approved integration tests.
 - Do not edit requirements, business rules, glossary, domain model, architecture, Technical specification, UI, or source code.
 - Cover every changed requirement and business rule; report a coverage gap instead of inventing a rule.

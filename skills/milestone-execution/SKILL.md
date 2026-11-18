@@ -26,21 +26,11 @@ Do not use this skill to plan, reorder, refine scope, verify a milestone, or rel
 - Task statuses: `To Do`, `In-Progress`, `Done`; `archived` when cleaned up.
 - A missing plan, an unassigned task, or an unordered backlog returns to Phase 3.
 
-## Papyrus status mapping
+## Task statuses
 
-Papyrus has fixed statuses; the workflow uses `To Do`, `In-Progress`, and `Done`. Map them as follows:
+The workflow uses `To Do`, `In-Progress`, and `Done`. The tool-specific status values and their mapping live in `manage-tasks`.
 
-| Workflow | Papyrus |
-|---|---|
-| `To Do` | `ToDo` |
-| `In-Progress`, work started | `Initiated` |
-| `In-Progress`, refinement complete | `Refined` |
-| `In-Progress`, implementation complete | `Implemented` |
-| `In-Progress`, acceptance check complete | `Validated` |
-| `Done` | `Done` |
-| cleaned up | `archived` |
-
-The intermediate status records the stage; the workflow treats every status between `ToDo` and `Done` as `In-Progress`. `Done` means every acceptance criterion is fulfilled and, when the task's artifact requires it, the user's verification is obtained. No other end-of-task approval is requested.
+`Done` means every acceptance criterion is fulfilled and, when the task's artifact requires it, the user's verification is obtained. No other end-of-task approval is requested.
 
 ## Actors
 
@@ -208,7 +198,7 @@ This skill never:
 ## Completion checks
 
 - Only tasks assigned to the target milestone were executed.
-- Interpretation of ordinals, dependencies, and readiness used Papyrus JSON, not guessed fields.
+- Interpretation of ordinals, dependencies, and readiness used the management tool's JSON, not guessed fields.
 - Every executed task followed its kind's skill and produced evidence recorded on the task.
 - Every required artifact verification was obtained before dependent work.
 - No task was skipped silently, no task was pulled from another milestone, and no task was marked `Done` without its criteria and verification.

@@ -21,7 +21,7 @@ Do not use this skill to fix code, change milestone scope, verify more than one 
 
 ## Prerequisites
 
-- Load `papyrus` and `next-version`.
+- Load the `manage-*` skills for the artifacts under verification (tasks, milestones, releases, audits) and `next-version`.
 - Read the milestone, its tasks, acceptance criteria, and the verification task.
 - Available subagents: `quality-gatekeeper`, `code-analyzer`, `planner`.
 

@@ -21,12 +21,6 @@ For one milestone, an assessed architectural impact, an updated Architecture art
 
 Do not use this skill to edit requirements, write code, design UI, plan milestones or tasks, or approve a release.
 
-## Prerequisites
-
-- Load `managed-records` and `manage-decisions`.
-- Read access to `docs/architecture/`, `docs/technical/`, `docs/requirements/`, `docs/business-rules/`, `docs/glossary/`, `docs/domain-model/`, and `decisions/`.
-- Available subagent: `tech-writer` for Technical specification sections.
-
 ## Architecture artifact
 
 - The Architecture is a plain Markdown set of files under `docs/architecture/`.
@@ -68,7 +62,7 @@ Run after `tech-writer` drafted a section and before refinement.
 - When the change is technical but not architectural, record `no architecture impact` with the reason.
 - Do not invent user-facing behavior or business rules to fill product gaps; return those to `requirements-engineer` through the orchestrator.
 - Do not modify `REQ`/`NFR`, business rules, glossary, domain model, UI, or source code.
-- Do not move or rename decision files by hand; use Papyrus. Never create an ADR index.
+- Do not move or rename decision records by hand; use `manage-decisions`. Never create an ADR index.
 
 ## Stop conditions
 
@@ -94,7 +88,7 @@ Run after `tech-writer` drafted a section and before refinement.
 
 - Impact was assessed and recorded, including the explicit `none` case.
 - Architecture files changed only under `docs/architecture/`.
-- Every architecture decision was recorded through Papyrus and user acceptance was obtained where required.
+- Every architecture decision was recorded through `manage-decisions` and user acceptance was obtained where required.
 - Affected Technical specification sections were delegated to `tech-writer`.
 - Architecture and decisions were presented for user verification before dependent work.
 - In conformance mode, the verdict is evidence-based and the Technical specification was not edited.

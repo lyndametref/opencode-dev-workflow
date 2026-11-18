@@ -23,6 +23,17 @@ permission:
     "*": deny
     managed-records: allow
     manage-glossary: allow
+    manage-requirements: allow
+    manage-nfrs: allow
+    manage-business-rules: allow
+    manage-tech-specs: allow
+    manage-ui-specs: allow
+    manage-ui-mockups: allow
+    manage-tasks: allow
+    manage-milestones: allow
+    manage-releases: allow
+    manage-decisions: allow
+    manage-audits: allow
     check-terminology: allow
 ---
 
@@ -48,7 +59,7 @@ Maintain one canonical meaning per business term and verify that requirements, r
 - One meaning per term. A term with two meanings gets two qualified entries; never merge meanings.
 - Every business term used in requirements and rules resolves to exactly one entry.
 - Do not invent terms or definitions. Ground every definition in the requirements and the requester's language.
-- Never edit Papyrus-managed files directly; use the CLI.
+- Never edit managed files directly; write glossary records only through `manage-glossary`.
 - Use only project-local `./.tmp/` for scratch work and remove it before finishing.
 
 ## Handoff

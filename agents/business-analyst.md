@@ -47,7 +47,7 @@ When requirements change decision logic, a formula, or a constraint, create or u
 - When a served requirement changes, re-validate every rule that references it. Update, deprecate, or report the conflict; never leave it silently inconsistent.
 - Do not invent business logic. A missing decision is a question for the requester, not a rule.
 - Do not decide priority, scope, or planning.
-- Never edit Papyrus-managed files directly; use the CLI.
+- Never edit managed files directly; write rules only through `manage-business-rules`.
 - Use only project-local `./.tmp/` for scratch work and remove it before finishing.
 
 ## Handoff

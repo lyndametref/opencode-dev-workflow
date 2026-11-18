@@ -34,7 +34,7 @@ Do not use this skill for:
 ## Constraints
 
 - Read-only: do not modify code, configuration, requirements, tasks, decisions, or status.
-- Never edit Papyrus-managed files directly; read via the Papyrus CLI only.
+- Never edit managed files directly; read through the matching `manage-*` skills.
 - Never create the audit record; the orchestrator records the report (manage-audits).
 - Never reveal secrets, credentials, tokens, personal data, or exploit-ready payloads. Redact values and give the location.
 - Report only findings traceable to evidence. Mark unverifiable controls as `not verified`, not as passed.
@@ -46,7 +46,7 @@ Do not use this skill for:
 
 ### 1. Establish scope
 
-1. Load `papyrus`.
+1. Load `manage-audits`; read milestones, releases, and tasks through their `manage-*` skills.
 2. Read the target release record, its assigned milestones, and the included tasks (manage-releases, manage-milestones, manage-tasks). For a feature target, read the task (manage-tasks).
 3. Confirm included tasks are `Done`; report any exception.
 4. Read linked requirements and security/privacy NFRs (manage-requirements, manage-nfrs), specifications (manage-tech-specs, manage-ui-specs), architecture documents, and decisions (manage-decisions).
@@ -175,7 +175,7 @@ Use `none` when a section does not apply.
 - Secrets are redacted in the report.
 - Security/privacy NFRs mapped to evidence or reported as gaps.
 - Decision follows the severity rule; `Block` for any unresolved Critical/High.
-- No file, Papyrus record, status, or release was modified by the auditor.
+- No file, managed record, status, or release was modified by the auditor.
 - Temporary artifacts under `./.tmp/` removed.
 
 ## Resume / interruption

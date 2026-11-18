@@ -7,14 +7,13 @@ labels:
   - mobile
 references:
   - REQ-EXAMPLE.001
+  - TECH-EXAMPLE
 status: ToDo
 assignee: []
 milestone: MS-EXAMPLE
 dependencies:
   - TASK-SCHEMA
 ordinal: 4300
-documentation:
-  - docs/technical/TECH-EXAMPLE.md
 type: feature
 ---
 

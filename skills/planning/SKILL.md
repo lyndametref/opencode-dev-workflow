@@ -10,7 +10,7 @@ disable-model-invocation: false
 
 ## Outcome
 
-A valid, ordered plan in Papyrus: the roadmap, one milestone per enhancement or technical improvement, one batch milestone per `bug` batch, the required task sequence, dependencies, ordinals, release assignment, milestone acceptance criteria, and exactly one milestone verification task per milestone. Planned requests are `closed`; declined requests are `rejected`.
+A valid, ordered plan in the managed records: the roadmap, one milestone per enhancement or technical improvement, one batch milestone per `bug` batch, the required task sequence, dependencies, ordinals, release assignment, milestone acceptance criteria, and exactly one milestone verification task per milestone. Planned requests are `closed`; declined requests are `rejected`.
 
 ## When to use
 
@@ -24,8 +24,8 @@ Do not use this skill to execute, refine, implement, review, audit, or change ta
 
 ## Prerequisites
 
-- Load `papyrus` before any backlog read or write.
-- Read the request artifacts under `docs/requests/`.
+- Load the `manage-*` skills for the artifacts involved (requests, requirements, NFRs, roadmap/TECH, milestones, releases, tasks) before any read or write.
+- Read the request artifacts via `manage-requests`.
 - Planning starts only when requirements are `verified`, no product or business decision is open, and the priority needed for ordering is known. Otherwise report the blocker.
 
 ## Inputs
@@ -39,9 +39,9 @@ Do not use this skill to execute, refine, implement, review, audit, or change ta
 
 | Element | Definition | Rule |
 |---|---|---|
-| Roadmap | Ordered feature list with source requirement references and rationale | Stored as a Papyrus technical specification titled `Feature Roadmap` (`TECH`). One position per feature; changes are recorded, never silent. |
+| Roadmap | Ordered feature list with source requirement references and rationale | Stored as a managed technical specification titled `Feature Roadmap` (`TECH`). One position per feature; changes are recorded, never silent. |
 | Milestone | One enhancement, one technical improvement, or a batch of `bug` tasks, delivered as a usable increment | Has no status; completion is derived from its tasks and confirmed by Phase 5 verification. |
-| Release | A Papyrus `REL` record, open until completed | Owns one or more milestones. Create it with a working title such as `Release (pending version)`; RC versioning happens in Phase 5 and the final version is chosen in Phase 6. |
+| Release | A managed release record, open until completed | Owns one or more milestones. Create it with a working title such as `Release (pending version)`; RC versioning happens in Phase 5 and the final version is chosen in Phase 6. |
 | Task | A task inside a milestone, traceable to requirements or the `bug` request | Outcome-level; assigned to the actor able to fulfil it; refinement completes its fields. |
 | Dependency | A hard ordering constraint declared on a task | Never a suggestion; cycles are defects. |
 | Ordinal | Position inside a milestone, lower runs first | Encodes user priority when dependencies allow. |

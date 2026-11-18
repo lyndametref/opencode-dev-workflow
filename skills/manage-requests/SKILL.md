@@ -19,27 +19,24 @@ Request artifacts are created, read, updated, listed, parked, reactivated, close
 
 ## Record format
 
-- **Directory** — managed by Papyrus under `docs/requests/` (see `papyrus.config.yml`).
-- **File** — `RE-<nnn>.md`, owned by Papyrus.
-- **Identifier** — `RE-001`, unique and stable. Allocate the next free number with `papyrus request list`. Never reuse or renumber.
+- **Identifier** — `RE-001`, unique and stable. Allocate with `papyrus request list`. Never reuse or renumber.
 - **Status values** — `open`, `parked`, `in-progress`, `closed`, `rejected`, `archived` (and `active` where configured).
 
-Frontmatter and body are Papyrus-owned. Multi-line content is supplied through `--description` or `papyrus request edit <id> --editor`.
+Content and metadata are Papyrus-owned and supplied through the request commands.
 
 ## Commands
 
 - List: `papyrus request list`
 - View: `papyrus request view <RE-ID>`
-- Create: `papyrus request create "<title>" -d "<description>" [--label <label>] [--reference <ref>]`
-- Edit: `papyrus request edit <RE-ID> [--title <title>] [-d <description>] [--label <label>] [--reference <ref>] [--editor]`
+- Create: `papyrus request create --title "<title>" --content "<body>" --request-type <category> [--label <label>] [--reference <ref>]`
+- Edit: `papyrus request edit <RE-ID> [--title <title>] [--content <body>] [--request-type <category>] [--label <label>] [--reference <ref>] [--editor]`
 - Status: `papyrus request status <RE-ID> <value>`
 - Archive: `papyrus request archive <RE-ID>`
 - Delete: `papyrus request delete <RE-ID> [--force]`
 
 ## Rules
 
-- Papyrus owns the `RE` ID, metadata, filename, and archive state. Never edit managed request files directly.
-- Use `--editor` only when an interactive editor is appropriate; all writes still go through Papyrus.
+- Papyrus owns the `RE` ID, metadata, and archive state. Never edit managed request files directly.
 - Only `status` and `references` may be updated by the actor that owns the step recording them. All other fields belong to `key-account-manager`.
 - Use only project-local `./.tmp/` for scratch work and remove it before finishing.
 

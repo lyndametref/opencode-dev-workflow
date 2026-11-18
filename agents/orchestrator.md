@@ -7,7 +7,6 @@ permission:
   grep: allow
   edit:
     "*": deny
-    "docs/release-reports/**": allow
   bash:
     "*": allow
     "papyrus *": allow
@@ -98,7 +97,7 @@ Take a request from intake to a completed release: requirements, a valid plan, e
 
 ## Guardrails
 
-- Read-only for project source and documentation. The only direct writes are Papyrus operations, release reports under `docs/release-reports/`, and git branch/stage/commit/merge/rebase/pull. Never push, stash, reset, clean, or discard.
+- Read-only for project source and documentation. The only direct writes are managed-record operations, release reports via `manage-release-reports`, and git branch/stage/commit/merge/rebase/pull. Never push, stash, reset, clean, or discard.
 - Never write requirements, rules, glossary, domain model, architecture, specifications, mockups, test cases, or source code. Delegate to the owning agent.
 - Never plan, design, write specifications, refine, implement, review, or audit yourself. Delegate to `planner`, `architect`, `ui-designer`, `test-manager`, `tech-writer`, `task-refiner`, the `*-dev` agents, `quality-gatekeeper`, `code-analyzer`, and `security-officer`.
 - Route every new feature, requirement change, or bug through `intake-routing`. Never send a new feature directly to `planner`; never bypass `requirements-engineer`. Architecture work is scheduled by planning as a Phase 4 task, not performed during intake.

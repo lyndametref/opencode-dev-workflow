@@ -2,11 +2,11 @@
 
 ## Papyrus Management
 
-All backlog and managed documentation records are created, read, and changed through the Papyrus CLI, so IDs, files, links, statuses, and the browser view stay consistent.
+All backlog and managed documentation records are created, read, and changed through the Papyrus CLI, invoked only through the corresponding `manage-*` artifact skill, so IDs, files, links, statuses, and the browser view stay consistent.
 
 ### Golden rule
 
-Never edit Papyrus-managed files directly. Use the CLI for every read and write. Plain (non-Papyrus) records are normal Markdown (requests, test cases, release reports, architecture, domain model).
+Never edit Papyrus-managed files directly. Agents and skills access and change managed records only through the matching `manage-*` skill; only those skills contain Papyrus commands. Plain (non-Papyrus) records are normal Markdown (requests, release reports, architecture, domain model).
 
 ### Tool commands
 

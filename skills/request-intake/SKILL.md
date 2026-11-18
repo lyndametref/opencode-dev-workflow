@@ -23,18 +23,16 @@ Do not use this skill to write requirements, acceptance criteria, business rules
 ## Prerequisites
 
 - Load `managed-records` for read-only checks against tasks, requirements, specifications, decisions, and glossary terms.
-- Use `manage-requests` for request artifact file operations.
-- Read access to `docs/` and the repository.
+- Use `manage-requests` for every request read and write.
 
 ## Request artifact
 
-Store each request as a Papyrus-managed record under `docs/requests/`.
+Create and update each request via `manage-requests`.
 
-- **Identifier** — `RE-001`, unique and stable. Allocate the next free number with `papyrus request list`. Never reuse or renumber.
 - **Owner** — `key-account-manager` owns every field.
 - **Status and references** — the only fields another actor may update, each from the step that records it: `requirements-engineer` sets `in-progress`; `planner` sets `closed` or `rejected`.
 
-Papyrus owns the front matter and filename. The request's category, requested outcome, requester, items, grouping, open questions, and history are recorded in the record title and description body.
+The request's category, requested outcome, requester, items, grouping, open questions, and history are recorded in the record title and content body.
 
 Body:
 
@@ -94,7 +92,7 @@ Ask who is affected, when it happens, and what "done" would look like to the req
 
 ### 4. Check existing records
 
-Use `papyrus` read-only commands and the `docs/` corpus to check whether the need already exists, is planned, or duplicates another request.
+Use `manage-*` read operations to check whether the need already exists, is planned, or duplicates another request.
 
 - Already covered by a requirement or specification: record the reference and the evidence in the item.
 - Already planned or delivered: record the task or release reference.
@@ -118,7 +116,7 @@ Create the artifact only when all hold:
 - `open` or `parked` is agreed with the requester;
 - the requester confirms the content is faithful.
 
-Then create the record with `papyrus request create "<title>" -d "<description>"` and, when the body is multi-line, `papyrus request edit <RE-ID> --editor`. Never persist before confirmation.
+Then create the record via `manage-requests` (`create`); for a multi-line body use its `edit` operation. Never persist before confirmation.
 
 ### 7. List and reactivate
 

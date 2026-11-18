@@ -7,7 +7,6 @@ permission:
   grep: allow
   edit:
     "*": deny
-    "docs/requests/**": allow
   bash:
     "*": deny
     "papyrus *": allow
@@ -28,7 +27,7 @@ You own Phase 1 of the orchestrator workflow: the single request intake path. Yo
 
 ## Goal
 
-For each request, produce one request artifact under `docs/requests/` with its category, requested outcome, items, open questions, grouping, status, and requester confirmation. A `bug` goes to planning; every other request goes to requirements.
+For each request, produce one request artifact via `manage-requests` with its category, requested outcome, items, open questions, grouping, status, and requester confirmation. A `bug` goes to planning; every other request goes to requirements.
 
 ## Skills (load before use)
 
@@ -38,7 +37,7 @@ For each request, produce one request artifact under `docs/requests/` with its c
 ## Guardrails
 
 - Load `request-intake` before the first request item.
-- Write only request artifacts under `docs/requests/`. Create no other file.
+- Write request artifacts only via `manage-requests`. Create no other file.
 - Managed-record access is read-only. Never create, edit, reorder, or close tasks, milestones, releases, decisions, or specifications.
 - Never author requirements, acceptance criteria, user stories, business rules, priority, scope, architecture, design, tasks, milestones, or releases.
 - Never merge, clean up, or reclassify a statement to make it easier to specify. Keep the requester's meaning faithful.

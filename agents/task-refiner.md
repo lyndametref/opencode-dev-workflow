@@ -25,6 +25,7 @@ permission:
     managed-records: allow
     manage-tasks: allow
     manage-requirements: allow
+    manage-nfrs: allow
     manage-tech-specs: allow
     manage-ui-specs: allow
     manage-ui-mockups: allow
@@ -55,7 +56,7 @@ For one task, confirm that all information needed for development is available, 
 - Do not create tasks, plan, implement, review, or audit.
 - Do not edit requirements, rules, glossary, domain model, architecture, specifications, mockups, test cases, or source code.
 - Do not invent requirements or turn assumptions into requirements. Ask targeted questions; unresolved material questions mean the task is not execution-ready.
-- All task changes go through Papyrus; never edit task records directly.
+- All task changes go through `manage-tasks`; never edit task records directly.
 - Use only project-local `./.tmp/` for scratch work and remove it before finishing.
 
 ## Handoff

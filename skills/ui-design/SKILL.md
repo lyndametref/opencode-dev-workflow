@@ -26,8 +26,8 @@ Do not use this skill to define requirements, business rules, validation semanti
 
 ## Artifacts
 
-- **UI Specification** — Papyrus `UI` records under `docs/specifications/ui/`. Each entry has identifier, title, status, and body. The body describes layout regions, navigation, UI states, interaction behavior, presentation of validation and messages, and platform differences. It never contains technology or library choices.
-- **UI Mockup** — Papyrus `MOCK` records under `docs/specifications/ui/mockups/`. At most one mockup per milestone, as a single self-contained HTML review file. It is associated with the affected task and one or more UI specifications.
+- **UI Specification** — `UI` records accessed via `manage-ui-specs`. Each entry has identifier, title, status, and body. The body describes layout regions, navigation, UI states, interaction behavior, presentation of validation and messages, and platform differences. It never contains technology or library choices.
+- **UI Mockup** — `MOCK` records accessed via `manage-ui-mockups`. At most one mockup per milestone, as a single self-contained HTML review file. It is associated with the affected task and one or more UI specifications.
 - A mockup does not exist for an interface no specification describes.
 - Approval happens on the mockup, not on the UI specification text.
 
@@ -39,7 +39,7 @@ Do not use this skill to define requirements, business rules, validation semanti
 4. **Create the MOCK record** — create the mockup record (manage-ui-mockups). Capture the returned `MOCK` ID and file path. Never choose, reuse, or renumber an ID by hand, and never split one ID across files or platforms.
 5. **Build the review file** — load `manage-ui-mockups` and follow its format: a review landing (task plus one button per platform) and one clickable prototype per platform. Keep the metadata comments intact; author only the HTML body.
 6. **Validate** — run `skills/manage-ui-mockups/scripts/ensure_wireframe_css.sh` and `skills/manage-ui-mockups/scripts/validate_mockups.sh`; fix every reported issue.
-7. **Present for verification** — show the single review file, its sources, and its platform/view coverage to the caller for user review. Keep the Papyrus status `pending`. Do not treat silence, another reviewer, or approval of another mockup as approval.
+7. **Present for verification** — show the single review file, its sources, and its platform/view coverage to the caller for user review. Keep the managed status `pending`. Do not treat silence, another reviewer, or approval of another mockup as approval.
 8. **Record approval** — after the caller reports explicit user approval, set the mockup to `approved` (manage-ui-mockups). On requested changes, revise the file and present it again.
 9. **Report** — MOCK ID, file path, platforms, happy-path views, active elements, `UI` IDs, references, validation result, and approval status.
 
@@ -51,8 +51,8 @@ Do not use this skill to define requirements, business rules, validation semanti
 - One mockup per milestone, even when it spans multiple platforms. The reviewer never opens a second file.
 - A prototype shows only the current feature's happy path. No variants, alternate states, or error states.
 - Do not implement production frontend code.
-- Do not modify `docs/requirements/`, business rules, or the Technical specification.
-- Papyrus owns the `MOCK` ID, filename, and metadata comments. Do not hand-edit the metadata comments.
+- Do not modify requirements, business rules, or the Technical specification.
+- `manage-ui-mockups` owns the `MOCK` ID, filename, and metadata comments. Do not hand-edit the metadata comments.
 - Do not create a mockup README table; use the manage-ui-mockups skill.
 
 ## Stop conditions
@@ -65,7 +65,7 @@ Do not use this skill to define requirements, business rules, validation semanti
 
 - **Task/milestone**: ID and title.
 - **UI specifications**: `UI` IDs and status.
-- **Mockup**: `MOCK` ID, single file path, Papyrus status.
+- **Mockup**: `MOCK` ID, single file path, status.
 - **Review contents**: landing and one prototype per platform.
 - **Platforms and views**: per platform.
 - **Active elements drawn**.

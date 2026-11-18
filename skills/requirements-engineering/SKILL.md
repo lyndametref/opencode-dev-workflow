@@ -22,7 +22,7 @@ Do not use this skill to plan, prioritize, estimate, create tasks, design soluti
 ## Prerequisites
 
 - Load `managed-records` and the record skills: `manage-requirements` for `REQ`, `manage-nfrs` for `NFR`.
-- Read access to `docs/requests/` for the request artifact.
+- Read the request artifact via `manage-requests`.
 
 ## Inputs and trigger
 
@@ -52,7 +52,7 @@ A requirement change requested elsewhere is routed back to `requirements-enginee
 3. **Resolve open questions** — ask the requester. A product decision is never inferred; record the answer on the request artifact or in the requirement.
 4. **Run baseline checks** before drafting.
 5. **Elicit** behavior, actors, triggers, data, error cases, and quality attributes for each item.
-6. **Draft or update** `REQ`/`NFR` records through the Papyrus `req`/`nfreq` commands. Create the owning group before its first requirement.
+6. **Draft or update** `REQ`/`NFR` records through `manage-requirements` and `manage-nfrs`. Create the owning group before its first requirement.
 7. **Verify** the draft against the verification checklist below.
 8. **Assess impact** and delegate affected artifacts to their owners.
 9. **Confirm consistency** between requirements and every delegated artifact. A mismatch returns to drafting.
@@ -174,7 +174,7 @@ This phase never:
 - **Validation status**: `verified` / `gaps` / `blocked`.
 - **Open questions/blockers**: product decisions still needed, or `none`.
 - **Impact**: rules, glossary, domain model, decisions, architecture flag, or `none`.
-- **Corpus visibility**: confirmed through Papyrus (yes/no).
+- **Corpus visibility**: confirmed through the `manage-*` skills (yes/no).
 - **Request status**: `in-progress`.
 
 ## Completion checks
@@ -183,5 +183,5 @@ This phase never:
 - Baseline checks ran and are reported.
 - Every changed `REQ`/`NFR` is verified or explicitly `gaps`/`blocked`.
 - Every impacted artifact was delegated, verified for consistency, or explicitly `none`.
-- Changed IDs are reported to the orchestrator and visible through Papyrus.
+- Changed IDs are reported to the orchestrator and visible through the `manage-*` skills.
 - No plan, task, milestone, release, code, or direct rule/glossary/domain edit was made.

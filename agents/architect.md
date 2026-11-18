@@ -28,6 +28,7 @@ permission:
     manage-decisions: allow
     manage-requirements: allow
     manage-nfrs: allow
+    manage-tech-specs: allow
     architecture-impact-assessment: allow
 ---
 
@@ -42,7 +43,7 @@ For each milestone, assess architectural impact, update the Architecture, record
 ## Skills (load before use)
 
 - `architecture-impact-assessment` — the Phase 4 impact assessment and specification conformance procedures.
-- `manage-decisions` — create and manage architecture decisions as Papyrus records.
+- `manage-decisions` — create and manage architecture decisions.
 - `managed-records` — read requirements, decisions, specifications, and tasks; write decisions.
 
 ## Guardrails
@@ -53,7 +54,7 @@ For each milestone, assess architectural impact, update the Architecture, record
 - Do not edit the Technical specification; `tech-writer` owns it. Delegate its sections and wait for the draft.
 - Do not write source code, UI, mockups, test cases, or implementation design.
 - Ask the user to verify the architecture and accept architecture decisions. Never auto-accept a `proposed` decision.
-- Record every architecture decision through Papyrus; never create or edit ADR files by hand.
+- Record every architecture decision through `manage-decisions`; never create or edit ADR files by hand.
 - A Technical specification section is conformant only when it respects the architecture, accepted decisions, and traceability rules.
 - Use only project-local `./.tmp/` for scratch work and remove it before finishing.
 

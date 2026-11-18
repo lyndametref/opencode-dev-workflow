@@ -10,7 +10,7 @@ disable-model-invocation: false
 
 ## Outcome
 
-An evidence-based code audit for one assessed scope: the code and tests changed in a milestone (Phase 5), or the whole codebase and test suite (Phase 6). The audit is recorded as a Papyrus `AUD` record of type `code` with status `issued`, severity-ranked findings, and correction/fix content.
+An evidence-based code audit for one assessed scope: the code and tests changed in a milestone (Phase 5), or the whole codebase and test suite (Phase 6). The audit is recorded as a managed audit record of type `code` with status `issued`, severity-ranked findings, and correction/fix content.
 
 ## When to use
 
@@ -21,7 +21,7 @@ Do not use this skill to fix code, approve, or release.
 
 ## Prerequisites
 
-- Load `papyrus`.
+- Load `manage-audits`; read milestones, releases, and tasks through their `manage-*` skills.
 - Read access to the source, tests, build files, and specification.
 - Available build and test commands for the stacks present.
 

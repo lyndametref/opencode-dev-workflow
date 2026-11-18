@@ -1,5 +1,5 @@
 > Example content for a Papyrus decision record. Create live records with
-> `papyrus decision create`; do not copy this file into `decisions/` by hand.
+> `papyrus decision create`; do not create ADR files by hand.
 
 # Use Neo4j for Genealogy Storage
 

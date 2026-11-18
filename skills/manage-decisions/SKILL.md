@@ -10,7 +10,7 @@ disable-model-invocation: false
 
 ## Outcome
 
-Create, revise, and manage Architecture Decision Records (ADRs) as Papyrus `decision` records in `decisions/`. Once an ADR reaches a final status (`Accepted`, `Refused`), its body becomes immutable — only status transitions to `Deprecated` or `Superseded` are permitted. The Papyrus browser is the ADR index; no `index.html` is generated.
+Create, revise, and manage Architecture Decision Records (ADRs) as Papyrus `decision` records. Once an ADR reaches a final status (`Accepted`, `Refused`), its body becomes immutable — only status transitions to `Deprecated` or `Superseded` are permitted. The Papyrus browser is the ADR index; no `index.html` is generated.
 
 ## When To Use
 
@@ -26,7 +26,7 @@ Do not use this skill for:
 
 ## ADR Location and Discovery
 
-- ADRs are Papyrus decision records stored in `decisions/`.
+- ADRs are Papyrus decision records.
 - Papyrus assigns the ID and filename (`ADR-NNNN-<kebab-case-title>`). Never choose, rename, or move an ADR file by hand.
 - Read records with `papyrus decision list` and `papyrus decision view <ADR-ID>`.
 - The browsable index is `papyrus browser`; never create or hand-edit an ADR index.

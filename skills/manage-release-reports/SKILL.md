@@ -1,6 +1,6 @@
 ---
 name: manage-release-reports
-description: 'Create, read, update, issue, and archive release reports as plain Markdown files under docs/release-reports/.'
+description: 'Create, read, update, issue, and archive release reports as plain Markdown records.'
 argument-hint: 'Examples: create a release report; set status to issued; archive a report.'
 user-invocable: true
 disable-model-invocation: false
@@ -10,7 +10,7 @@ disable-model-invocation: false
 
 ## Outcome
 
-Release reports are created, read, updated, issued, and archived as plain Markdown files under `docs/release-reports/`, so version, scope, evidence, and approval state stay consistent.
+Release reports are created, read, updated, issued, and archived as plain Markdown records, so version, scope, evidence, and approval state stay consistent.
 
 ## When to use
 
@@ -21,7 +21,6 @@ Release reports are created, read, updated, issued, and archived as plain Markdo
 
 ## Record format
 
-- **Directory** — `docs/release-reports/`.
 - **File** — `<REL-ID>-<version>-report.md`.
 - **Owner** — `orchestrator`.
 

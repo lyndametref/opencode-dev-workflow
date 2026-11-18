@@ -22,7 +22,7 @@ Do not use this skill to write requirements, plan, or execute work yourself.
 
 ## Prerequisites
 
-- A captured request. Use the request artifact under `docs/requests/` when one exists; otherwise capture the request behavior, source, and affected scope in the response.
+- A captured request. Use the request artifact via `manage-requests` when one exists; otherwise capture the request behavior, source, and affected scope in the response.
 - Never ask the user to repeat a handoff package that is already in context.
 - Available subagents: `requirements-engineer`, `planner`.
 
@@ -39,7 +39,7 @@ Do not use this skill to write requirements, plan, or execute work yourself.
    - created or changed `REQ`/`NFR` IDs and groups;
    - validation result (`verified` / `gaps` / `blocked`) and traceability status;
    - open product questions or blockers;
-   - confirmation that the records are visible through Papyrus;
+   - confirmation that the records are visible through the `manage-*` skills;
    - whether the change touches NFRs or introduces new integrations or cross-cutting scope;
    - the request status (`in-progress`).
 

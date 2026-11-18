@@ -10,7 +10,7 @@ disable-model-invocation: false
 
 ## Outcome
 
-Maintain a consistent, traceable business requirements corpus through Papyrus. Papyrus owns IDs, filenames, grouping, and metadata under `docs/requirements/business/`.
+Maintain a consistent, traceable business requirements corpus through Papyrus. Papyrus owns IDs, filenames, grouping, and metadata.
 
 ## When To Use
 

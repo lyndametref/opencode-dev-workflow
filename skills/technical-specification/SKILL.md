@@ -1,6 +1,6 @@
 ---
 name: technical-specification
-description: 'Maintain the project-wide Technical specification as Papyrus TECH sections organized by architecture building blocks, traceable to requirements, rules, and decisions and approved by the architect.'
+description: 'Maintain the project-wide Technical specification as managed TECH sections organized by architecture building blocks, traceable to requirements, rules, and decisions and approved by the architect.'
 argument-hint: 'Provide the affected building block, requirements, or milestone/task ID.'
 user-invocable: true
 disable-model-invocation: false
@@ -10,7 +10,7 @@ disable-model-invocation: false
 
 ## Outcome
 
-An implementation-consumable Technical specification in Papyrus, organized in sections per architecture building block, updated for the changed requirements and decisions, traceable, and approved by the architect for conformance.
+An implementation-consumable Technical specification, organized in sections per architecture building block, updated for the changed requirements and decisions, traceable, and approved by the architect for conformance.
 
 ## When to use
 
@@ -20,14 +20,9 @@ An implementation-consumable Technical specification in Papyrus, organized in se
 
 Do not use this skill to write requirements, acceptance criteria, architecture decisions, UI design, or source code.
 
-## Prerequisites
-
-- Load `papyrus`.
-- Read access to `docs/architecture/`, `docs/requirements/`, `docs/business-rules/`, `docs/glossary/`, `docs/domain-model/`, and `decisions/`.
-
 ## Specification model
 
-- One specification for the whole project, stored as Papyrus `TECH` records under `docs/technical/`.
+- One specification for the whole project, stored and accessed via `manage-tech-specs`.
 - Organized in sections per building block of the Architecture. At least one section per building block.
 - A feature does not get its own specification: it updates the sections it affects.
 - Section identifier `SPEC-001`; subsection identifier `SPEC-001.01`.

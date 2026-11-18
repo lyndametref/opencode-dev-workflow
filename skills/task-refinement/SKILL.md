@@ -21,7 +21,7 @@ Do not use this skill to create tasks, plan milestones, write implementation cod
 
 ## Prerequisites
 
-Load `papyrus`. Refinement does not start before all hold:
+Load `manage-tasks`; read linked artifacts through their `manage-*` skills. Refinement does not start before all hold:
 
 - the architecture impact assessment is settled and the architecture is user-verified;
 - the Technical specification conformance is verified by `architect`;
@@ -37,7 +37,7 @@ If a prerequisite is missing, stop and report.
 2. **Read the inputs** — the linked `REQ`/`NFR`, `BR`, Technical specification, UI specification, approved mockups, approved test cases, decisions, and domain artifacts.
 3. **Audit the task** — identify missing or weak scope, behavior, assumptions, dependencies, acceptance criteria, and definition of done. Check that the task is traceable to its requirement or request.
 4. **Ask targeted questions** — clarify user-visible behavior, boundaries, data, validation, errors, and verification. Do not mark the task execution-ready while a material question is open. Do not turn assumptions into requirements.
-5. **Complete the task fields** through Papyrus:
+5. **Complete the task fields** through `manage-tasks`:
    - update the description (manage-tasks);
    - add each acceptance criterion (manage-tasks);
    - set references and documentation (manage-tasks);
@@ -48,11 +48,11 @@ If a prerequisite is missing, stop and report.
 ## Rules
 
 - The task and its acceptance criteria are the implementation contract. Requirement and specification links provide context and rationale; they do not substitute for task content.
-- Papyrus has no notes, plan, or definition-of-done field. Put the definition of done in the description or express it as acceptance criteria.
+- The task record has no notes, plan, or definition-of-done field. Put the definition of done in the description or express it as acceptance criteria.
 - Do not change the task's milestone, ordinal, dependencies, or scope beyond refinement. Scope, dependency, and ordinal changes go to `planner`.
 - Do not delegate UI design, test design, domain artifacts, or architecture work; those are separate milestone tasks. Report a missing input instead.
 - Do not edit requirements, rules, glossary, domain model, architecture, Technical specification, UI specifications, mockups, test cases, or source code.
-- All task changes go through the Papyrus CLI; never edit task records directly.
+- All task changes go through `manage-tasks`; never edit task records directly.
 - Flag any requirement or behavior not traceable to documentation as an open question.
 
 ## Stop conditions
@@ -80,4 +80,4 @@ If a prerequisite is missing, stop and report.
 - A definition of done is present.
 - Every claim is traceable to documentation, user input, or an open question.
 - No implementation detail, dependency change, ordinal change, or milestone change was made.
-- All changes were made through the Papyrus CLI.
+- All changes were made through `manage-tasks`.

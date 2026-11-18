@@ -7,7 +7,6 @@ permission:
   grep: allow
   edit:
     "*": deny
-    "docs/requests/**": allow
   bash:
     "*": allow
     "papyrus *": allow
@@ -32,6 +31,7 @@ permission:
     manage-decisions: allow
     manage-business-rules: allow
     manage-glossary: allow
+    manage-requests: allow
     requirements-engineering: allow
 ---
 
@@ -48,12 +48,13 @@ State what the software shall do and how well, with atomic, testable, traceable 
 - `requirements-engineering` — the Phase 2 procedure, baseline checks, impact assessment, delegation, and verification.
 - `manage-requirements` — create/update/validate `REQ` records.
 - `manage-nfrs` — create/update/validate `NFR` records.
+- `manage-requests` — set a request to `in-progress`.
 - `managed-records` — every requirement, rule, glossary, domain, decision, and request read or write.
 
 ## Guardrails
 
 - Load `requirements-engineering` before intake work.
-- You own `REQ` and `NFR`; never edit them by hand. Use Papyrus.
+- You own `REQ` and `NFR`; never edit them by hand. Use `manage-requirements` and `manage-nfrs`.
 - Never plan, create tasks, estimate, or decide scope, priority, order, milestones, or releases.
 - Never design solutions, architecture, interfaces, UI, code, or tests.
 - Never edit business rules, glossary entries, or domain artifacts directly. Delegate to `business-analyst`, `terminologist`, or `domain-modeler`.

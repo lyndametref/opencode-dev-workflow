@@ -1,6 +1,6 @@
 ---
 name: manage-ui-mockups
-description: 'Generate a single self-contained HTML review package for a milestone UI design task: a review landing and clickable per-platform prototypes, saved as one Papyrus MOCK record under docs/specifications/ui/mockups/, using a shared wireframe.css.'
+description: 'Generate a single self-contained HTML review package for a milestone UI design task: a review landing and clickable per-platform prototypes, saved as one Papyrus MOCK record, using a shared wireframe.css.'
 argument-hint: 'generate the review package for the create-order flow (MOCK-0010); simulate the checkout scenario'
 user-invocable: true
 disable-model-invocation: false
@@ -15,7 +15,7 @@ Produce **one** interactive, wireframe-styled HTML file per MOCK record that a r
 1. **Review landing** — the affected task under review, plus one button per platform prototype.
 2. **Platform prototypes** — one clickable prototype per platform, so usability can be tested view by view.
 
-Saved as a Papyrus `MOCK` record under `docs/specifications/ui/mockups/`, sharing `wireframe.css`. It demonstrates layout and interaction flow only; it conveys no library, framework, or technology choice. Papyrus owns the MOCK id and metadata comments; the designer authors the HTML body.
+Saved as a Papyrus `MOCK` record, sharing `wireframe.css`. It demonstrates layout and interaction flow only; it conveys no library, framework, or technology choice. Papyrus owns the MOCK id and metadata comments; the designer authors the HTML body.
 
 ## When To Use
 
@@ -31,7 +31,6 @@ Do not use this skill for:
 
 ## Location
 
-- All mockups live in `docs/specifications/ui/mockups/`.
 - Papyrus creates the record and file with `papyrus ui-mockup create --task <TASK-ID> --spec <UI-ID> "<title>"`.
 - Papyrus owns the MOCK id, filename, and metadata comments. The designer fills the HTML body.
 - Shared stylesheet: `docs/specifications/ui/mockups/wireframe.css` (copied from the skill assets).

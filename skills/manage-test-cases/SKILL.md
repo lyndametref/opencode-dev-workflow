@@ -1,6 +1,6 @@
 ---
 name: manage-test-cases
-description: 'Create, read, update, approve, verify, and archive integration test cases as plain Markdown files under docs/test-cases/.'
+description: 'Create, read, update, approve, verify, and archive integration test cases through the Papyrus test-case commands.'
 argument-hint: 'Examples: create a test case; set status to approved; mark verified.'
 user-invocable: true
 disable-model-invocation: false
@@ -10,7 +10,7 @@ disable-model-invocation: false
 
 ## Outcome
 
-Test cases are created, read, updated, approved, verified, and archived as plain Markdown files under `docs/test-cases/`, so identifiers, coverage, status, and traceability stay consistent.
+Test cases are created, read, updated, approved, verified, and archived through the Papyrus `test-case` commands, so identifiers, coverage, status, and traceability stay consistent.
 
 ## When to use
 
@@ -22,26 +22,19 @@ Test cases are created, read, updated, approved, verified, and archived as plain
 
 ## Record format
 
-- **Directory** — `docs/test-cases/`.
-- **File** — `TC-<nnn>-<slug>.md`.
-- **Identifier** — `TC-001`, unique and stable. Allocate the next free number by listing `docs/test-cases/`.
+Papyrus owns the `TC` identifier, filename, and metadata. Do not choose an ID or name a file by hand.
 
-Frontmatter:
-
-```yaml
----
-id: TC-001
-title: Short scenario title
-status: draft          # draft | approved | verified | archived
-covered_requirement: REQ-001.001
-covered_rules: [BR-001]
----
-```
+| Field        | Content                                                              |
+| ------------ | -------------------------------------------------------------------- |
+| Title        | Short scenario title.                                                |
+| Description  | One Gherkin scenario and its traceability, supplied via `--description` or `--editor`. |
+| References   | Covered requirement and business rule IDs, supplied with `--reference`. |
+| Status       | `draft`, `approved`, `verified`, or `archived`.                      |
 
 Body: one Gherkin scenario and traceability.
 
 ```markdown
-## Scenario: <title, identical to the frontmatter title>
+## Scenario: <title, identical to the test case title>
 
 GIVEN <initial context, state, and data>
   AND <further context>
@@ -59,6 +52,15 @@ THEN <observable, testable outcome>
 - One test case holds exactly one scenario and one `WHEN` block; further variants get their own test case.
 - Steps stay at the behavior level: no functions, tables, endpoints, or selectors.
 
+## Commands
+
+- Create: `papyrus test-case create "<title>" --description "<gherkin>" --reference <REQ-ID> [--reference <BR-ID>] [--label <label>]`
+- List: `papyrus test-case list`
+- View: `papyrus test-case view <TC-ID>`
+- Edit: `papyrus test-case edit <TC-ID> [--title <title>] [--description <gherkin>] [--reference <ref>] [--editor]`
+- Status: `papyrus test-case status <TC-ID> <value>`
+- Archive: `papyrus test-case archive <TC-ID>`
+
 ## Status values
 
 | Status | Meaning |
@@ -75,6 +77,7 @@ THEN <observable, testable outcome>
 
 - A test case describes an integration test: does the feature still work. Low-level tests live with the code.
 - Every test case has a Gherkin scenario with `GIVEN`, `WHEN`, and `THEN`, a covered requirement, and covered rules.
+- Papyrus owns the `TC` ID, metadata, filename, and archive state. Never edit managed test case files directly.
 - Never edit requirements, business rules, or source code here.
 - Use only project-local `./.tmp/` for scratch work and remove it before finishing.
 

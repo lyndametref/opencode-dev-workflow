@@ -18,15 +18,15 @@ Detect inconsistent business terminology and propose precise replacements aligne
 - Before release documentation reviews
 
 ## Canonical Source
-- Papyrus glossary records, read with `papyrus glossary list` and `papyrus glossary view <GLO-ID>`.
-- Records live in `docs/glossary/`; Papyrus owns the IDs and files.
+- Glossary records can be accessed with the `manage-glossary` skill (list/view).
+- Records can be accessed with the `manage-glossary` skill; it owns the IDs and files.
 
 ## Scope
 - Include:
-  - Papyrus requirements (`papyrus req list`, `papyrus nfreq list`)
-  - Papyrus rules (`papyrus rule list`)
-  - Papyrus specifications (`papyrus tech-spec list`, `papyrus ui-spec list`, `papyrus ui-mockup list`)
-  - Papyrus tasks, milestones, releases, decisions, and audits
+  - Requirements and NFRs, read through `manage-requirements` and `manage-nfrs`
+  - Business rules, read through `manage-business-rules`
+  - Specifications and mockups, read through `manage-tech-specs`, `manage-ui-specs`, and `manage-ui-mockups`
+  - Tasks, milestones, releases, decisions, and audits, read through `manage-tasks`, `manage-milestones`, `manage-releases`, `manage-decisions`, and `manage-audits`
   - `docs/domain-model/`
   - `docs/architecture/`
 - Exclude by default:
@@ -36,12 +36,12 @@ Detect inconsistent business terminology and propose precise replacements aligne
 
 ## Procedure
 1. Collect canonical terms.
-- Read `papyrus glossary list` and `papyrus glossary view <GLO-ID>`.
+- Read glossary records via `manage-glossary` (list/view).
 - Build preferred labels and allowed aliases from the definitions.
 
 2. Scan for variants.
 - Find case variants, plural variants, legacy names, and near-synonyms.
-- Use `papyrus search "<term>"` for the Papyrus corpus and repository search for plain docs.
+- Use the search operation of `manage-glossary` for the managed corpus and repository search for plain docs.
 - Detect terms used without a glossary record when they appear repeatedly.
 
 3. Classify findings.
@@ -58,7 +58,7 @@ Detect inconsistent business terminology and propose precise replacements aligne
 5. Validate after apply (if requested).
 - Re-scan target records and files.
 - Confirm conflicts and variants are resolved.
-- Confirm updates are visible through Papyrus.
+- Confirm updates are visible via `manage-glossary` (list).
 
 ## Completion Checks
 - All conflicts and variants are listed with evidence.

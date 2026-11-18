@@ -27,11 +27,11 @@ Do not use this skill to verify a milestone again, fix a milestone, plan the rel
 
 ## Release model
 
-- A release is a Papyrus `REL` record, open until completed. Planner creates it with a working title such as `Release (pending version)`; Phase 6 renames it to `Release <version>` when the final version is chosen.
+- A release is a managed release record, open until completed. Planner creates it with a working title such as `Release (pending version)`; Phase 6 renames it to `Release <version>` when the final version is chosen.
 - Milestones are assigned to a release through the manage-milestones skill; the release scope is derived from them.
 - The final version is chosen after the scope-and-findings approval and immediately before the final build.
 - The release has no acceptance criteria of its own; project-wide criteria apply.
-- The release report is a plain Markdown file under `docs/release-reports/<REL-ID>-<version>-report.md`.
+- The release report is created and updated via `manage-release-reports`.
 
 ## Procedure
 
@@ -102,7 +102,7 @@ Record command, result, and counts. A failure creates fix work and returns to st
 
 ### 8. Assemble the release report
 
-Write `docs/release-reports/<REL-ID>-<version>-report.md` with status `draft`, containing:
+Create the report via `manage-release-reports` with status `draft`, containing:
 
 - version, release scope, and owned milestones;
 - implemented requests;

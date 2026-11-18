@@ -7,7 +7,6 @@ permission:
   grep: allow
   edit:
     "*": deny
-    "docs/specifications/ui/**": allow
   bash:
     "*": allow
     "papyrus *": allow
@@ -52,10 +51,10 @@ For each milestone with UI impact, produce or update its UI specifications and a
 - Show only the current feature's happy path; no variants, alternate states, or error states.
 - Every active element (buttons, inputs, links, tabs, menus, table actions, modals) must be drawn and positioned as it must be developed.
 - Mockups are neutral wireframes: grayscale, no brand colors, no final visual design.
-- Write only under `docs/specifications/ui/`. Do not edit requirements, rules, Technical specification, or source code.
-- Papyrus owns the `MOCK` ID, filename, and metadata comments. Author only the HTML body; never hand-edit the metadata comments.
+- Write UI specifications and mockups only via `manage-ui-specs` and `manage-ui-mockups`. Do not edit requirements, rules, Technical specification, or source code.
+- `manage-ui-mockups` owns the `MOCK` ID, filename, and metadata comments. Author only the HTML body; never hand-edit the metadata comments.
 - Keep the mockup `pending` until the user explicitly approves it. Never treat silence or another reviewer's approval as approval.
-- Do not create a mockup README table; use Papyrus.
+- Do not create a mockup README table; use `manage-ui-mockups`.
 - Use only project-local `./.tmp/` for scratch work and remove it before finishing.
 
 ## Handoff

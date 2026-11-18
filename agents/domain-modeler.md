@@ -25,6 +25,11 @@ permission:
   skill:
     "*": deny
     managed-records: allow
+    manage-requirements: allow
+    manage-nfrs: allow
+    manage-tech-specs: allow
+    manage-ui-specs: allow
+    manage-business-rules: allow
     domain-modeling: allow
     state-diagram-creation: allow
     attribute-list-definition: allow

@@ -5,8 +5,7 @@ agent: orchestrator
 
 Run the requirement intake flow for the request artifact(s) referenced above.
 
-- If a `REQUEST-xxx` ID is present, read that artifact under `docs/requests/`.
-- If no request ID is present, ask me for it. Do not ask me to repeat the request content.
+- Read the referenced request artifact(s) via `manage-requests`. Do not ask me to repeat the request content.
 - A request with category `bug` goes directly to planning; it bypasses requirements.
 - Follow the `intake-routing` skill.
 

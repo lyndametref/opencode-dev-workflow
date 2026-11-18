@@ -10,7 +10,7 @@ disable-model-invocation: false
 
 ## Outcome
 
-An evidence-based quality audit for one assessed scope: a milestone at its Phase 5 boundary, or the whole release in Phase 6. The audit is recorded as a Papyrus `AUD` record of type `quality` with status `issued`, severity-ranked findings, and either a pass or the correction/fix content the reviewer defines.
+An evidence-based quality audit for one assessed scope: a milestone at its Phase 5 boundary, or the whole release in Phase 6. The audit is recorded as a managed audit record of type `quality` with status `issued`, severity-ranked findings, and either a pass or the correction/fix content the reviewer defines.
 
 ## When to use
 
@@ -21,7 +21,7 @@ Do not use this skill to fix, rework, approve, or release.
 
 ## Prerequisites
 
-- Load `papyrus`.
+- Load `manage-audits`; read milestones, releases, and tasks through their `manage-*` skills.
 - Read access to the milestone/release, its tasks, requirements, specifications, UI, tests, and source code.
 
 ## Scopes

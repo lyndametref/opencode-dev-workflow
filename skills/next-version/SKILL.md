@@ -1,7 +1,7 @@
 ---
 name: next-version
 description: 'Choose a Semantic Version for a verified milestone release candidate (Phase 5) or a final release (Phase 6) from the changes it contains, handling major/minor/patch classification and RC numbering with reset on major increment.'
-argument-hint: 'Provide a milestone ID for an RC, or a release ID for the final version. If omitted, resolve from Papyrus and ask when ambiguous.'
+argument-hint: 'Provide a milestone ID for an RC, or a release ID for the final version. If omitted, resolve from the managed records and ask when ambiguous.'
 user-invocable: true
 disable-model-invocation: false
 ---
@@ -21,9 +21,9 @@ Do not use this skill to verify a milestone, close a release, or create tags.
 
 ## Prerequisites
 
-- Load `papyrus`.
+- Load `manage-releases`.
 - Read access to Git tags and the project's version files.
-- The milestone or release scope in Papyrus.
+- The milestone or release scope in the managed records.
 
 ## Versioning rules
 
@@ -43,7 +43,7 @@ The project follows Semantic Versioning (`MAJOR.MINOR.PATCH`).
 
 1. Read the last released version:
    - `git tag --list 'v*' --sort=-v:refname` and variants without the `v` prefix; take the highest SemVer tag;
-   - otherwise `papyrus --json release list` and take the highest `Release <version>` with the `released` label;
+   - otherwise list releases via `manage-releases` and take the highest `Release <version>` with the `released` label;
    - otherwise ask the user; do not guess.
 2. Cross-check project version files (`package.json`, `Cargo.toml`, `build.gradle*`, `pom.xml`, `pyproject.toml`, `VERSION`, etc.). If they disagree, report the discrepancy and ask which is authoritative.
 3. Record `baseline = MAJOR.MINOR.PATCH` from the last final release.
@@ -87,7 +87,7 @@ Produce a table: Task ID | Title | Class | Evidence.
 
 **RC mode:**
 
-1. Find the latest RC for the same base: `git tag --list '*-rc.*' --sort=-v:refname` and Papyrus release titles.
+1. Find the latest RC for the same base: `git tag --list '*-rc.*' --sort=-v:refname` and managed release titles.
 2. Same base -> next RC number = latest + 1. Different base -> 1. No prior RC -> 1.
 3. Recommended version = `X.Y.Z-rc.N`.
 
@@ -107,7 +107,7 @@ Produce a table: Task ID | Title | Class | Evidence.
 - **Recommended version**.
 - Caveats: non-`Done` work was excluded; a later breaking change may reset the version.
 
-Do not create tags, edit version files, or change Papyrus state. The orchestrator records the recommendation in the Phase 5 verification task or on the release.
+Do not create tags, edit version files, or change managed record state. The orchestrator records the recommendation in the Phase 5 verification task or on the release.
 
 ## Stop conditions
 
@@ -126,4 +126,4 @@ Do not create tags, edit version files, or change Papyrus state. The orchestrato
 - Increment justified by the highest-severity change.
 - RC numbering explains reset or increment.
 - Recommended version is printed separately from the rationale.
-- No repository, Papyrus, tag, or version file was modified.
+- No repository, managed record, tag, or version file was modified.
