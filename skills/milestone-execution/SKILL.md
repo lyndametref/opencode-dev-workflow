@@ -89,7 +89,7 @@ Inspect the working tree before task work.
 
 - If already on `task/<TASK-ID>` or that branch exists, reuse it.
 - If uncommitted changes exist, show them and ask whether to clean up or continue. Never commit, stash, discard, or alter them without the user's decision.
-- If the user chooses cleanup, wait for confirmation, re-check that the tree is clean, check out the main branch, pull, and create `task/<TASK-ID>` only if it does not exist.
+- If the user chooses cleanup, wait for confirmation, re-check that the tree is clean, check out the main branch, run `git pull --ff-only` (never a pull that could create a merge), and create `task/<TASK-ID>` only if it does not exist.
 - If Git is denied or fails, stop and ask the user to prepare the branch and tree; never bypass the policy.
 
 ### 5. Dispatch the task by kind
@@ -126,6 +126,11 @@ When a verification is required, ask the user to verify the artifact. A pending 
 Set the status to `Refined` after refinement, `Implemented` after implementation, and `Validated` after the acceptance check. Tasks with no refinement or implementation stage stay `Initiated` until `Done`; the intermediate statuses record a stage, not a required sequence. Set `Done` only when the acceptance criteria are fulfilled and the required verification is obtained.
 
 After a task is `Done`, merge its `task/<TASK-ID>` branch into the main branch with `--no-ff`: stage and commit any remaining changes first, run `git merge --no-ff task/<TASK-ID>`, and leave the repository on the main branch. Do not push. If the merge fails, stop and report.
+
+- `--no-ff` is mandatory: every task branch integration creates a merge commit, even when a fast-forward is possible.
+- Never run `git merge` without `--no-ff`, and never use `--ff`, `--ff-only`, or a plain fast-forward.
+- Never let a pull create a merge commit: use `git pull --ff-only` or `git pull --rebase`.
+- The orchestrator performs the merge; no task owner or reviewer merges branches.
 
 ### 7. Task outcome and rework
 
@@ -184,6 +189,7 @@ This skill never:
 - asks for end-of-task approval beyond the defined artifact verifications;
 - skips a verification-required artifact;
 - absorbs new scope discovered during execution;
+- merges a task branch without `--no-ff` or delegates a merge to another agent;
 - verifies a milestone or runs a release audit.
 
 ## Stop conditions
@@ -202,4 +208,5 @@ This skill never:
 - Every executed task followed its kind's skill and produced evidence recorded on the task.
 - Every required artifact verification was obtained before dependent work.
 - No task was skipped silently, no task was pulled from another milestone, and no task was marked `Done` without its criteria and verification.
+- Every completed task branch was integrated into the main branch with `git merge --no-ff`.
 - The milestone boundary was reported, not approved.
