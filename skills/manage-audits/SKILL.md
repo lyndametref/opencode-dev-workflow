@@ -23,7 +23,7 @@ Audit records are created, read, updated, and deprecated through the management 
 
 - List: `papyrus audit list`
 - View: `papyrus audit view <AUD-ID>`
-- Create: `papyrus audit create --title "<title>" --content <report|-> --audit-type <quality|code|security> --reference <MS/REL-ID> --label <label>`
+- Create: `papyrus audit create --title "<title>" --content <report|-> --audit-type <quality|code|security> --reference <MS/REL-ID>` then `papyrus audit status <AUD-ID> issued` (approval is tracked by status, not labels)
 - Edit: `papyrus audit edit <AUD-ID> --title "<title>" --content <report|-> --audit-type <type> --label <label> --reference <ref>`
 - Deprecate/restore: `papyrus audit deprecate <AUD-ID>`, `papyrus audit restore <AUD-ID>`
 
@@ -42,7 +42,7 @@ EOF
 ## Rules
 
 - The auditor reports; the orchestrator records the audit.
-- Audit status is tracked by labels (`issued`, `approved`) and deprecation (`archived`).
+- Audit approval is documented by the `status` field (`issued`/`approved`), not by labels. Use `papyrus audit status <AUD-ID> issued|approved`; labels are not used for approval.
 - Only one audit of a type may be `issued` or `approved` within a single assessed scope at a time.
 - Never edit managed audit files directly.
 
