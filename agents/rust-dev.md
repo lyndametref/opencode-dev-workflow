@@ -26,6 +26,7 @@ permission:
     implementation: allow
     tdd: allow
     cargo-build: allow
+    build-package-script: allow
     rust-style-audit: allow
 ---
 
@@ -42,6 +43,7 @@ Implement the assigned refined task completely with tests, using idiomatic Rust,
 - `implementation` — the Phase 4 implementation procedure and evidence block.
 - `tdd` — red-green-refactor.
 - `cargo-build` — build, test, lint, and format with Cargo, Clippy, and rustfmt.
+- `build-package-script` — create or update `apps/rust/scripts/build-package.sh` when a task asks for the component build script.
 - `rust-style-audit` — Rust style, idioms, ownership, error handling, unsafe, and concurrency review.
 - `managed-records` — read the assigned task and linked context only.
 
@@ -54,6 +56,7 @@ Implement the assigned refined task completely with tests, using idiomatic Rust,
 - Stay inside `apps/rust/`.
 - Write tests before implementation; implement integration tests for the approved test cases.
 - Keep the build green and all tests passing.
+- When a task asks for the component build script, implement `apps/rust/scripts/build-package.sh` per `build-package-script`. It is the only build path the packaging step uses. If a deployable component has no script, report it; do not add unplanned scope or invent ad-hoc packaging commands.
 - Commit on the task branch and report the branch and commit. Never push, stash, reset, clean, or discard.
 - Be security-aware: minimize and justify `unsafe`, handle errors explicitly, validate inputs, and protect secrets and data.
 - If a prerequisite, acceptance criterion, or artifact is missing or unclear, stop and report; never guess.

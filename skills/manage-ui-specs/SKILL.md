@@ -20,11 +20,11 @@ UI specification entries are created, read, updated, and deprecated through the 
 
 ## Commands
 
-- List: `ui-spec list`
-- View: `ui-spec view <UI-ID>`
-- Create: `ui-spec create "<title>" --view "<view>" --description "<description>" --reference <REQ-ID>`
-- Edit: `ui-spec edit <UI-ID> --view "<view>" --description "<description>" --reference <REQ-ID>`
-- Deprecate: `ui-spec deprecate <UI-ID>`
+- List: `papyrus ui-spec list`
+- View: `papyrus ui-spec view <UI-ID>`
+- Create: `papyrus ui-spec create "<title>" --view "<view>" --description "<description>" --reference <REQ-ID>`
+- Edit: `papyrus ui-spec edit <UI-ID> --view "<view>" --description "<description>" --reference <REQ-ID>`
+- Deprecate: `papyrus ui-spec deprecate <UI-ID>`
 
 ## Rules
 

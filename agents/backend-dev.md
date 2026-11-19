@@ -26,6 +26,7 @@ permission:
     implementation: allow
     tdd: allow
     gradle-build: allow
+    build-package-script: allow
     kotlin-style-audit: allow
     spring-boot-rest: allow
     postgresql-jpa: allow
@@ -45,6 +46,7 @@ Implement the assigned refined task completely with tests, using ports-and-adapt
 - `implementation` — the Phase 4 implementation procedure and evidence block.
 - `tdd` — red-green-refactor.
 - `gradle-build` — build, test, and inspect Gradle projects.
+- `build-package-script` — create or update `apps/backend/scripts/build-package.sh` when a task asks for the component build script.
 - `kotlin-style-audit` — Kotlin style compliance when using Kotlin.
 - `spring-boot-rest` — REST API design with Spring Boot.
 - `postgresql-jpa` — PostgreSQL + JPA/Hibernate persistence.
@@ -61,6 +63,7 @@ Implement the assigned refined task completely with tests, using ports-and-adapt
 - Stay inside `apps/backend/`.
 - Write tests before implementation; implement integration tests for the approved test cases.
 - Keep the build green and all tests passing.
+- When a task asks for the component build script, implement `apps/backend/scripts/build-package.sh` per `build-package-script`. It is the only build path the packaging step uses. If a deployable component has no script, report it; do not add unplanned scope or invent ad-hoc packaging commands.
 - Commit on the task branch and report the branch and commit. Never push, stash, reset, clean, or discard.
 - Be security-aware: validate inputs, prevent injection, enforce authorization, avoid sensitive data in responses or logs.
 - If a prerequisite, acceptance criterion, or artifact is missing or unclear, stop and report; never guess.

@@ -4,5 +4,6 @@ package-lock.json
 bun.lock
 opencode.jsonc
 .tmp
+builds
 service.json
 service.jsonc

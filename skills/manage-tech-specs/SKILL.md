@@ -20,11 +20,11 @@ Technical specification sections are created, read, updated, and deprecated thro
 
 ## Commands
 
-- List: `tech-spec list`
-- View: `tech-spec view <TECH-ID>`
-- Create: `tech-spec create "<title>" --description "<description>" --reference <REQ-ID>`
-- Edit: `tech-spec edit <TECH-ID> --title "<title>" --description "<description>" --reference <REQ-ID>`
-- Deprecate: `tech-spec deprecate <TECH-ID>`
+- List: `papyrus tech-spec list`
+- View: `papyrus tech-spec view <TECH-ID>`
+- Create: `papyrus tech-spec create "<title>" --description "<description>" --reference <REQ-ID>`
+- Edit: `papyrus tech-spec edit <TECH-ID> --title "<title>" --description "<description>" --reference <REQ-ID>`
+- Deprecate: `papyrus tech-spec deprecate <TECH-ID>`
 
 ## Rules
 

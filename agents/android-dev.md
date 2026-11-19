@@ -26,6 +26,7 @@ permission:
     implementation: allow
     tdd: allow
     gradle-build: allow
+    build-package-script: allow
     kotlin-style-audit: allow
 ---
 
@@ -42,6 +43,7 @@ Implement the assigned refined task completely with tests, keeping the domain mo
 - `implementation` — the Phase 4 implementation procedure and evidence block.
 - `tdd` — red-green-refactor.
 - `gradle-build` — build, test, and lint Gradle/Android projects.
+- `build-package-script` — create or update `apps/android/scripts/build-package.sh` when a task asks for the component build script.
 - `kotlin-style-audit` — Google Kotlin style compliance.
 - `managed-records` — read the assigned task and linked context only.
 
@@ -54,6 +56,7 @@ Implement the assigned refined task completely with tests, keeping the domain mo
 - Stay inside `apps/android/`.
 - Write tests before implementation; implement integration tests for the approved test cases.
 - Keep the build green and all tests passing.
+- When a task asks for the component build script, implement `apps/android/scripts/build-package.sh` per `build-package-script`. It is the only build path the packaging step uses. If a deployable component has no script, report it; do not add unplanned scope or invent ad-hoc packaging commands.
 - Commit on the task branch and report the branch and commit. Never push, stash, reset, clean, or discard.
 - Be security-aware: validate inputs, protect data, avoid sensitive data in logs or storage.
 - If a prerequisite, acceptance criterion, or artifact is missing or unclear, stop and report; never guess.

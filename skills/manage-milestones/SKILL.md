@@ -20,16 +20,16 @@ Milestones are created, read, updated, assigned to a release, and archived throu
 
 ## Commands
 
-- List: `milestone list`
-- View: `milestone view <MS-ID>`
-- Create: `milestone create "<title>" --description "<scope>" --release <REL-ID> --label <label> --reference <ref>`
-- Edit: `milestone edit <MS-ID> --title "<title>" --description "<scope>" --release <REL-ID> --label <label> --reference <ref>`
-- Archive: `milestone archive <MS-ID>`
+- List: `papyrus milestone list`
+- View: `papyrus milestone view <MS-ID>`
+- Create: `papyrus milestone create "<title>" --description "<scope>" --release <REL-ID> --label <label> --reference <ref>`
+- Edit: `papyrus milestone edit <MS-ID> --title "<title>" --description "<scope>" --release <REL-ID> --label <label> --reference <ref>`
+- Archive: `papyrus milestone archive <MS-ID>`
 
 ## Rules
 
 - A milestone has no status; completion is derived from its tasks and confirmed by Phase 5 verification.
-- Assign a milestone to a release with `milestone edit <MS-ID> --release <REL-ID>`.
+- Assign a milestone to a release with `papyrus milestone edit <MS-ID> --release <REL-ID>`.
 - Milestone acceptance criteria are written in the description, each with an identifier and a testable statement.
 - Never edit managed milestone files directly.
 

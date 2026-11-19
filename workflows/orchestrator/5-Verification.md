@@ -1,6 +1,6 @@
 ## 5. Verification
 
-Phase 5 independently verifies a **milestone** at its boundary: its acceptance criteria, quality requirements, and code quality. Verification covers only what the milestone changed; the whole release is inspected in Phase 6. It produces the quality and code audits, one verification task, and correction tasks; it never fixes, approves, or releases.
+Phase 5 independently verifies a **milestone** at its boundary: its acceptance criteria, quality requirements, and code quality. Verification covers only what the milestone changed; the whole release is inspected in Phase 6. It produces the quality and code audits, one verification task, and correction tasks, then publishes the versioned RC package of the verified milestone. It never fixes, approves, or releases.
 
 Security is a design concern, handled through requirements and architecture. It is not audited per milestone; security is assessed once at release time, where the combination of features can create risks that no single milestone reveals.
 
@@ -21,9 +21,9 @@ Phase 4 does not verify the increment. Phase 5 runs the milestone verification t
 | ---------------------- | ------------------------------------------------------------------------------------------------------------- |
 | `quality-gatekeeper`   | Runs the verification task's quality review: acceptance criteria, required-field completeness, rerun tests, scope creep, NFR coverage |
 | `code-analyzer`        | Audits the code and tests changed in the milestone and records an Audit artifact (type: code)                 |
-| `orchestrator`         | Opens and closes the verification task, records the result and the RC version                                 |
+| `orchestrator`         | Opens and closes the verification task, records the result and the RC version, and publishes the RC package via `packaging` |
 | `planner`              | Creates the milestone verification task during planning, and correction or follow-up tasks at the reviewers' request |
-| User                   | Reviews the milestone audits at the Phase 6 scope-and-findings review; no approval happens in this phase      |
+| User                   | Reviews the milestone audits at the Phase 6 scope-and-findings review; may waive packaging for the milestone; no approval happens in this phase      |
 
 Reviewers are independent of implementation and read-only. A reviewer never fixes what it finds.
 
@@ -42,7 +42,8 @@ flowchart LR
     CA --> COK{"Code audit<br/>passes?"}
     COK -->|"No"| CORR
     COK -->|"Yes"| RCV["Determine the RC version"]
-    RCV --> OUT["Complete the verification task<br/>Hand verified milestone<br/>to Release"]
+    RCV --> PKG["Publish the RC package<br/>with the component scripts"]
+    PKG --> OUT["Complete the verification task<br/>Hand verified milestone<br/>to Release"]
 ```
 
 ### Verification task
@@ -80,12 +81,28 @@ Audits follow their own lifecycle: `issued → approved → archived`; `approved
 - RC numbering restarts when the major version increments. RC versions are Semantic Versioning pre-release identifiers (e.g. `1.2.0-rc.1`).
 - The final release version is chosen in Phase 6, not here.
 
+### RC package
+
+After the checks pass and the RC version is recorded, the orchestrator publishes the verified milestone with `packaging`.
+
+- Each deployable component is built by its own `<component-dir>/scripts/build-package.sh`, created and owned by the technology's `*-dev` agent. No ad-hoc build commands, no static pre-check in the quality review.
+- The package is built from the committed tree of the verified milestone; the commit SHA is recorded.
+- It is written to the git-ignored `builds/<version>/` directory of the project, one archive per deployable component, with `MANIFEST.txt` and a `.sha256` per archive.
+- Publication is local only: the package is never staged, committed, tagged, pushed, uploaded, or deployed.
+- A version is immutable: an existing `builds/<version>/` is never overwritten. A rebuild after corrections needs a new RC version.
+- The verification task records the version, commit SHA, script paths and commands, component list, paths, sizes, and checksums.
+- A missing or failing build script creates a task in the milestone for the owning `*-dev` agent; the task runs in Phase 4, verification reruns, a new RC is chosen, and packaging runs again. The packaging run in Phase 5 is also the recurring check that each script still works.
+- The user may waive packaging for the milestone; a waiver is explicit, user-only, and recorded in the verification task with its scope, reason, and timestamp (with timezone).
+- If verification reruns and the RC version changes, the previous package is marked superseded in the verification task and is never handed out as current.
+
 ### Failure handling
 
 | Outcome                  | Action                                                                                           |
 | ------------------------ | ------------------------------------------------------------------------------------------------ |
 | Quality review fails     | Create correction tasks with the failure description; Phase 4 executes them; verification reruns |
 | Code audit finds defects | Create correction tasks with the failure description; Phase 4 executes them; verification reruns |
+| RC package build fails or a build script is missing | Record the failure; create a task for the owning `*-dev` agent; Phase 4 executes it; verification reruns; package again with the new RC |
+| Package directory is not git-ignored or already exists | Stop; the user fixes the ignore rules, and changed content needs a new RC version |
 | Deferred finding         | The finding is recorded with an owner and a follow-up task created by planning; the user accepts or rejects it at the Phase 6 scope-and-findings review; the milestone proceeds with the risk documented |
 | Scope creep              | Report the unjustified change; the user decides removal or a requirements change through Phase 2 |
 
@@ -100,7 +117,8 @@ Phase 5 is complete when:
 - every correction task created by a failed check is `Done`;
 - verification ran again after the corrections and passed;
 - deferred findings have an owner and a follow-up task;
-- the verification task is `Done` with the RC version and the milestone verification result; the quality audit and the code audit are recorded as Audit artifacts (types: quality, code) with status `issued`; the user reviews them at the Phase 6 release gate.
+- the verification task is `Done` with the RC version and the milestone verification result; the quality audit and the code audit are recorded as Audit artifacts (types: quality, code) with status `issued`; the user reviews them at the Phase 6 release gate;
+- the RC package is published for the recorded version under the git-ignored `builds/<version>/` using the component scripts, its checksums verified, and its evidence recorded in the verification task; nothing of it is staged, committed, tagged, pushed, or uploaded, or the user explicitly waived packaging and the waiver is recorded.
 
 ### Boundaries
 
@@ -112,6 +130,9 @@ Phase 5 never:
 - approves or closes a release; Phase 6 does that;
 - inspects unchanged areas or the whole release; Phase 6 does the full release inspection;
 - runs the release review, release quality, code, or security audit, or final release tests; those belong to Phase 6;
+- packages code that has not passed verification;
+- commits, tags, pushes, uploads, or deploys a package; publication is local to `builds/<version>/` only;
+- overwrites or rebuilds an existing package version;
 - verifies around an incomplete task;
 - writes reports outside the verification task and the audit artifact.
 
@@ -122,6 +143,8 @@ Phase 5 never:
 - An acceptance criterion is ambiguous or unverifiable: stop and report; the criterion is fixed by its owner.
 - Unresolved finding without an owner: stop; a finding is never carried without an owner.
 - A reviewer discovers a requirement gap rather than an implementation defect: return to Phase 2.
+- The working tree is dirty or `builds/` is not git-ignored: stop; package only a committed, verified tree into an ignored directory.
+- A package build fails or a build script is missing: no package is published; the failure becomes task work.
 
 ### Open points
 

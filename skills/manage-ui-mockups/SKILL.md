@@ -183,10 +183,10 @@ After creation, summarize:
 
 ## Management commands
 
-- List: `ui-mockup list`
-- View: `ui-mockup view <MOCK-ID>`
-- Create: `ui-mockup create --task <TASK-ID> --spec <UI-ID> "<title>"`
-- Edit: `ui-mockup edit <MOCK-ID> --status approved` (or `deprecated`)
-- Deprecate: `ui-mockup deprecate <MOCK-ID>`
+- List: `papyrus ui-mockup list`
+- View: `papyrus ui-mockup view <MOCK-ID>`
+- Create: `papyrus ui-mockup create --task <TASK-ID> --spec <UI-ID> "<title>"`
+- Edit: `papyrus ui-mockup edit <MOCK-ID> --status approved` (or `deprecated`)
+- Deprecate: `papyrus ui-mockup deprecate <MOCK-ID>`
 
 Mockups start `pending`. Set `approved` only after explicit user approval. Never hand-edit metadata comments.

@@ -26,6 +26,7 @@ permission:
     implementation: allow
     tdd: allow
     alpine-js: allow
+    build-package-script: allow
     frontend-testing: allow
     frontend-style-audit: allow
 ---
@@ -43,6 +44,7 @@ Implement the assigned refined task completely with tests as a standalone web ap
 - `implementation` — the Phase 4 implementation procedure and evidence block.
 - `tdd` — red-green-refactor.
 - `alpine-js` — Alpine.js patterns, reactivity, stores, and fetch integration.
+- `build-package-script` — create or update `apps/webFrontend/scripts/build-package.sh` when a task asks for the component build script.
 - `frontend-testing` — unit and end-to-end testing for vanilla/Alpine JS.
 - `frontend-style-audit` — style, accessibility, and security audit.
 - `managed-records` — read the assigned task and linked context only.
@@ -51,7 +53,8 @@ Implement the assigned refined task completely with tests as a standalone web ap
 
 - Load `implementation` before every task, then the stack skills the task needs.
 - Implement the complete task scope. The task and its acceptance criteria are the contract.
-- Keep payloads light: vanilla JS and small libraries; no heavy framework, bundler, or build step unless explicitly requested.
+- Keep payloads light: vanilla JS and small libraries; no heavy framework, bundler, or build step unless explicitly requested. The packaging script only copies the static files and injects the version.
+- When a task asks for the component build script, implement `apps/webFrontend/scripts/build-package.sh` per `build-package-script`. It is the only build path the packaging step uses. If a deployable component has no script, report it; do not add unplanned scope or invent ad-hoc packaging commands.
 - Consume the backend only through REST; no database access.
 - Do not change task status, scope, acceptance criteria, dependencies, or ordinal.
 - Do not edit requirements, rules, glossary, domain model, architecture, specifications, UI, or mockups.

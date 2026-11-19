@@ -57,7 +57,7 @@ Every milestone uses the same ordered task kinds, in this order. Architecture an
 | 3 | Test design | `test-design` | Gherkin test cases for every changed requirement and business rule; done when the user verified them. | `test-manager` |
 | 4 | Refinement | `refinement` | Confirm all information for development is available and complete the task's refinement fields. | `task-refiner` |
 | 5 | Implementation | `implementation` | Code and automated tests, including the integration tests that implement the test cases. | `android-dev`, `backend-dev`, `frontend-dev`, or `rust-dev` |
-| 6 | Milestone verification | `milestone-verification` | Verify the increment against the milestone acceptance criteria and close the milestone. Not part of Phase 4 execution. | `quality-gatekeeper` |
+| 6 | Milestone verification | `milestone-verification` | Verify the increment against the milestone acceptance criteria, publish the versioned RC package, and close the milestone. Not part of Phase 4 execution. | `quality-gatekeeper` |
 
 Rules:
 
@@ -123,6 +123,7 @@ A plan is valid only when:
 - Refinement splits that change dependencies, ordinals, or milestone scope return to the planner.
 - Reordering or re-scoping an in-progress task requires the user's agreement first.
 - A failed release audit, a rejected finding, or a failed final build adds a **fix milestone** to the release: create it if missing, add only fix tasks scoped to what the release needs to become releasable, and assign each to the owning actor. The auditor who reported the finding defines the fix task's content.
+- A deployable component reported without a `scripts/build-package.sh` at packaging gets a task for the owning `*-dev` agent: in the milestone being verified in Phase 5, or in the fix milestone in Phase 6. The task asks for the script per `build-package-script`; nothing else is bundled into it.
 
 ## Priority change
 

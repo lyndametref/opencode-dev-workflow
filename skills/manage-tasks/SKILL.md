@@ -20,11 +20,11 @@ Tasks are created, read, updated, archived, and restored through the management 
 
 ## Commands
 
-- List: `task list [--status <status>] [--milestone <id>] [--release <id>] [--label <label>] [--search <text>] [--limit <n>]`
-- View: `task view <TASK-ID>`
-- Create: `task create "<title>" --description "<text>" --ac "<criterion>" --milestone <MS-ID> --ordinal <n> --depends-on <TASK-ID> --label <label> --reference <ref> --documentation <path> --type <type>`
-- Edit: `task edit <TASK-ID> --status <status> --title "<title>" --description "<text>" --ac "<criterion>" --depends-on <TASK-ID> --milestone <MS-ID> --ordinal <n> --label <label> --reference <ref> --documentation <path> --comment "<text>" --comment-author <agent>`
-- Archive/restore: `task archive <TASK-ID>`, `task restore <TASK-ID>`
+- List: `papyrus task list [--status <status>] [--milestone <id>] [--release <id>] [--label <label>] [--search <text>] [--limit <n>]`
+- View: `papyrus task view <TASK-ID>`
+- Create: `papyrus task create "<title>" --description "<text>" --ac "<criterion>" --milestone <MS-ID> --ordinal <n> --depends-on <TASK-ID> --label <label> --reference <ref> --documentation <path> --type <type>`
+- Edit: `papyrus task edit <TASK-ID> --status <status> --title "<title>" --description "<text>" --ac "<criterion>" --depends-on <TASK-ID> --milestone <MS-ID> --ordinal <n> --label <label> --reference <ref> --documentation <path> --comment "<text>" --comment-author <agent>`
+- Archive/restore: `papyrus task archive <TASK-ID>`, `papyrus task restore <TASK-ID>`
 
 ## Status values
 
@@ -45,7 +45,7 @@ Exact and case-sensitive: `ToDo`, `Initiated`, `Refined`, `Implemented`, `Valida
 
 ## Evidence
 
-Record fulfilment proof and review outcomes: `task edit <id> --comment "<text>" --comment-author <agent>`.
+Record fulfilment proof and review outcomes: `papyrus task edit <id> --comment "<text>" --comment-author <agent>`.
 
 ## References
 

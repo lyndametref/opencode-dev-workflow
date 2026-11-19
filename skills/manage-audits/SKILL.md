@@ -21,11 +21,11 @@ Audit records are created, read, updated, and deprecated through the management 
 
 ## Commands
 
-- List: `audit list`
-- View: `audit view <AUD-ID>`
-- Create: `audit create --title "<title>" --content "<report>" --audit-type <quality|code|security> --reference <MS/REL-ID> --label <label>`
-- Edit: `audit edit <AUD-ID> --title "<title>" --content "<report>" --audit-type <type> --label <label> --reference <ref>`
-- Deprecate/restore: `audit deprecate <AUD-ID>`, `audit restore <AUD-ID>`
+- List: `papyrus audit list`
+- View: `papyrus audit view <AUD-ID>`
+- Create: `papyrus audit create --title "<title>" --content "<report>" --audit-type <quality|code|security> --reference <MS/REL-ID> --label <label>`
+- Edit: `papyrus audit edit <AUD-ID> --title "<title>" --content "<report>" --audit-type <type> --label <label> --reference <ref>`
+- Deprecate/restore: `papyrus audit deprecate <AUD-ID>`, `papyrus audit restore <AUD-ID>`
 
 ## Rules
 

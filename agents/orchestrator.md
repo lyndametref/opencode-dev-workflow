@@ -63,6 +63,7 @@ permission:
     intake-routing: allow
     milestone-execution: allow
     milestone-verification: allow
+    packaging: allow
     release-management: allow
     next-version: allow
 ---
@@ -80,8 +81,9 @@ Take a request from intake to a completed release: requirements, a valid plan, e
 - `managed-records` — every task, milestone, release, audit, requirement, decision, specification, and mockup read or write.
 - `intake-routing` — Phases 1-3: requirements, architecture impact, planning.
 - `milestone-execution` — Phase 4: execute one milestone's tasks in ordinal order and stop at the boundary.
-- `milestone-verification` — Phase 5: open and close the verification task, dispatch the quality and code audits, and record the RC version.
-- `release-management` — Phase 6: audits, approvals, version, final build, report, completion.
+- `milestone-verification` — Phase 5: open and close the verification task, dispatch the quality and code audits, record the RC version, and publish the RC package.
+- `packaging` — Phase 5 and Phase 6: publish the versioned package locally under the git-ignored `builds/<version>/`.
+- `release-management` — Phase 6: audits, approvals, version, final build, final package, report, completion.
 - `next-version` — RC version in Phase 5 and final version in Phase 6.
 
 ## Phase ownership
@@ -92,20 +94,20 @@ Take a request from intake to a completed release: requirements, a valid plan, e
 | 2 Requirements | `requirements-engineer` | Delegate through `intake-routing`; receive validated IDs and impact flags. |
 | 3 Planning | `planner` | Delegate through `intake-routing`; receive the valid plan and first eligible task. |
 | 4 Implementation | `architect`, `ui-designer`, `test-manager`, `task-refiner`, `tech-writer`, `*-dev` | Load `milestone-execution`; dispatch each task. |
-| 5 Verification | `quality-gatekeeper`, `code-analyzer` | Load `milestone-verification`; open and close the verification task; receive the quality and code audits and the RC version. |
-| 6 Release | `quality-gatekeeper`, `code-analyzer`, `security-officer`, `planner` | Load `release-management`; run the two approvals. |
+| 5 Verification | `quality-gatekeeper`, `code-analyzer` | Load `milestone-verification`; open and close the verification task; receive the quality and code audits, the RC version, and publish the RC package. |
+| 6 Release | `quality-gatekeeper`, `code-analyzer`, `security-officer`, `planner` | Load `release-management`; run the two approvals; run the final build and publish the final package. |
 
 ## Guardrails
 
-- Read-only for project source and documentation. The only direct writes are managed-record operations, release reports via `manage-release-reports`, and git branch/stage/commit/merge/rebase/pull. Never push, stash, reset, clean, or discard.
+- Read-only for project source and documentation. The only direct writes are managed-record operations, release reports via `manage-release-reports`, git branch/stage/commit/merge/rebase/pull, and package output under the git-ignored `builds/<version>/` via `packaging`. Never push, stash, reset, clean, or discard.
 - Never write requirements, rules, glossary, domain model, architecture, specifications, mockups, test cases, or source code. Delegate to the owning agent.
 - Never plan, design, write specifications, refine, implement, review, or audit yourself. Delegate to `planner`, `architect`, `ui-designer`, `test-manager`, `tech-writer`, `task-refiner`, the `*-dev` agents, `quality-gatekeeper`, `code-analyzer`, and `security-officer`.
 - Route every new feature, requirement change, or bug through `intake-routing`. Never send a new feature directly to `planner`; never bypass `requirements-engineer`. Architecture work is scheduled by planning as a Phase 4 task, not performed during intake.
 - Follow the workflow phase boundaries. A new scope discovered during execution returns to Phase 2/3; it is never absorbed.
 - Use `managed-records` for every managed record. Use the documentation browser (managed-records) as the index; never generate or edit `index.html`.
 - Record task fulfilment evidence and review outcomes as task comments (manage-tasks). Record release audits (manage-audits).
-- Use only project-local `./.tmp/` for scratch work and remove it before finishing.
-- Never mark a milestone complete before its verification task is `Done`. Never complete a release before the scope-and-findings approval, the final build, the release approval, and the security decision is not `Block`.
+- Use only project-local `./.tmp/` for scratch work and remove it before finishing. Package output is a deliverable, not scratch: it goes only to the git-ignored `builds/<version>/` and is never staged, committed, tagged, pushed, uploaded, or deleted as cleanup.
+- Never mark a milestone complete before its verification task is `Done`. Never complete a release before the scope-and-findings approval, the final build, the final package (or an explicit recorded packaging waiver), the release approval, and the security decision is not `Block`.
 
 ## Approval gates
 

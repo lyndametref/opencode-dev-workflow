@@ -1,6 +1,6 @@
 ---
 name: release-management
-description: 'Inspect and close one release: verify milestones, run the release quality, code, and security audits, obtain the scope-and-findings and release approvals, choose the final version, run the final build, assemble the release report, and record completion. Implements Phase 6 of the orchestrator workflow.'
+description: 'Inspect and close one release: verify milestones, run the release quality, code, and security audits, obtain the scope-and-findings and release approvals, choose the final version, run the final build, publish the final package, assemble the release report, and record completion. Implements Phase 6 of the orchestrator workflow.'
 argument-hint: 'Provide a release ID or version (e.g. REL-001 or Release 1.2.0).'
 user-invocable: true
 disable-model-invocation: false
@@ -10,7 +10,7 @@ disable-model-invocation: false
 
 ## Outcome
 
-One release is inspected, audited, approved, versioned, built, reported, and marked complete. Every milestone is complete and verified; the release quality, code, and security audits are recorded; the user approved the scope and findings and then the release; the final build and tests passed; the release report exists; the `REL` record has the final version and a completion note.
+One release is inspected, audited, approved, versioned, built, packaged, reported, and marked complete. Every milestone is complete and verified; the release quality, code, and security audits are recorded; the user approved the scope and findings and then the release; the final build and tests passed; the final package is published locally under its version; the release report exists; the `REL` record has the final version and a completion note.
 
 ## When to use
 
@@ -21,7 +21,7 @@ Do not use this skill to verify a milestone again, fix a milestone, plan the rel
 
 ## Prerequisites
 
-- Load `managed-records`, `manage-release-reports`, and `next-version`.
+- Load `managed-records`, `manage-release-reports`, `next-version`, and `packaging`.
 - Read access to the repository, build files, tests, and release evidence.
 - Available subagents: `quality-gatekeeper`, `code-analyzer`, `security-officer`, `planner`, and the owning `*-dev` agents for fixes.
 
@@ -100,7 +100,20 @@ Run after the scope-and-findings approval and after the version is recorded:
 
 Record command, result, and counts. A failure creates fix work and returns to step 6; the release is not completed.
 
-### 8. Assemble the release report
+### 8. Publish the final package
+
+After the tests pass, load `packaging` and publish the final version. Milestone RC packages from Phase 5 are never reused as the release package; the release is built and packaged under its final version.
+
+- each deployable component is built by its own `<component-dir>/scripts/build-package.sh`, created and owned by the technology's `*-dev` agent; never use ad-hoc build commands;
+- build from the committed release tree and record the commit SHA;
+- write `builds/<version>/` with one archive per deployable component, `MANIFEST.txt`, and a `.sha256` per archive;
+- confirm `builds/` is git-ignored; nothing is staged, committed, tagged, pushed, uploaded, or deployed;
+- never overwrite an existing final version; a changed release needs the version decision revisited;
+- record the package evidence in the release report: version, commit SHA, component archives, paths, sizes, sha256.
+
+A package failure creates fix work and returns to step 6; nothing is published and the release is not completed. A deployable component without a build script gets a fix task in the fix milestone, owned by its `*-dev` agent. The user may waive packaging; record the waiver in the release report with its scope, reason, and timestamp (with timezone).
+
+### 9. Assemble the release report
 
 Create the report via `manage-release-reports` with status `draft`, containing:
 
@@ -109,6 +122,7 @@ Create the report via `manage-release-reports` with status `draft`, containing:
 - change log;
 - completed tasks and their requirement traceability;
 - final test results;
+- package evidence: final version, commit SHA, component archives, paths, sizes, and sha256, or the recorded packaging waiver;
 - per-milestone verification, and audit severity counts by type;
 - accepted risks with owners and follow-ups;
 - fix milestone and its fix tasks, if any;
@@ -117,14 +131,14 @@ Create the report via `manage-release-reports` with status `draft`, containing:
 
 Set status `issued` when the report is presented for release approval.
 
-### 9. Release approval and completion
+### 10. Release approval and completion
 
 Print the full release report and ask a short approval question. Do not embed the report in the question.
 
 - Withheld or changes requested: return the work to the owning milestones or the fix milestone; nothing is recorded as released.
 - Approved: set the report status `issued`, record completion (manage-releases) with the `released` label and a completion note, and report the released version, milestones, accepted risks, and follow-ups.
 
-Do not tag or push unless the user explicitly asks.
+Do not tag, push, or upload unless the user explicitly asks. Local publication under `builds/<version>/` is the only package output.
 
 ## Failure handling
 
@@ -136,6 +150,9 @@ Do not tag or push unless the user explicitly asks.
 | Security finding accepted | Document it with an owner and follow-up; the release proceeds. |
 | Scope or findings not approved | Fix tasks in the fix milestone; no final build. |
 | Final build or tests fail | Fix tasks in the fix milestone; rerun inspection, approval, and build after verification. |
+| Final package build fails | Fix tasks in the fix milestone; nothing is published; the release is not completed. |
+| A deployable component has no build script | Fix task in the fix milestone for the owning `*-dev` agent; packaging resumes after verification. |
+| Final package directory exists or is not git-ignored | Stop; the user decides the version and the ignore rules; a version is never overwritten. |
 | Release approval withheld | Return the work to the owning milestones or fix milestone; report the reason. |
 | Scope creep found | The user decides removal or a requirements change through Phase 2. |
 
@@ -149,7 +166,9 @@ This skill never:
 - records completion while a fix task is open or the fix milestone is unfinished;
 - records completion without a full release inspection and explicit approval;
 - runs the final build before the scope and findings are approved;
-- publishes, tags, or deploys unless the user explicitly asks.
+- commits, tags, pushes, uploads, or deploys a package; publication is local to `builds/<version>/` only;
+- overwrites or rebuilds an existing package version;
+- tags, uploads, or deploys unless the user explicitly asks.
 
 ## Stop conditions
 
@@ -157,6 +176,7 @@ This skill never:
 - A release audit fails: create fix work; no final build.
 - The user does not approve the scope or findings: create fix work; no final build.
 - Final build or tests fail: create fix work; the release is not completed.
+- The final package fails to build: create fix work; nothing is published and the release is not completed.
 - A security finding is neither accepted nor fixed: the release cannot complete.
 - Missing evidence for a project-wide criterion: stop; the owning milestone supplies it.
 - Release approval withheld: stop and report.
@@ -168,6 +188,7 @@ This skill never:
 - **Audits**: quality, code, security `AUD` IDs, verdicts, severity counts.
 - **Findings accepted/rejected**: owner and follow-up.
 - **Final build/tests**: commands, results, counts.
+- **Final package**: directory, component archives, sizes, sha256, commit SHA; or the recorded waiver.
 - **Release report**: path and status.
 - **Approvals**: scope/findings and release.
 - **Completion**: `released` label, version, note.
@@ -180,6 +201,7 @@ This skill never:
 - The user approved the scope and audit findings.
 - The final version is chosen and recorded on the release.
 - The final build and tests ran after the approval and passed.
+- The final package is published for the recorded version under `builds/<version>/` with checksums and evidence recorded, or the user waived packaging and the waiver is recorded.
 - Every security finding is accepted and documented, or fixed with the fix milestone finished.
 - Every fix task is `Done` and the fix milestone is verified.
 - Accepted risks and follow-ups have owners.
@@ -190,4 +212,4 @@ This skill never:
 
 Release state is derived from the `REL` record, its milestones, their verification tasks, the audits, and the release report.
 
-On re-invocation, re-read all of them, skip completed steps, and rerun any check whose evidence is stale. If the release already has the `released` label, report it instead of recording completion again.
+On re-invocation, re-read all of them, skip completed steps, and rerun any check whose evidence is stale. If the release already has the `released` label, report it instead of recording completion again. An existing `builds/<version>/` is never overwritten; a rebuilt release needs a new final version.

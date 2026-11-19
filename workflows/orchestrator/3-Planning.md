@@ -63,7 +63,7 @@ Every milestone uses the same ordered task kinds, in this order, with optional a
 | 3     | Test design                    | Write the Gherkin test cases for the changed requirements and business rules; done when every changed requirement or rule has its test cases and the user has verified them | `test-manager`       |
 | 4     | Refinement                     | Confirm that all information needed for development is available, and complete the task's refinement fields | `task-refiner`       |
 | 5     | Implementation                 | Development and automated tests, implementing the code and the test cases                          | Any `*-dev` agent    |
-| 6     | Milestone verification         | Verify the increment against the milestone acceptance criteria and close the milestone              | `quality-gatekeeper` |
+| 6     | Milestone verification         | Verify the increment against the milestone acceptance criteria, publish the versioned RC package, and close the milestone | `quality-gatekeeper` |
 
 Rules:
 
@@ -134,7 +134,7 @@ Refinement may split a task within the plan. Any split that changes dependencies
 
 Reordering or re-scoping an in-progress task requires the user's agreement first.
 
-A failed release audit adds a **fix milestone** to the release: the planner creates the fix milestone and its fix tasks, scoped only to what the release needs to become releasable.
+A failed release audit adds a **fix milestone** to the release: the planner creates the fix milestone and its fix tasks, scoped only to what the release needs to become releasable. A deployable component reported without a `scripts/build-package.sh` during packaging gets a task for its `*-dev` agent, in the milestone being verified or in the fix milestone.
 
 ### Priority change
 

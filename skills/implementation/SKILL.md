@@ -40,7 +40,7 @@ If any prerequisite is missing, stop and report; do not invent it.
 5. **Write failing tests** — write or update low-level tests and the integration tests that implement the approved test cases. Tests come before implementation.
 6. **Implement the complete scope** — implement the smallest change that fulfils every acceptance criterion and test case. Do not stop at a partial scope.
 7. **Refactor** — improve clarity and maintainability without changing the required behavior or breaking boundaries.
-8. **Run the checks** — build, full test suite, lint/static checks, and the stack's security checks. Reconcile the results against every acceptance criterion.
+8. **Run the checks** — build, full test suite, lint/static checks, and the stack's security checks. Reconcile the results against every acceptance criterion. When the task asks for the component build script, follow `build-package-script` and run its self-check into `./.tmp/`.
 9. **Commit** — commit the changes on the task branch. Do not push, stash, reset, clean, or discard.
 10. **Report evidence** — return the evidence block below. Do not change the task status; the orchestrator owns status and acceptance.
 
@@ -53,6 +53,7 @@ If any prerequisite is missing, stop and report; do not invent it.
 - **Tests run**: command, pass/fail, counts, and test files/classes added or updated.
 - **Static checks**: lint/compile result.
 - **Security checks**: input validation, authorization, data exposure, and other relevant mitigations.
+- **Build package script**: path, contract self-check result, and produced artifacts, when the task provides one.
 - **NFR coverage**: referenced NFRs and how they are addressed, or `none`.
 - **Architecture/spec conformance**: any deviation and its resolution.
 - **Branch and commit**.
@@ -65,6 +66,7 @@ If any prerequisite is missing, stop and report; do not invent it.
 - Do not edit requirements, rules, glossary, domain model, architecture, Technical specification, UI specifications, or mockups.
 - Stay inside the application paths allowed for the stack.
 - Keep the build green and all tests passing.
+- A build script task produces `<component-dir>/scripts/build-package.sh` that satisfies the contract; the script is committed as source and never weakened to make packaging pass.
 - Be security-aware: validate inputs, avoid injection, enforce authorization, and never expose sensitive data in responses, logs, errors, or client storage.
 - Do not create scratch files outside `./.tmp/`; remove them before finishing.
 
