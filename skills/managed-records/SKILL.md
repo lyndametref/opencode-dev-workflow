@@ -24,6 +24,23 @@ Full syntax, JSON shapes, and caveats: `skills/managed-records/references/REFERE
 
 Help about papyrus is available with `papyrus --help`
 
+## Multiline input
+
+Papyrus reads multiline field values from stdin. Pass `-` for the option and feed the value with a quoted heredoc; never inline multiline text.
+
+```bash
+papyrus audit create --title "Quality audit MS-001" \
+  --audit-type quality --reference MS-001 --content - <<'EOF'
+## Findings
+- low: duplicate validation in the checkout handler
+EOF
+```
+
+- One stdin-consuming option per command. For more multiline fields, run a separate `edit` with its own heredoc.
+- The option must document `Use "-" to read multiline text from standard input`. Fields without it stay single-line (for example `release --description`).
+- Quote the heredoc delimiter (`<<'EOF'`) so `$`, backticks, and quotes stay literal.
+- `printf '%s\n' "line one" "line two" | papyrus ... --description -` is the fallback when a heredoc is impractical.
+
 ## Notes
 
 - For grouped documents: create the group before creating a requirement or NFR in it.

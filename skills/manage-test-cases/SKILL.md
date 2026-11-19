@@ -27,7 +27,7 @@ Papyrus owns the `TC` identifier, filename, and metadata. Do not choose an ID or
 | Field        | Content                                                              |
 | ------------ | -------------------------------------------------------------------- |
 | Title        | Short scenario title.                                                |
-| Description  | One Gherkin scenario and its traceability, supplied via `--description` or `--editor`. |
+| Description  | One Gherkin scenario and its traceability, supplied via `--description <text|->` or `--editor`. |
 | References   | Covered requirement and business rule IDs, supplied with `--reference`. |
 | Status       | `draft`, `approved`, `verified`, or `archived`.                      |
 
@@ -54,12 +54,27 @@ THEN <observable, testable outcome>
 
 ## Commands
 
-- Create: `papyrus test-case create "<title>" --description "<gherkin>" --reference <REQ-ID> [--reference <BR-ID>] [--label <label>]`
+- Create: `papyrus test-case create "<title>" --description <gherkin|-> --reference <REQ-ID> [--reference <BR-ID>] [--label <label>]`
 - List: `papyrus test-case list`
 - View: `papyrus test-case view <TC-ID>`
-- Edit: `papyrus test-case edit <TC-ID> [--title <title>] [--description <gherkin>] [--reference <ref>] [--editor]`
+- Edit: `papyrus test-case edit <TC-ID> [--title <title>] [--description <gherkin|->] [--reference <ref>] [--editor]`
 - Status: `papyrus test-case status <TC-ID> <value>`
 - Archive: `papyrus test-case archive <TC-ID>`
+
+Gherkin is multiline: pass `-` and the scenario on stdin.
+
+```bash
+papyrus test-case create "<title>" --reference REQ-001.001 --description - <<'EOF'
+## Scenario: <title>
+
+GIVEN <context>
+WHEN <action>
+THEN <outcome>
+
+## Traceability
+- Requirement: REQ-001.001
+EOF
+```
 
 ## Status values
 

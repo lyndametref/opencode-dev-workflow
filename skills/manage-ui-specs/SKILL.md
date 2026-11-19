@@ -22,8 +22,16 @@ UI specification entries are created, read, updated, and deprecated through the 
 
 - List: `papyrus ui-spec list`
 - View: `papyrus ui-spec view <UI-ID>`
-- Create: `papyrus ui-spec create "<title>" --view "<view>" --description "<description>" --reference <REQ-ID>`
-- Edit: `papyrus ui-spec edit <UI-ID> --view "<view>" --description "<description>" --reference <REQ-ID>`
+- Create: `papyrus ui-spec create "<title>" --view "<view>" --description <text|-> --reference <REQ-ID>`
+- Edit: `papyrus ui-spec edit <UI-ID> --view "<view>" --description <text|-> --reference <REQ-ID>`
+
+Multiline content uses `--description -`:
+```bash
+papyrus ui-spec create "<title>" --view "<view>" --reference <REQ-ID> --description - <<'EOF'
+## Layout
+...
+EOF
+```
 - Deprecate: `papyrus ui-spec deprecate <UI-ID>`
 
 ## Rules

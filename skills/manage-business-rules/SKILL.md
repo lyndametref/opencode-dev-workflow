@@ -60,15 +60,21 @@ Papyrus owns the record format. Do not create or edit business-rule files direct
 
 4. **Create or update through Papyrus**:
    ```bash
-   papyrus rule create "<Title>" \
-     --description "<rule>" \
+   papyrus rule create "<Title>" --description - \
      --rationale "Based on REQ-xxx.yyy — <reason>" \
      --applicability "<when and where>" \
-     --requirement REQ-xxx.yyy
-   papyrus rule edit <BR-ID> --title "<title>" --description "<rule>" \
-     --requirement REQ-xxx.yyy
+     --requirement REQ-xxx.yyy <<'EOF'
+   <rule statement>
+
+   Exceptions: <exceptions or none>
+   Example: <worked example>
+   EOF
+   papyrus rule edit <BR-ID> --title "<title>" --description - \
+     --requirement REQ-xxx.yyy <<'EOF'
+   <updated rule statement>
+   EOF
    ```
-   Ensure the description is a single precise statement, the rationale references at least one requirement, and the applicability states when and where the rule applies.
+   Pass `-` and a heredoc for the multiline description; `--rationale` and `--applicability` are single-line. Ensure the description is a single precise statement, the rationale references at least one requirement, and the applicability states when and where the rule applies.
 
    Papyrus 0.1.0 has no `--rationale` or `--applicability` flag on `rule edit`. Change those fields with `papyrus rule edit <BR-ID> --editor` when an interactive editor is available, or deprecate the record and create a corrected replacement that references it.
 

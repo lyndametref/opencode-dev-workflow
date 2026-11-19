@@ -26,10 +26,10 @@ Do not use this skill for technical/acronym glossary maintenance unrelated to bu
 
 - Papyrus owns glossary records and assigns IDs automatically.
 - Create, read, and update through the Papyrus CLI only:
-  - `papyrus glossary create --term "<term>" --definition "<definition>"`
+  - `papyrus glossary create --term "<term>" --definition <definition|->`
   - `papyrus glossary list`
   - `papyrus glossary view <GLO-ID>`
-  - `papyrus glossary edit <GLO-ID> --term "<term>" --definition "<definition>"`
+  - `papyrus glossary edit <GLO-ID> --term "<term>" --definition <definition|->`
   - `papyrus glossary deprecate <GLO-ID>` / `papyrus glossary restore <GLO-ID>`
   - `papyrus search "<term>"` (search the managed corpus)
 - The browsable index is `papyrus browser`. Do not create or edit `index.html`.
@@ -59,15 +59,15 @@ Papyrus stores a **term** and a **definition**. Include supporting context in th
 2. **Baseline search** — Use `papyrus glossary list`, `papyrus glossary view <GLO-ID>`, and `papyrus search "<term>"` to find existing uses, aliases, abbreviations, and near-synonyms.
 
 3. **Choose action branch**:
-   - `add`: `papyrus glossary create --term "<term>" --definition "<definition>"`.
-   - `update`: `papyrus glossary edit <GLO-ID> --definition "<definition>"` while preserving term identity.
+   - `add`: `papyrus glossary create --term "<term>" --definition - <<'EOF'` with the definition on stdin.
+   - `update`: `papyrus glossary edit <GLO-ID> --definition - <<'EOF'` with the new definition on stdin, preserving term identity.
    - `merge`: keep one preferred term; deprecate the duplicates with `papyrus glossary deprecate`; mention former aliases in the preferred definition.
    - `rename`: `papyrus glossary edit <GLO-ID> --term "<new term>"`; the ID stays stable. Update references.
 
 4. **Edit glossary records** — Keep definitions short, explicit, and non-circular. Prefer one-sentence definitions plus one context clause when needed. Definitions do not include business rules.
 
 5. **Propagate reference updates** — Update impacted Papyrus records through their owning commands:
-   - `papyrus req` / `papyrus nfreq`
+   - `papyrus req` / `papyrus nfr`
    - `papyrus rule`
    - `papyrus tech-spec` / `papyrus ui-spec`
    - `papyrus task`

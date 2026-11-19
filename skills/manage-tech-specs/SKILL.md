@@ -22,8 +22,16 @@ Technical specification sections are created, read, updated, and deprecated thro
 
 - List: `papyrus tech-spec list`
 - View: `papyrus tech-spec view <TECH-ID>`
-- Create: `papyrus tech-spec create "<title>" --description "<description>" --reference <REQ-ID>`
-- Edit: `papyrus tech-spec edit <TECH-ID> --title "<title>" --description "<description>" --reference <REQ-ID>`
+- Create: `papyrus tech-spec create "<title>" --description <text|-> --reference <REQ-ID>`
+- Edit: `papyrus tech-spec edit <TECH-ID> --title "<title>" --description <text|-> --reference <REQ-ID>`
+
+Multiline content uses `--description -`:
+```bash
+papyrus tech-spec create "<title>" --reference <REQ-ID> --description - <<'EOF'
+## Behavior
+...
+EOF
+```
 - Deprecate: `papyrus tech-spec deprecate <TECH-ID>`
 
 ## Rules

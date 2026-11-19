@@ -42,6 +42,8 @@ A Papyrus decision record has these fields:
 - **Consequences** — positive and negative consequences, trade-offs, and migration notes.
 - **References** — requirement IDs and related records.
 
+Multiline body fields (`--decision`, `--context`, `--consequences`) are passed as `-` with the text on stdin; one stdin field per command.
+
 ### Status lifecycle
 
 - `Proposed` — initial state, open for discussion.
@@ -66,13 +68,19 @@ Every procedure ends by confirming the record is visible through `papyrus decisi
 ### 1. Create a new ADR (Proposed)
 
 1. **Resolve the title** — short, descriptive noun phrase.
-2. **Create through Papyrus**:
+2. **Create through Papyrus** — one multiline field per command; the decision first, then context and consequences by `edit`:
    ```bash
-   papyrus decision create "<Title>" --decision-type adr \
-     --context "<problem, forces, options>" \
-     --decision "<decision>" \
-     --consequences "<positive, negative, migration>" \
-     --reference <REQ-ID>
+   papyrus decision create "<Title>" --decision-type adr --reference <REQ-ID> --decision - <<'EOF'
+   <the decision>
+   EOF
+
+   papyrus decision edit <ADR-ID> --context - <<'EOF'
+   <problem, forces, options>
+   EOF
+
+   papyrus decision edit <ADR-ID> --consequences - <<'EOF'
+   <positive, negative, migration>
+   EOF
    ```
 3. **Confirm status** — the new record is `Proposed`; if not, set it with `papyrus decision edit <ADR-ID> --status Proposed`.
 4. **Confirm visibility** with `papyrus decision list`.
@@ -105,10 +113,18 @@ Every procedure ends by confirming the record is visible through `papyrus decisi
 
 ### 5. Revise a Proposed ADR (Before Final Status)
 
-1. Any field may be edited while the status is `Proposed`:
+1. Any field may be edited while the status is `Proposed`. Use one stdin field per command:
    ```bash
-   papyrus decision edit <ADR-ID> --title "<title>" --context "<context>" \
-     --decision "<decision>" --consequences "<consequences>" --reference <ref>
+   papyrus decision edit <ADR-ID> --title "<title>" --reference <ref>
+   papyrus decision edit <ADR-ID> --decision - <<'EOF'
+   <decision>
+   EOF
+   papyrus decision edit <ADR-ID> --context - <<'EOF'
+   <context>
+   EOF
+   papyrus decision edit <ADR-ID> --consequences - <<'EOF'
+   <consequences>
+   EOF
    ```
 2. **Confirm visibility** with `papyrus decision list`.
 

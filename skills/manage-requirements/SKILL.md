@@ -25,8 +25,8 @@ Do not use this skill for implementation logic (no Kotlin, SQL, Java, etc.), tec
 
 Papyrus creates and owns the record format. Do not create or edit requirement files directly.
 
-- **Groups** — `papyrus req create-group --title "<Group title>" --description "<description>" --story "<user story>"`.
-- **Atomic requirements** — `papyrus req create "<title>" --group <REQ-GROUP-ID> --story "<user story>" --description "<description and acceptance criteria>"`.
+- **Groups** — `papyrus req create-group --title "<Group title>" --description "<description>" --story "<user story>"`. Group descriptions are single-line.
+- **Atomic requirements** — `papyrus req create "<title>" --group <REQ-GROUP-ID> --story "<user story>" --description <text|->`.
 
 A requirement's content should carry:
 
@@ -55,14 +55,19 @@ The browsable index is `papyrus browser`. Use `papyrus req list` / `papyrus req 
 
 3. **Identify required changes** — Determine what needs to be created, updated, or reorganized.
 
-4. **For creation** — Create or confirm the group first, then the atomic requirement:
+4. **For creation** — Create or confirm the group first, then the atomic requirement. The group description stays inline; the requirement description is multiline and comes from stdin:
    ```bash
    papyrus req create-group --title "<Group>" --description "<scope>" --story "<story>"
-   papyrus req create "<Title>" --group <REQ-GROUP-ID> --story "<story>" \
-     --description "<description; Criticality: Must have; Acceptance Criteria: ...>"
+   papyrus req create "<Title>" --group <REQ-GROUP-ID> --story "<story>" --description - <<'EOF'
+   <description>
+
+   Criticality: Must have
+   Acceptance Criteria:
+   - <criterion>
+   EOF
    ```
 
-5. **For updates** — Use `papyrus req edit <ID> --title ... --story ... --description ... --label ... --reference ...`. Papyrus has no group-change flag; if a requirement must move to another group, do not renumber it. Deprecate the old record and create a replacement referencing it, or ask the user.
+5. **For updates** — Use `papyrus req edit <ID> --title ... --story ... --description <text|-> --label ... --reference ...`; pass `--description -` for multiline. Papyrus has no group-change flag; if a requirement must move to another group, do not renumber it. Deprecate the old record and create a replacement referencing it, or ask the user.
 
 6. **For consistency checks** — Check for conflicts, gaps, and untraceable claims across the corpus. Report findings before changing meaning.
 

@@ -30,6 +30,7 @@ Releases are created, read, updated, assigned milestones, and completed through 
 - A release is a first-class `REL` record. Assign milestones with `papyrus milestone edit <MS-ID> --release <REL-ID>`.
 - An open release may carry a working title such as `Release (pending version)`; Phase 6 renames it to `Release <version>`.
 - Record completion by adding the label `released` and a completion note to the description.
+- Release descriptions do not read stdin; keep them single-line. Put longer release notes in the release report, not the `REL` description.
 - Never edit managed release files directly.
 
 ## References

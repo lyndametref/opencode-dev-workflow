@@ -28,15 +28,28 @@ Content and metadata are Papyrus-owned and supplied through the request commands
 
 - List: `papyrus request list`
 - View: `papyrus request view <RE-ID>`
-- Create: `papyrus request create --title "<title>" --content "<body>" --request-type <category> [--label <label>] [--reference <ref>]`
-- Edit: `papyrus request edit <RE-ID> [--title <title>] [--content <body>] [--request-type <category>] [--label <label>] [--reference <ref>] [--editor]`
+- Create: `papyrus request create --title "<title>" --content <body|-> --request-type <category> [--label <label>] [--reference <ref>]`
+- Edit: `papyrus request edit <RE-ID> [--title <title>] [--content <body|->] [--request-type <category>] [--label <label>] [--reference <ref>] [--editor]`
 - Status: `papyrus request status <RE-ID> <value>`
 - Archive: `papyrus request archive <RE-ID>`
 - Delete: `papyrus request delete <RE-ID> [--force]`
 
+The request body is multiline: pass `-` and the body on stdin.
+
+```bash
+papyrus request create --title "<title>" --request-type enhancement --content - <<'EOF'
+## Items
+### Item 1
+- Statement: ...
+- Requester and context: ...
+EOF
+```
+
 ## Rules
 
 - Papyrus owns the `RE` ID, metadata, and archive state. Never edit managed request files directly.
+- The installed Papyrus must provide the `request` command; confirm with `papyrus request --help`. If it does not, stop and report the version gap. Never store requests as plain Markdown or substitute another command.
+- Request bodies are multiline: pass `--content -` and the body on stdin.
 - Only `status` and `references` may be updated by the actor that owns the step recording them. All other fields belong to `key-account-manager`.
 - Use only project-local `./.tmp/` for scratch work and remove it before finishing.
 

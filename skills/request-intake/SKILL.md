@@ -116,7 +116,7 @@ Create the artifact only when all hold:
 - `open` or `parked` is agreed with the requester;
 - the requester confirms the content is faithful.
 
-Then create the record via `manage-requests` (`create`); for a multi-line body use its `edit` operation. Never persist before confirmation.
+Then create the record via `manage-requests` (`create`); the body is multiline, so pass `--content -` and the Markdown body on stdin. Never persist before confirmation.
 
 ### 7. List and reactivate
 

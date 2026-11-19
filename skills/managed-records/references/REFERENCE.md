@@ -25,14 +25,32 @@ papyrus [--json] [--dir <path>] [--config <file>] [--no-color] <command>
 
 The browser is the documentation index. Existing generated `index.html` files are not used.
 
+## Multiline input
+
+Papyrus reads multiline values from stdin when the option documents `Use "-" to read multiline text from standard input`. Pass `-` and a quoted heredoc:
+
+```bash
+papyrus milestone create "Checkout" --release REL-001 --description - <<'EOF'
+Customers complete checkout in three steps.
+- Address
+- Payment
+- Confirmation
+EOF
+```
+
+- One stdin-consuming option per command; use a separate `edit` for another field.
+- Keep single-line values inline.
+- Fields without stdin support stay single-line: `release --description`, `req create-group --description`, `rule --rationale` / `--applicability`, `task --ac` / `--comment`, and all `--story` flags.
+- `printf '%s\n' "line one" "line two" | papyrus ... --description -` works when a heredoc is impractical.
+
 ## Tasks
 
 | Action | Command |
 |---|---|
 | List | `papyrus task list [--status <status>] [--milestone <id>] [--release <id>] [--label <label>] [--assignee <name>] [--search <text>] [--limit <n>] [--sort <field>]` |
 | View | `papyrus task view <TASK-ID>` |
-| Create | `papyrus task create "<title>" [--description <text>] [--ac <text>] [--milestone <id>] [--ordinal <n>] [--depends-on <TASK-ID>] [--label <label>] [--reference <ref>] [--documentation <path>] [--type <type>] [--assignee <name>]` |
-| Edit | `papyrus task edit <TASK-ID> [--title] [--description] [--ac] [--status] [--milestone] [--no-milestone] [--ordinal] [--depends-on] [--label] [--reference] [--documentation] [--type] [--assignee] [--comment] [--comment-author] [--editor]` |
+| Create | `papyrus task create "<title>" [--description <text\|->] [--ac <text>] [--milestone <id>] [--ordinal <n>] [--depends-on <TASK-ID>] [--label <label>] [--reference <ref>] [--documentation <path>] [--type <type>] [--assignee <name>]` |
+| Edit | `papyrus task edit <TASK-ID> [--title] [--description <text\|->] [--ac] [--status] [--milestone] [--no-milestone] [--ordinal] [--depends-on] [--label] [--reference] [--documentation] [--type] [--assignee] [--comment] [--comment-author] [--editor]` |
 | Archive | `papyrus task archive <TASK-ID>` |
 | Restore | `papyrus task restore <TASK-ID>` |
 | Delete | `papyrus task delete <TASK-ID>` |
@@ -60,7 +78,7 @@ The browser is the documentation index. Existing generated `index.html` files ar
 - There is no `priority` field.
 - Use `ordinal` for execution order. Lower runs first.
 - `dependencies` contains direct dependency IDs.
-- `--ac` adds acceptance criteria; there is no check/uncheck flag.
+- `--ac` adds acceptance criteria; there is no check/uncheck flag. `--ac` and `--comment` are single-line; `--description` accepts `-` for multiline stdin.
 - There are no notes, plan, or final-summary fields. Use comments for evidence.
 - `task view --json` returns `content` (full Markdown, including acceptance criteria) and `metadata`.
 
@@ -96,8 +114,8 @@ papyrus --json task list \
 |---|---|
 | List | `papyrus milestone list` |
 | View | `papyrus milestone view <MS-ID>` |
-| Create | `papyrus milestone create "<title>" [--description <text>] [--release <REL-ID>] [--label <label>] [--reference <ref>]` |
-| Edit | `papyrus milestone edit <MS-ID> [--title] [--description] [--release] [--no-release] [--label] [--reference]` |
+| Create | `papyrus milestone create "<title>" [--description <text\|->] [--release <REL-ID>] [--label <label>] [--reference <ref>]` |
+| Edit | `papyrus milestone edit <MS-ID> [--title] [--description <text\|->] [--release] [--no-release] [--label] [--reference]` |
 | Archive | `papyrus milestone archive <MS-ID>` |
 | Delete | `papyrus milestone delete <MS-ID>` |
 
@@ -110,7 +128,9 @@ A milestone has a `release` field. Assign it with `--release`. Milestones have n
 | List | `papyrus release list` |
 | View | `papyrus release view <REL-ID>` |
 | Create | `papyrus release create "<title>" [--description <text>] [--label <label>] [--reference <ref>]` |
-| Edit | `papyrus release edit <REL-ID> [--title] [--description] [--label] [--reference]` |
+| Edit | `papyrus release edit <REL-ID> [--title] [--description <text>] [--label] [--reference]` |
+
+Release descriptions do not read stdin; keep them single-line.
 
 A release is a first-class `REL` record. It has no status field. Model it as:
 
@@ -126,47 +146,47 @@ A release is a first-class `REL` record. It has no status field. Model it as:
 | Action | Command |
 |---|---|
 | Create group | `papyrus req create-group --title "<title>" [--description <text>] [--story <text>]` |
-| Create requirement | `papyrus req create "<title>" --group <REQ-GROUP-ID> [--story <text>] [--description <text>]` |
+| Create requirement | `papyrus req create "<title>" --group <REQ-GROUP-ID> [--story <text>] [--description <text\|->]` |
 | List | `papyrus req list` |
 | View | `papyrus req view <REQ-ID>` |
-| Edit | `papyrus req edit <REQ-ID> [--title] [--story] [--description] [--label] [--reference] [--editor]` |
+| Edit | `papyrus req edit <REQ-ID> [--title] [--story] [--description <text\|->] [--label] [--reference] [--editor]` |
 | Deprecate / restore | `papyrus req deprecate <REQ-ID>` / `papyrus req restore <REQ-ID>` |
-| Create NFR | `papyrus nfreq create "<title>" --group <NFR-GROUP-ID> [--description <text>]` |
-| Create NFR group | `papyrus nfreq create-group --title "<title>" [--description <text>]` |
-| List / view / edit NFRs | `papyrus nfreq list`, `papyrus nfreq view <NFR-ID>`, `papyrus nfreq edit <NFR-ID> ...` |
+| Create NFR | `papyrus nfr create "<title>" --group <NFR-GROUP-ID> [--description <text\|->]` |
+| Create NFR group | `papyrus nfr create-group --title "<title>" [--description <text>]` |
+| List / view / edit NFRs | `papyrus nfr list`, `papyrus nfr view <NFR-ID>`, `papyrus nfr edit <NFR-ID> ...` |
 
 Create the group first; otherwise Papyrus returns `group not found`.
 
-Requirements and NFRs have no acceptance-criteria flag. Put the criteria in `--description`, or use `--editor` when an interactive editor is appropriate.
+Requirements and NFRs have no acceptance-criteria flag. Put the criteria in `--description` (use `--description -` for multiline), or use `--editor` when an interactive editor is appropriate.
 
 ## Business Rules
 
 | Action | Command |
 |---|---|
-| Create | `papyrus rule create "<title>" --description "<rule>" --rationale "<why>" --applicability "<when and where>" [--requirement <REQ-ID>] [--label <label>] [--reference <ref>]` |
+| Create | `papyrus rule create "<title>" --description "<rule\|->" --rationale "<why>" --applicability "<when and where>" [--requirement <REQ-ID>] [--label <label>] [--reference <ref>]` |
 | List | `papyrus rule list` |
 | View | `papyrus rule view <BR-ID>` |
-| Edit | `papyrus rule edit <BR-ID> [--title] [--description] [--requirement <REQ-ID>] [--no-requirement [<REQ-ID>]] [--label] [--reference] [--editor]` |
+| Edit | `papyrus rule edit <BR-ID> [--title] [--description "<rule\|->"] [--requirement <REQ-ID>] [--no-requirement [<REQ-ID>]] [--label] [--reference] [--editor]` |
 | Deprecate / restore | `papyrus rule deprecate <BR-ID>` / `papyrus rule restore <BR-ID>` |
 
 ## Glossary
 
 | Action | Command |
 |---|---|
-| Create | `papyrus glossary create --term "<term>" --definition "<definition>" [--label <label>] [--reference <ref>]` |
+| Create | `papyrus glossary create --term "<term>" --definition "<definition\|->" [--label <label>] [--reference <ref>]` |
 | List | `papyrus glossary list` |
 | View | `papyrus glossary view <GLO-ID>` |
-| Edit | `papyrus glossary edit <GLO-ID> [--term] [--definition] [--label] [--reference] [--editor]` |
+| Edit | `papyrus glossary edit <GLO-ID> [--term] [--definition "<definition\|->"] [--label] [--reference] [--editor]` |
 | Deprecate / restore | `papyrus glossary deprecate <GLO-ID>` / `papyrus glossary restore <GLO-ID>` |
 
 ## Decision Records
 
 | Action | Command |
 |---|---|
-| Create | `papyrus decision create "<title>" [--decision-type adr\|bdr] [--decision <text>] [--context <text>] [--consequences <text>] [--label <label>] [--reference <ref>]` |
+| Create | `papyrus decision create "<title>" [--decision-type adr\|bdr] [--decision <text\|->] [--context <text\|->] [--consequences <text\|->] [--label <label>] [--reference <ref>]` |
 | List | `papyrus decision list` |
 | View | `papyrus decision view <ADR-ID>` |
-| Edit | `papyrus decision edit <ADR-ID> [--title] [--decision] [--context] [--consequences] [--status <status>] [--superseded-by <ADR-ID>] [--label] [--reference]` |
+| Edit | `papyrus decision edit <ADR-ID> [--title] [--decision <text\|->] [--context <text\|->] [--consequences <text\|->] [--status <status>] [--superseded-by <ADR-ID>] [--label] [--reference]` |
 | Archive | `papyrus decision archive <ADR-ID>` |
 
 Decision statuses used by this workflow: `Proposed`, `Accepted`, `Refused`, `Superseded`, `Deprecated`. Check the project convention if unsure.
@@ -175,14 +195,14 @@ Decision statuses used by this workflow: `Proposed`, `Accepted`, `Refused`, `Sup
 
 | Action | Command |
 |---|---|
-| Create UI spec | `papyrus ui-spec create "<title>" --view "<view>" --description "<text>" [--label <label>] [--reference <ref>]` |
-| List / view / edit UI specs | `papyrus ui-spec list`, `papyrus ui-spec view <UI-ID>`, `papyrus ui-spec edit <UI-ID> --view ... --description ... [--editor]` |
+| Create UI spec | `papyrus ui-spec create "<title>" --view "<view>" --description "<text\|->" [--label <label>] [--reference <ref>]` |
+| List / view / edit UI specs | `papyrus ui-spec list`, `papyrus ui-spec view <UI-ID>`, `papyrus ui-spec edit <UI-ID> --view ... --description "<text\|->" [--editor]` |
 | Deprecate / restore UI spec | `papyrus ui-spec deprecate <UI-ID>` / `papyrus ui-spec restore <UI-ID>` |
-| Create tech spec | `papyrus tech-spec create "<title>" --description "<text>" [--label <label>] [--reference <ref>]` |
-| List / view / edit tech specs | `papyrus tech-spec list`, `papyrus tech-spec view <TECH-ID>`, `papyrus tech-spec edit <TECH-ID> --title ... --description ... [--editor]` |
+| Create tech spec | `papyrus tech-spec create "<title>" --description "<text\|->" [--label <label>] [--reference <ref>]` |
+| List / view / edit tech specs | `papyrus tech-spec list`, `papyrus tech-spec view <TECH-ID>`, `papyrus tech-spec edit <TECH-ID> --title ... --description "<text\|->" [--editor]` |
 | Deprecate / restore tech spec | `papyrus tech-spec deprecate <TECH-ID>` / `papyrus tech-spec restore <TECH-ID>` |
 
-The planning roadmap is stored as a technical specification titled `Feature Roadmap` and updated with `papyrus tech-spec edit <TECH-ID> --description "<roadmap>"`.
+The planning roadmap is stored as a technical specification titled `Feature Roadmap` and updated with `papyrus tech-spec edit <TECH-ID> --description -` and the roadmap on stdin.
 
 ## UI Mockups
 
@@ -200,10 +220,10 @@ Mockups start as `pending`. Set `--status approved` after explicit user approval
 
 | Action | Command |
 |---|---|
-| Create | `papyrus audit create --title "<title>" --content "<report>" [--audit-type <type>] [--label <label>] [--reference <ref>]` |
+| Create | `papyrus audit create --title "<title>" --content "<report\|->" [--audit-type <type>] [--label <label>] [--reference <ref>]` |
 | List | `papyrus audit list` |
 | View | `papyrus audit view <AUD-ID>` |
-| Edit | `papyrus audit edit <AUD-ID> [--title] [--content] [--audit-type] [--label] [--reference] [--editor]` |
+| Edit | `papyrus audit edit <AUD-ID> [--title] [--content "<report\|->"] [--audit-type] [--label] [--reference] [--editor]` |
 | Deprecate / restore | `papyrus audit deprecate <AUD-ID>` / `papyrus audit restore <AUD-ID>` |
 
 The security officer reports findings; the orchestrator records the report as an audit record referencing the release.

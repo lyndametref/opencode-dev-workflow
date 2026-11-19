@@ -22,8 +22,8 @@ Tasks are created, read, updated, archived, and restored through the management 
 
 - List: `papyrus task list [--status <status>] [--milestone <id>] [--release <id>] [--label <label>] [--search <text>] [--limit <n>]`
 - View: `papyrus task view <TASK-ID>`
-- Create: `papyrus task create "<title>" --description "<text>" --ac "<criterion>" --milestone <MS-ID> --ordinal <n> --depends-on <TASK-ID> --label <label> --reference <ref> --documentation <path> --type <type>`
-- Edit: `papyrus task edit <TASK-ID> --status <status> --title "<title>" --description "<text>" --ac "<criterion>" --depends-on <TASK-ID> --milestone <MS-ID> --ordinal <n> --label <label> --reference <ref> --documentation <path> --comment "<text>" --comment-author <agent>`
+- Create: `papyrus task create "<title>" --description <text|-> --ac "<criterion>" --milestone <MS-ID> --ordinal <n> --depends-on <TASK-ID> --label <label> --reference <ref> --documentation <path> --type <type>`
+- Edit: `papyrus task edit <TASK-ID> --status <status> --title "<title>" --description <text|-> --ac "<criterion>" --depends-on <TASK-ID> --milestone <MS-ID> --ordinal <n> --label <label> --reference <ref> --documentation <path> --comment "<text>" --comment-author <agent>`
 - Archive/restore: `papyrus task archive <TASK-ID>`, `papyrus task restore <TASK-ID>`
 
 ## Status values
@@ -39,13 +39,14 @@ Exact and case-sensitive: `ToDo`, `Initiated`, `Refined`, `Implemented`, `Valida
 - No priority field. Use `--ordinal` (lower first) and dependencies.
 - No `--ready` flag. Compute readiness from `metadata.dependencies` and the `Done` set.
 - `--ac` adds acceptance criteria. There is no checkbox toggle; the quality review records pass/fail.
+- `--description` is multiline: pass `-` and the text on stdin. `--ac` and `--comment` are single-line and stay inline.
 - No notes or final-summary fields. Record evidence and decisions with `--comment`.
 - Never change task scope, acceptance criteria, or dependencies outside `task-refiner` or `planner`.
 - Never edit managed task files directly.
 
 ## Evidence
 
-Record fulfilment proof and review outcomes: `papyrus task edit <id> --comment "<text>" --comment-author <agent>`.
+Record fulfilment proof and review outcomes: `papyrus task edit <id> --comment "<text>" --comment-author <agent>`. Comments are single-line.
 
 ## References
 

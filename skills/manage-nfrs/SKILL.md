@@ -1,6 +1,6 @@
 ---
 name: manage-nfrs
-description: 'Create, update, reorganize, and check consistency of non-functional requirements through the Papyrus nfreq commands.'
+description: 'Create, update, reorganize, and check consistency of non-functional requirements through the Papyrus nfr commands.'
 argument-hint: 'Examples: create a new NFR for authentication timeout; validate all NFRs for consistency; update NFR-001.002'
 user-invocable: true
 disable-model-invocation: false
@@ -25,8 +25,8 @@ Do not use this skill for implementation logic (no Kotlin, SQL, Java, etc.), tec
 
 Papyrus creates and owns the record format. Do not create or edit NFR files directly.
 
-- **Groups** — `papyrus nfreq create-group --title "<Group title>" --description "<description>"`.
-- **Atomic NFRs** — `papyrus nfreq create "<title>" --group <NFR-GROUP-ID> --description "<description, rationale, verification method>"`.
+- **Groups** — `papyrus nfr create-group --title "<Group title>" --description "<description>"`. Group descriptions are single-line.
+- **Atomic NFRs** — `papyrus nfr create "<title>" --group <NFR-GROUP-ID> --description <text|->`.
 
 An NFR's content should carry:
 
@@ -45,30 +45,33 @@ Papyrus has no separate rationale or verification fields; include them in the de
 
 ### Index
 
-The browsable index is `papyrus browser`. Use `papyrus nfreq list` / `papyrus nfreq view <ID>` for reading. Do not generate or edit `index.html`.
+The browsable index is `papyrus browser`. Use `papyrus nfr list` / `papyrus nfr view <ID>` for reading. Do not generate or edit `index.html`.
 
 ## Procedure
 
 1. **Classify request** — Determine whether the request is `create`, `update`, `validate`, or `reorganize`.
 
-2. **Read baseline** — Use `papyrus nfreq list` and `papyrus nfreq view <ID>` to understand existing NFRs and grouping.
+2. **Read baseline** — Use `papyrus nfr list` and `papyrus nfr view <ID>` to understand existing NFRs and grouping.
 
 3. **Identify required changes** — Determine what needs to be created, updated, or reorganized.
 
-4. **For creation** — Create or confirm the group first, then the atomic NFR:
+4. **For creation** — Create or confirm the group first, then the atomic NFR. The group description stays inline; the NFR description is multiline and comes from stdin:
    ```bash
-   papyrus nfreq create-group --title "<Group>" --description "<scope>"
-   papyrus nfreq create "<Title>" --group <NFR-GROUP-ID> \
-     --description "Description: ... Rationale: ... Verification: ..."
+   papyrus nfr create-group --title "<Group>" --description "<scope>"
+   papyrus nfr create "<Title>" --group <NFR-GROUP-ID> --description - <<'EOF'
+   Description: <observable target>
+   Rationale: <quality attribute>
+   Verification: <method>
+   EOF
    ```
 
-5. **For updates** — Use `papyrus nfreq edit <ID> --title ... --description ... --label ... --reference ...`. Papyrus has no group-change flag; if an NFR must move to another group, do not renumber it. Deprecate the old record and create a replacement referencing it, or ask the user.
+5. **For updates** — Use `papyrus nfr edit <ID> --title ... --description <text|-> --label ... --reference ...`; pass `--description -` for multiline. Papyrus has no group-change flag; if an NFR must move to another group, do not renumber it. Deprecate the old record and create a replacement referencing it, or ask the user.
 
 6. **For consistency checks** — Check for conflicting performance targets, overlapping security constraints, and untraceable verification claims. Report findings before changing meaning.
 
-7. **For deprecation** — Use `papyrus nfreq deprecate <ID>`; restore with `papyrus nfreq restore <ID>`.
+7. **For deprecation** — Use `papyrus nfr deprecate <ID>`; restore with `papyrus nfr restore <ID>`.
 
-8. **Report outcome** — Summarize the action, `NFR` IDs, validation status, and any risks. Confirm visibility with `papyrus nfreq list`.
+8. **Report outcome** — Summarize the action, `NFR` IDs, validation status, and any risks. Confirm visibility with `papyrus nfr list`.
 
 ## Resume / interruption
 
@@ -84,7 +87,7 @@ After changing NFRs, report the changed `NFR` IDs to the caller (planner / archi
 - Group numbering is consistent; no manual renumbering.
 - Each atomic NFR carries title, description, rationale, and verification method.
 - Each group carries a title and description.
-- Records are visible through `papyrus nfreq list`.
+- Records are visible through `papyrus nfr list`.
 - No `index.html` was generated or edited.
 - No implementation code (Kotlin, SQL, Java, etc.) appears in NFR records.
 
@@ -105,5 +108,5 @@ Use this summary after updates:
 - **Updated records**: list
 - **Cross-reference updates**: list
 - **Validation results**: pass/fail with details
-- **Papyrus visibility**: confirmed via `papyrus nfreq list`
+- **Papyrus visibility**: confirmed via `papyrus nfr list`
 - **Residual risks**: if any

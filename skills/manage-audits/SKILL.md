@@ -23,9 +23,21 @@ Audit records are created, read, updated, and deprecated through the management 
 
 - List: `papyrus audit list`
 - View: `papyrus audit view <AUD-ID>`
-- Create: `papyrus audit create --title "<title>" --content "<report>" --audit-type <quality|code|security> --reference <MS/REL-ID> --label <label>`
-- Edit: `papyrus audit edit <AUD-ID> --title "<title>" --content "<report>" --audit-type <type> --label <label> --reference <ref>`
+- Create: `papyrus audit create --title "<title>" --content <report|-> --audit-type <quality|code|security> --reference <MS/REL-ID> --label <label>`
+- Edit: `papyrus audit edit <AUD-ID> --title "<title>" --content <report|-> --audit-type <type> --label <label> --reference <ref>`
 - Deprecate/restore: `papyrus audit deprecate <AUD-ID>`, `papyrus audit restore <AUD-ID>`
+
+Audit reports are multiline; pass `-` and the report on stdin.
+
+```bash
+papyrus audit create --title "Quality audit MS-001" --audit-type quality \
+  --reference MS-001 --content - <<'EOF'
+## Checks
+- Acceptance criteria: pass
+## Findings
+- low: duplicate validation
+EOF
+```
 
 ## Rules
 
