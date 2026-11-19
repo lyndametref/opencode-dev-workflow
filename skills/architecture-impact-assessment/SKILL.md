@@ -48,8 +48,8 @@ Run after `tech-writer` drafted a section and before refinement.
 2. Check:
    - the section belongs to a building block of the Architecture;
    - it respects the architecture constraints and accepted decisions;
-   - it references `REQ`/`NFR` and decisions instead of restating requirements;
-   - it contains behavior, flows and states, data and API-facing attributes, validation and error behavior, interface contracts, and traceability.
+   - it keeps traceability in references and does not restate requirements;
+   - its body contains behavior, flows and states, data and API-facing attributes, validation and error behavior, and interface contracts, with no traceability lists and no Task/Milestone/Release IDs.
 3. Report `conformant` or `not conformant` with specific findings and the required corrections. Do not edit the Technical specification yourself.
 4. A `not conformant` verdict returns the section to `tech-writer`; refinement does not start.
 

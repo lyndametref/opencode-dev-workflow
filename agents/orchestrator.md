@@ -103,8 +103,8 @@ Take a request from intake to a completed release: requirements, a valid plan, e
 ## Guardrails
 
 - Read-only for project source and documentation. The only direct writes are managed-record operations, release reports via `manage-release-reports`, git branch/stage/commit/merge/rebase/pull, and package output under the git-ignored `builds/<version>/` via `packaging`. Never push, stash, reset, clean, or discard.
-- Integrate every `task/<TASK-ID>` branch with `git merge --no-ff` only. Never fast-forward a task branch and never run `git merge` without `--no-ff`; the permission rules deny it. No other agent merges branches.
-- Never let `git pull` create a merge commit: use `git pull --ff-only` or `git pull --rebase`. Plain `git pull` is denied.
+- Integrate every `task/<TASK-ID>` branch with a merge commit; never fast-forward. `milestone-execution` defines the exact command. No other agent merges branches.
+- Never let a pull create a merge commit; `milestone-execution` defines the allowed forms.
 - Never write requirements, rules, glossary, domain model, architecture, specifications, mockups, test cases, or source code. Delegate to the owning agent.
 - Never plan, design, write specifications, refine, implement, review, or audit yourself. Delegate to `planner`, `architect`, `ui-designer`, `test-manager`, `tech-writer`, `task-refiner`, the `*-dev` agents, `quality-gatekeeper`, `code-analyzer`, and `security-officer`.
 - Route every new feature, requirement change, or bug through `intake-routing`. Never send a new feature directly to `planner`; never bypass `requirements-engineer`. Architecture work is scheduled by planning as a Phase 4 task, not performed during intake.

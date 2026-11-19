@@ -30,7 +30,7 @@ Papyrus reads multiline field values from stdin. Pass `-` for the option and fee
 
 ```bash
 papyrus audit create --title "Quality audit MS-001" \
-  --audit-type quality --reference MS-001 --content - <<'EOF'
+  --audit-type quality --content - <<'EOF'
 ## Findings
 - low: duplicate validation in the checkout handler
 EOF

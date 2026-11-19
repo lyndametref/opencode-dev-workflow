@@ -79,7 +79,7 @@ Rules:
 3. **Update the roadmap** — feature order, source requirement references, rationale. Create or edit the `Feature Roadmap` technical specification.
 4. **Ensure the release** — create a `REL` record with a working title such as `Release (pending version)` if none is active, or reuse the open release. Do not assign a version yet; Phase 5/6 do that.
 5. **Create the milestone** — title, kind (`bug`, `enhancement`, `technical-improvement`), release assignment, and acceptance criteria in the description.
-6. **Add the tasks in order** — create the required task kinds, assign each to the actor able to fulfil it, and set `--type`, `--milestone`, `--ordinal`, `--depends-on`, `--reference`, and `--documentation` where known. Keep tasks outcome-level.
+6. **Add the tasks in order** — create the required task kinds, assign each to the actor able to fulfil it, and set the task's type, milestone, ordinal, dependencies, references, and documentation where known; `manage-tasks` defines the exact fields. Keep tasks outcome-level.
 7. **Add exactly one milestone verification task** per milestone, with `--type milestone-verification`, assigned to `quality-gatekeeper`, and dependent on the last execution task.
 8. **Set dependencies and ordinals** so execution order matches the roadmap: dependencies first, then user priority. Use `--ordinal`, never a priority field.
 9. **Validate the plan** against the checklist below. Correct and revalidate until valid.

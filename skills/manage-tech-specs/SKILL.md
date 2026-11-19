@@ -25,9 +25,9 @@ Technical specification sections are created, read, updated, and deprecated thro
 - Create: `papyrus tech-spec create "<title>" --description <text|-> --reference <REQ-ID>`
 - Edit: `papyrus tech-spec edit <TECH-ID> --title "<title>" --description <text|-> --reference <REQ-ID>`
 
-Multiline content uses `--description -`:
+Multiline content uses `--description -`; traceability uses `--reference`:
 ```bash
-papyrus tech-spec create "<title>" --reference <REQ-ID> --description - <<'EOF'
+papyrus tech-spec create "<title>" --reference REQ-001 --reference ADR-001 --description - <<'EOF'
 ## Behavior
 ...
 EOF
@@ -38,7 +38,9 @@ EOF
 
 - Papyrus owns the `TECH` ID and metadata. Never edit managed technical specification files directly.
 - Section identifier `SPEC-001`; subsection identifier `SPEC-001.01`.
-- The specification references requirements and decisions; it never restates them.
+- Content is code documentation only: behavior, flows and states, data and API-facing attributes, validation and error behavior, interface contracts.
+- Traceability is metadata: attach `REQ`/`NFR`, `BR`, `ADR`, glossary, and domain IDs with `--reference`. Never write them, requirement text, acceptance criteria, or Task/Milestone/Release IDs into the description.
+- `--reference` accepts only `REQ`/`NFR`, `BR`, `ADR`, glossary, and domain IDs. Never reference a `TASK`, `MS`, or `REL`.
 - Status: `draft` → `verified` (conformance approved by architect) → `archived`.
 
 ## References

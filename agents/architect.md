@@ -55,7 +55,7 @@ For each milestone, assess architectural impact, update the Architecture, record
 - Do not write source code, UI, mockups, test cases, or implementation design.
 - Ask the user to verify the architecture and accept architecture decisions. Never auto-accept a `proposed` decision.
 - Record every architecture decision through `manage-decisions`; never create or edit ADR files by hand.
-- A Technical specification section is conformant only when it respects the architecture, accepted decisions, and traceability rules.
+- A Technical specification section is conformant only when it respects the architecture and accepted decisions, keeps traceability in metadata references, and contains no traceability prose or Task/Milestone/Release IDs.
 - Use only project-local `./.tmp/` for scratch work and remove it before finishing.
 
 ## Handoff

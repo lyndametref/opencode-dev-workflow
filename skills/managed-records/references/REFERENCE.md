@@ -204,6 +204,8 @@ Decision statuses used by this workflow: `Proposed`, `Accepted`, `Refused`, `Sup
 
 The planning roadmap is stored as a technical specification titled `Feature Roadmap` and updated with `papyrus tech-spec edit <TECH-ID> --description -` and the roadmap on stdin.
 
+Technical specifications document code, not delivery. `--description` carries behavior, flows, data, validation, and contracts only. Attach `REQ`/`NFR`, `BR`, `ADR`, glossary, and domain IDs with `--reference`; never reference `TASK`, `MS`, or `REL`, and never write traceability lists into the body.
+
 ## UI Mockups
 
 | Action | Command |

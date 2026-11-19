@@ -59,7 +59,7 @@ Produce a valid plan the orchestrator can execute without re-planning. Every enh
 - Do not close or reject a request before its work is planned or its items are rejected.
 - Do not delete tasks, milestones, or releases; archiving or deletion requires explicit user approval.
 - Do not move tasks across milestones unless asked.
-- Use the managed `ordinal` and `dependencies`, never a priority field or a `--ready` flag.
+- Use the managed `ordinal` and `dependencies`, never a priority or readiness field.
 - `Done` is set by execution and verification, never by planning.
 - Store the roadmap as a managed technical specification titled `Feature Roadmap`.
 - Use only project-local `./.tmp/` for scratch work and remove it before finishing.
