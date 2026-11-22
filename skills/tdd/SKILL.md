@@ -19,6 +19,7 @@ Implement behavior through short red-green-refactor cycles so every change is ve
 - Before writing production code when tests are feasible.
 
 Do not use this skill for:
+
 - Pure documentation, configuration, or asset changes with no logic.
 - Exploratory spikes where tests would be throwaway (prototype first, then TDD the real change).
 
@@ -37,12 +38,17 @@ Do not use this skill for:
 - Name tests after behavior: `should_<expected>_when_<condition>`.
 - A test that never fails is not a test — verify the red step.
 - Refactor only with green tests; stop refactoring when tests stay green but code is clean.
+- To decide if code is clean check the Four Rules of simple design
+- 1. **Runs all the tests** — passing tests prove the design works.
+  2. **Contains no duplication** — Only duplication which resolving a trade off are acceptable and never more than 3%
+  3. **Expresses the intent of the programmer** — code should clearly communicate what it does and why.
+  4. **Minimizes the number of classes and methods** — fewest elements needed; no speculative structure.
 
 ## Test levels
 
 - **Unit**: domain logic, use cases, pure functions (fast, isolated).
 - **Integration**: adapters, repositories, serialization (real dependencies, faked externals).
-- **End-to-end / UI**: critical user flows (slow; keep few).
+- **End-to-end / UI**: critical user flows (slow; keep few). Are based on provided test-cases artifacts.
 
 Match the level to the behavior; prefer the lowest level that still exercises the real logic.
 
