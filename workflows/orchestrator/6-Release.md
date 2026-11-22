@@ -14,25 +14,22 @@ Release work does not start while a milestone is incomplete or unverified.
 
 ### Actors
 
-| Actor                | Role in Phase 6                                                                                                                                 |
-| -------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------- |
+| Actor                | Role in Phase 6                                                                                                                                                                       |
+| -------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `orchestrator`       | Owner: chooses the final version, runs the release process, aggregates evidence, publishes the final package with `packaging`, compiles the report, records completion after approval |
-| `quality-gatekeeper` | Release quality audit and final test results over the whole release                                                                             |
-| `code-analyzer`      | Release-wide code audit of the whole codebase and test suite, including code unchanged in this release                                          |
-| `security-officer`   | Reports security findings with severity and a recommendation; does not decide acceptance                                                        |
-| `planner`            | Keeps the release composition and milestone assignment accurate; the version is determined in this phase                                        |
-| User                 | Approves the release scope and the audit findings, decides whether each security finding is acceptable, gives the explicit release approval, and may waive packaging for the release |
-| Task owners          | Execute fix tasks in the fix milestone and rework work returned to their milestones                                                             |
+| `quality-gatekeeper` | Release quality audit and final test results over the whole release                                                                                                                   |
+| `code-analyzer`      | Release-wide code audit of the whole codebase and test suite, including code unchanged in this release                                                                                |
+| `security-officer`   | Reports security findings with severity and a recommendation; does not decide acceptance                                                                                              |
+| `planner`            | Keeps the release composition and milestone assignment accurate; the version is determined in this phase                                                                              |
+| User                 | Approves the release scope and the audit findings, decides whether each security finding is acceptable, gives the explicit release approval, and may waive packaging for the release  |
+| Task owners          | Execute fix tasks in the fix milestone and rework work returned to their milestones                                                                                                   |
 
 ### Flow
 
 ```mermaid
 %%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 18}}}%%
 flowchart LR
-    IN([Release to inspect]) --> SCOPE["Resolve release scope"]
-    SCOPE --> COMPLETE{"Milestones complete and verified?"}
-    COMPLETE -->|"No"| STOP(["Stop: gaps reported to user"])
-    COMPLETE -->|"Yes"| SEC["Release quality, code and<br/>security audits, then user review"]
+    IN([Release to inspect]) --> SEC["Release quality, code and<br/>security audits, then user review"]
     SEC --> OK{"Scope and findings approved?"}
     OK -->|"No"| FIX["Create fix tasks in a fix milestone"]
     OK -->|"Yes"| VERSION["Choose the final version"]
@@ -42,21 +39,21 @@ flowchart LR
     BUILD --> PKG["Publish the final package<br/>and assemble the release report"]
     PKG --> APPROVE{"User approves<br/>the release?"}
     APPROVE -->|"No"| RETURN["Create task to fix user findings"]
-    RETURN --> IN
+    RETURN --> IMPL
     APPROVE -->|"Yes"| CLOSE["Record release completion"]
 ```
 
 ### Phase boundary with Verification
 
-| Concern  | Phase 5 Verification                             | Phase 6 Release                                                           |
-| -------- | ------------------------------------------------ | ------------------------------------------------------------------------- |
-| Scope    | One milestone at its boundary                    | The whole release, all its milestones                                     |
-| Depth    | Change set of the milestone                      | Full change set plus integration and regression                           |
-| Checks   | Quality review and code audit, change-scoped     | Release quality audit, release-wide code audit, release security audit, final build and tests |
-| Security | Not assessed here; security is by design         | Assessed only here, across the whole release and its feature combinations |
-| Output   | Per-milestone evidence, the RC version, and its published package | Release report, final package, and a release decision                     |
-| Approval | None                                             | Scope and audit findings, then release                                    |
-| Failure  | Reopens tasks in that milestone                  | Returns the release work to the owning milestone                          |
+| Concern  | Phase 5 Verification                                              | Phase 6 Release                                                                               |
+| -------- | ----------------------------------------------------------------- | --------------------------------------------------------------------------------------------- |
+| Scope    | One milestone at its boundary                                     | The whole release, all its milestones                                                         |
+| Depth    | Change set of the milestone                                       | Full change set plus integration and regression                                               |
+| Checks   | Quality review and code audit, change-scoped                      | Release quality audit, release-wide code audit, release security audit, final build and tests |
+| Security | Not assessed here; security is by design                          | Assessed only here, across the whole release and its feature combinations                     |
+| Output   | Per-milestone evidence, the RC version, and its published package | Release report, final package, and a release decision                                         |
+| Approval | None                                                              | Scope and audit findings, then release                                                        |
+| Failure  | Reopens tasks in that milestone                                   | Returns the release work to the owning milestone                                              |
 
 Phase 6 does not repeat the per-milestone checks. It inspects what only the whole release can reveal: integration between milestones, cumulative change, regression, release-wide consistency, and security risks created by combining features.
 
@@ -69,12 +66,12 @@ Phase 6 does not repeat the per-milestone checks. It inspects what only the whol
 
 ### Release inspection
 
-| Check                 | Covers                                                                                                                    | Output                                        |
-| --------------------- | ------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------- |
-| Release quality audit | Milestones complete and verified, whole change set, consistency across milestones, integration, scope creep, NFR coverage | Audit (type: quality) with severity-ranked findings |
-| Release code audit    | The whole codebase and test suite, including code not changed in this release                                             | Audit (type: code) with severity-ranked findings |
+| Check                 | Covers                                                                                                                    | Output                                                                    |
+| --------------------- | ------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------- |
+| Release quality audit | Milestones complete and verified, whole change set, consistency across milestones, integration, scope creep, NFR coverage | Audit (type: quality) with severity-ranked findings                       |
+| Release code audit    | The whole codebase and test suite, including code not changed in this release                                             | Audit (type: code) with severity-ranked findings                          |
 | Security audit        | The whole release, cross-feature risks, and risks created by combining features                                           | Audit (type: security) with severity-ranked findings and a recommendation |
-| Final build and tests | The approved release as built, full suite, regression                                                                     | Pass/fail with evidence                       |
+| Final build and tests | The approved release as built, full suite, regression                                                                     | Pass/fail with evidence                                                   |
 
 Rules:
 
@@ -134,10 +131,10 @@ The report contains:
 
 Phase 6 has two approvals:
 
-| Approval                 | When                                                                           | Effect                                                      |
-| ------------------------ | ------------------------------------------------------------------------------ | ----------------------------------------------------------- |
+| Approval                 | When                                                                         | Effect                                                      |
+| ------------------------ | ---------------------------------------------------------------------------- | ----------------------------------------------------------- |
 | Scope and audit findings | After the release quality, code, and security audits, before the final build | Confirms the release scope, accepts or rejects each finding |
-| Release                  | After the final build and tests, on the assembled release report               | Completes or withholds the release                          |
+| Release                  | After the final build and tests, on the assembled release report             | Completes or withholds the release                          |
 
 - The user approves or withholds each approval explicitly.
 - The final build and tests run only after the scope and audit findings are approved.
@@ -149,19 +146,19 @@ Phase 6 has two approvals:
 
 ### Failure handling
 
-| Outcome                                 | Action                                                                                                               |
-| --------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
-| A milestone is incomplete or unverified | Return to Phase 4 or 5; no release inspection                                                                        |
-| A release audit fails                  | Create fix tasks in the fix milestone; Phase 4 executes; Phase 5 verifies; the release inspection reruns             |
-| Security findings not accepted          | Create fix tasks in the fix milestone; the release cannot complete while they remain                                 |
-| Security findings accepted              | Document each accepted finding with an owner and follow-up in the security audit; the release proceeds               |
-| Scope or findings not approved          | Create fix tasks in the fix milestone; no final build runs                                                           |
-| Final build or tests fail               | Create fix tasks in the fix milestone; the inspection, the approval, and the build are rerun after they are verified |
-| Final package build fails               | Create fix tasks in the fix milestone; the release is not completed and nothing is published            |
-| A deployable component has no build script | Create a fix task in the fix milestone for the owning `*-dev` agent; packaging resumes after it is verified |
-| Final package directory exists or is not git-ignored | Stop; the user decides the version and the ignore rules; an existing version is never overwritten |
-| Release approval withheld               | Return the work to the owning milestones or the fix milestone; report the reason                                     |
-| Scope creep found                       | User decides removal or a requirements change through Phase 2                                                        |
+| Outcome                                              | Action                                                                                                               |
+| ---------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
+| A milestone is incomplete or unverified              | Return to Phase 4 or 5; no release inspection                                                                        |
+| A release audit fails                                | Create fix tasks in the fix milestone; Phase 4 executes; Phase 5 verifies; the release inspection reruns             |
+| Security findings not accepted                       | Create fix tasks in the fix milestone; the release cannot complete while they remain                                 |
+| Security findings accepted                           | Document each accepted finding with an owner and follow-up in the security audit; the release proceeds               |
+| Scope or findings not approved                       | Create fix tasks in the fix milestone; no final build runs                                                           |
+| Final build or tests fail                            | Create fix tasks in the fix milestone; the inspection, the approval, and the build are rerun after they are verified |
+| Final package build fails                            | Create fix tasks in the fix milestone; the release is not completed and nothing is published                         |
+| A deployable component has no build script           | Create a fix task in the fix milestone for the owning `*-dev` agent; packaging resumes after it is verified          |
+| Final package directory exists or is not git-ignored | Stop; the user decides the version and the ignore rules; an existing version is never overwritten                    |
+| Release approval withheld                            | Return the work to the owning milestones or the fix milestone; report the reason                                     |
+| Scope creep found                                    | User decides removal or a requirements change through Phase 2                                                        |
 
 ### Exit criteria
 

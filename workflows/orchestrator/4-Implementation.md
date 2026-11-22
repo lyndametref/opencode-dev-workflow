@@ -40,7 +40,7 @@ flowchart LR
     VOK -->|"Yes"| DONE
     DONE --> MORE{"More tasks to execute in Milestone?"}
     MORE -->|"Yes"| SEL
-    MORE -->|"No"| STOP["Stop: milestone finished, stop boundary reached, or backlog end (Phase 5 verifies the milestone)"]
+    MORE -->|"No"| STOP["Implementation done"]
 ```
 
 ### Task model
@@ -48,13 +48,12 @@ flowchart LR
 | Status        | Meaning                                                                                                                |
 | ------------- | ---------------------------------------------------------------------------------------------------------------------- |
 | `To Do`       | Planned, not started                                                                                                   |
-| `In-Progress` | Being executed, including rework after a failed acceptance check or a denied user verification          |
+| `In-Progress` | Being executed, including rework after a failed acceptance check or a denied user verification                         |
 | `Done`        | Every acceptance criterion is fulfilled and, when the task's artifact requires it, the user's verification is obtained |
 | `archived`    | Cleaned up; hidden from the backlog                                                                                    |
 
-- `archived` is terminal. A task never returns to `To Do`.
 - A task is `Done` when all its acceptance criteria are fulfilled and any required artifact verification is obtained; no other user approval is requested.
-- Fulfilment proof is recorded on the task when it becomes `Done`; its format follows the nature of the acceptance criteria (test results, document or mockup verification, review output) and is defined per task.
+- Fulfillment proof is recorded on the task when it becomes `Done`; its format follows the nature of the acceptance criteria (test results, document or mockup verification, review output) and is defined per task.
 - Task kinds come from the milestone composition in Phase 3: architecture impact assessment, UI design, test design, refinement, implementation, and milestone verification.
 - When a task is `Done`, the orchestrator integrates its `task/<TASK-ID>` branch with `git merge --no-ff`; fast-forward merges are never used.
 - The milestone verification task belongs to the milestone but is not selected as a Phase 4 task; it is executed at the milestone boundary in Phase 5, and the milestone is not complete until it is `Done`.
