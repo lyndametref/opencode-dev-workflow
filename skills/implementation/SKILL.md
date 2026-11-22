@@ -1,6 +1,6 @@
 ---
 name: implementation
-description: 'Execute one refined implementation task in Phase 4: verify prerequisites, implement the complete task with tests, run the checks, commit on the task branch, and report fulfilment evidence.'
+description: 'Execute one refined implementation task: verify prerequisites, implement the complete task with tests, run the checks, commit on the task branch, and report fulfilment evidence.'
 argument-hint: 'Provide the refined implementation task ID.'
 user-invocable: true
 disable-model-invocation: false
@@ -14,7 +14,7 @@ A refined implementation task is delivered: code and low-level tests, integratio
 
 ## When to use
 
-- The implementation task of a milestone is assigned to a `*-dev` agent in Phase 4.
+- The implementation task of a milestone is assigned to a `*-dev` agent.
 
 Do not use this skill to refine scope, change requirements, plan tasks, review the milestone, or audit the release.
 
@@ -36,19 +36,16 @@ If any prerequisite is missing, stop and report; do not invent it.
 1. **Read the task and context** — read the refined task, its acceptance criteria, the linked `REQ`/`NFR`, `BR`, Technical specification, UI specification, mockups, test cases, and decisions.
 2. **Map acceptance criteria** — list every acceptance criterion and the implementation and verification that will satisfy it.
 3. **Work on the prepared branch** — the orchestrator has prepared `task/<TASK-ID>`. If you are not on it, stop and report; do not create, switch, or clean branches. Preserve existing changes; never discard work.
-4. **Load the stack skills** — `tdd` first, then the language/framework skills relevant to the stack.
-5. **Write failing tests** — write or update low-level tests and the integration tests that implement the approved test cases. Tests come before implementation.
-6. **Implement the complete scope** — implement the smallest change that fulfils every acceptance criterion and test case. Do not stop at a partial scope.
-7. **Refactor** — improve clarity and maintainability without changing the required behavior or breaking boundaries.
-8. **Run the checks** — build, full test suite, lint/static checks, and the stack's security checks. Reconcile the results against every acceptance criterion. When the task asks for the component build script, follow `build-package-script` and run its self-check into `./.tmp/`.
-9. **Commit** — commit the changes on the task branch. Do not push, stash, reset, clean, or discard.
-10. **Report evidence** — return the evidence block below. Do not change the task status; the orchestrator owns status and acceptance.
+4. **Implement the complete scope** — implement the smallest change that fulfils every acceptance criterion and test case. Do not stop at a partial scope. Use the `tdd` skill to make the implementation
+5. **Run the checks** — build, full test suite, lint/static checks, and the stack's security checks. Reconcile the results against every acceptance criterion. 
+6. **Commit** — commit the changes on the task branch. Do not push, stash, reset, clean, or discard.
+7. **Report evidence** — return the evidence block below. Do not change the task status; the orchestrator owns status and acceptance.
 
 ## Evidence block
 
 - **Task**: ID and title.
 - **Acceptance criteria covered**: each criterion and how it is met.
-- **Test cases implemented**: `TC` IDs and the integration tests that implement them.
+- **Test cases implemented**: test cases IDs and the integration tests that implement them.
 - **Files changed**: created and modified paths.
 - **Tests run**: command, pass/fail, counts, and test files/classes added or updated.
 - **Static checks**: lint/compile result.
@@ -66,8 +63,6 @@ If any prerequisite is missing, stop and report; do not invent it.
 - Do not edit requirements, rules, glossary, domain model, architecture, Technical specification, UI specifications, or mockups.
 - Stay inside the application paths allowed for the stack.
 - Keep the build green and all tests passing.
-- A build script task produces `<component-dir>/scripts/build-package.sh` inside the owning agent's component folder (`apps/<app>` in a multi-app repository, or the repository root for a single-app project) that satisfies the contract; the script is committed as source and never weakened to make packaging pass.
-- Be security-aware: validate inputs, avoid injection, enforce authorization, and never expose sensitive data in responses, logs, errors, or client storage.
 - Do not create scratch files outside `./.tmp/`; remove them before finishing.
 
 ## Stop conditions
