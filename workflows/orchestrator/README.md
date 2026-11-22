@@ -13,9 +13,9 @@ Start with [0-End-to-End.md](./0-End-to-End.md) for the whole flow. Each artifac
 | [1. Request intake](./1-Request_intake.md) | `key-account-manager` | Requests | Whether a request is `open` or `parked`, and that its content is faithful |
 | [2. Requirements](./2-Requirements.md) | `requirements-engineer` | Requirements; Business Rules, Business Glossary, Domain Model, Decision (type `business`) when impacted | A change of meaning, and any decision opened by a trade-off |
 | [3. Planning](./3-Planning.md) | `planner` | Backlog; Task; Milestone; Release | Priority and scope |
-| [4. Implementation](./4-Implementation.md) | `architect`, `ui-designer`, `test-manager`, `task-refiner`, `tech-writer`, `*-dev` agents | Architecture; Decision (type `architecture`); Technical specification; UI Specification; UI Mockups; Test Case; Source Code | Architecture, mockup, and test-case verification by the user |
-| [5. Verification](./5-Verification.md) | `quality-gatekeeper`, `code-analyzer`, `orchestrator` | Milestone verification task; Audit (types `quality`, `code`); RC package under `builds/<version>/` | None: findings are corrected or deferred; the user accepts them at the Phase 6 release gate |
-| [6. Release](./6-Release.md) | `orchestrator`, `quality-gatekeeper`, `code-analyzer`, `security-officer`, `planner` | Audit (types `quality`, `code`, `security`); Release report; final package under `builds/<version>/`; completed Release | Scope and findings, then the release itself |
+| [4. Implementation](./4-Implementation.md) | `architect`, `ui-designer`, `test-manager`, `task-refiner`, `tech-writer`, `*-dev` agents, `orchestrator` | Architecture; Decision (type `architecture`); Technical specification; UI Specification; UI Mockups; Test Case; Source Code; RC package under `builds/<version>/` | Architecture, mockup, and test-case verification by the user |
+| [5. Verification](./5-Verification.md) | `quality-gatekeeper`, `code-analyzer`, `security-officer`, `orchestrator` | Audit (types `quality`, `code`, `security`); release verification task | None: findings become fix tasks; the user accepts them at the Phase 6 release gate |
+| [6. Release](./6-Release.md) | `orchestrator`, `quality-gatekeeper`, `planner` | Release report; final package under `builds/<version>/`; completed Release | Scope and findings, then the release itself |
 
 ## Artifacts at a glance
 

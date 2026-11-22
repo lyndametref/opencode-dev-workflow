@@ -1,29 +1,45 @@
 ## 5. Verification
 
-Phase 5 independently verifies a **milestone** at its boundary: its acceptance criteria, quality requirements, and code quality. Verification covers only what the milestone changed; the whole release is inspected in Phase 6. It produces the quality and code audits, one verification task, and correction tasks, then publishes the versioned RC package of the verified milestone. It never fixes, approves, or releases.
+Phase 5 runs once per **feature freeze** and verifies the **whole codebase**, not a milestone. It answers three questions independently:
 
-Security is a design concern, handled through requirements and architecture. It is not audited per milestone; security is assessed once at release time, where the combination of features can create risks that no single milestone reveals.
+- **Quality audit** — is every feature implemented properly, against its requirements, business rules, and acceptance criteria?
+- **Code audit** — is the code maintainable and evolvable, and does it follow the code guidelines?
+- **Security audit** — can the software be exploited?
 
-Phase position: `Phase 4 → Phase 5 → Phase 6 Release`.
+Verification produces the three audits and one release verification task, and turns failures into fix tasks. It never fixes, versions, packages, approves, or releases.
+
+Phase position: `Phase 4 → Phase 5 (at feature freeze) → Phase 6 Release`.
+
+### Feature freeze
+
+The freeze is the trigger and the scope of Phase 5.
+
+- The user declares the freeze; it is recorded on the release with its timestamp (with timezone) and the frozen milestone scope.
+- The freeze stops the Phase 1–4 loop: no new requests, requirements, scope, or features. Only fixes to verification findings are allowed while the freeze holds.
+- The verification baseline is the RC version and commit of the last completed milestone; verification audits that committed tree.
+- Without a recorded freeze, no verification runs.
+- Keeping or lifting the freeze is a user decision; lifting it returns the work to the Phase 1–4 loop.
 
 ### Inputs and preconditions
 
-- **Milestone ready for verification**: every execution task is `Done`; the milestone verification task is not yet `Done`.
-- **Evidence from implementation**: task fulfilment proof and test output.
-- **Milestone acceptance criteria**, plus referenced requirements (REQ/NFR) and specifications.
-- **Change set**: the code, tests, configuration, and behavior the milestone changed.
+- **Recorded feature freeze** with the frozen milestone scope.
+- **Complete milestones**: every task of every frozen milestone is `Done`, and each milestone has its RC version and its packaged RC under `builds/<version>/`, or a recorded packaging waiver.
+- **Baseline**: the RC version and commit SHA of the last completed milestone.
+- **Evidence**: task fulfilment proof, test output, requirements (REQ/NFR), business rules, specifications, architecture, and decisions.
+- **Audit input**: the whole codebase and test suite at the baseline commit.
 
-Phase 4 does not verify the increment. Phase 5 runs the milestone verification task independently and reruns the checks rather than trusting the reported evidence.
+Phase 4 does not verify the increment. Phase 5 audits the frozen codebase independently and reruns the checks rather than trusting the reported evidence.
 
 ### Actors
 
-| Actor                  | Role in Phase 5                                                                                               |
-| ---------------------- | ------------------------------------------------------------------------------------------------------------- |
-| `quality-gatekeeper`   | Runs the verification task's quality review: acceptance criteria, required-field completeness, rerun tests, scope creep, NFR coverage |
-| `code-analyzer`        | Audits the code and tests changed in the milestone and records an Audit artifact (type: code)                 |
-| `orchestrator`         | Opens and closes the verification task, records the result and the RC version, and publishes the RC package via `packaging` |
-| `planner`              | Creates the milestone verification task during planning, and correction or follow-up tasks at the reviewers' request |
-| User                   | Reviews the milestone audits at the Phase 6 scope-and-findings review; may waive packaging for the milestone; no approval happens in this phase      |
+| Actor                | Role in Phase 5                                                                                                                    |
+| -------------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| `quality-gatekeeper` | Runs the quality audit: every feature implemented properly, acceptance-criteria and requirement coverage, NFRs, scope creep, rerun tests |
+| `code-analyzer`      | Runs the code audit over the whole codebase: maintainability, evolvability, code-guideline compliance, tests                        |
+| `security-officer`   | Runs the security audit over the whole codebase: exploitability, attack surface, cross-feature risks                               |
+| `orchestrator`       | Opens and closes the release verification task, records the baseline, the audits, findings, fix tasks, and the result                   |
+| `planner`            | Creates fix tasks in the fix milestone at the reviewers' request, and follow-up tasks for accepted findings                        |
+| User                 | Declares the freeze, and accepts or rejects each finding at the Phase 6 scope-and-findings review; no approval happens in this phase |
 
 Reviewers are independent of implementation and read-only. A reviewer never fixes what it finds.
 
@@ -32,79 +48,53 @@ Reviewers are independent of implementation and read-only. A reviewer never fixe
 ```mermaid
 %%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 18}}}%%
 flowchart LR
-    IN([Milestone boundary reached]) --> OPEN["Open the verification task"]
-    OPEN --> QR["Quality review:<br/>criteria, completeness, tests, scope"]
-    QR --> QOK{"Quality<br/>passes?"}
-    QOK -->|"No"| CORR["Reviewer defines the correction;<br/>planner creates the task"]
-    CORR --> IMPL["Phase 4 executes<br/>the corrections"]
-    IMPL --> IN
-    QOK -->|"Yes"| CA["Code audit:<br/>complexity, duplication, tests"]
-    CA --> COK{"Code audit<br/>passes?"}
-    COK -->|"No"| CORR
-    COK -->|"Yes"| RCV["Determine the RC version"]
-    RCV --> PKG["Publish the RC package<br/>with each component's own script"]
-    PKG --> OUT["Complete the verification task<br/>Hand verified milestone<br/>to Release"]
+    IN([Feature freeze declared]) --> OPEN["Open the release verification task<br/>record baseline and frozen scope"]
+    OPEN --> AUD["Quality, code and security audits<br/>over the whole codebase"]
+    AUD --> OK{"Every audit<br/>passes?"}
+    OK -->|"No"| CORR["Reviewer defines the finding;<br/>planner creates fix tasks"]
+    CORR --> IMPL["Phase 4 implements<br/>the fixes"]
+    IMPL --> AUD
+    OK -->|"Yes"| OUT["Complete the verification task<br/>Hand the verified codebase<br/>to Release"]
 ```
 
-### Verification task
+### Release verification task
 
-- The planner creates **one milestone verification task per milestone**; the orchestrator opens it when the milestone's execution tasks are `Done`. The criteria are on the milestone. No other verification reports are written.
-- The task is not `Done` until every check passes; the milestone is not complete before that.
-- The task records: milestone and change set, checks run, evidence, findings, the audits, the correction tasks it created, the RC version, and the final result.
-- A failed quality review or code audit produces a **correction task** in the milestone being verified: the reviewer who found the failure defines its content — the failure description and the acceptance criteria it blocks — and the `planner` creates the task. Correction tasks stay inside the milestone's approved scope and complete the unfulfilled scope; they do not change the scope. Scope, dependency, or ordinal changes, if ever required, go to the planner.
-- Correction tasks follow the Phase 4 task model: assigned to an owning actor, executed, and `Done` only when their criteria are met.
-- The verification task is not `Done` until every correction task is `Done` and verification is rerun and passes.
+- The planner creates **one release verification task** when the freeze is declared; the orchestrator opens it and closes it when every audit passes. It belongs to the release, not to a milestone.
+- It records: freeze (timestamp and frozen scope), baseline RC version and commit SHA, audits run, evidence, findings, the fix tasks it created, and the final result.
+- Each rerun after a fix records the new baseline (the fix milestone's RC version and commit).
+- It is not `Done` until all three audits pass, every fix task is `Done`, and the audits were rerun and passed.
+- No other verification reports are written.
 
 ### Checks
 
-Checks are change-scoped: they inspect the milestone's change set and the behavior it touches, not the whole corpus. All results are recorded in the verification task.
+All checks cover the frozen codebase, including code unchanged since the last release. All results are recorded in the release verification task.
 
-| Check          | Verifies                                                                                                                                             | Result                   |
-| -------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------ |
-| Quality review | Each milestone acceptance criterion, required-field completeness, rerun tests, scope creep, referenced NFRs                                          | Audit (type: quality); pass or correction tasks |
-| Code audit     | Complexity, duplication, naming, structure, test coverage, style-guide compliance of code and tests created or modified in the milestone          | Audit (type: code); pass or correction tasks    |
+| Audit           | Question                                                                    | Verifies                                                                                                                                       | Result                    |
+| --------------- | --------------------------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------- | ------------------------- |
+| Quality audit   | Is every feature implemented properly?                                      | Requirement and milestone acceptance-criteria coverage, business rules, NFR coverage, scope creep, rerun tests                                  | Audit (type: quality)     |
+| Code audit      | Is the code maintainable and evolvable, does it follow the code guidelines?  | Complexity, duplication, naming, structure, test coverage, code-guideline compliance of the whole codebase and test suite                      | Audit (type: code)        |
+| Security audit  | Can the software be exploited?                                              | Secrets, dependency supply chain, authentication and authorization, input handling, data protection, platform risks, cross-feature risks        | Audit (type: security)    |
 
 Rules:
 
-- Every check reruns or re-reads its evidence; reported results are not accepted on trust.
+- Every audit reruns or re-reads its evidence; reported results are not accepted on trust.
 - Findings are severity-ranked with evidence, location, and recommendation; the scale is `low`, `medium`, `high`, `blocker`.
-- Accepted findings require an owner and a follow-up task.
-- The code audit targets only the code and tests created or modified in the milestone; pre-existing code is not audited here.
-- Unchanged areas are not re-audited; they are covered by the release-wide inspection in Phase 6.
+- Every finding gets an owner; a finding the user does not accept becomes fix work, an accepted finding gets a follow-up task.
+- The audits are read-only.
+- The code audit and the security audit cover the whole codebase, not only the latest milestone's changes.
 
-Audits follow their own lifecycle: `issued → approved → archived`; `approved` records the user's acceptance of the findings at the Phase 6 scope-and-findings review, so a Phase 5 audit stays `issued` until then. A finding the user does not accept becomes correction or fix work; after the correction a new audit is issued and the old one is archived. Only one audit of a type can be `issued` or `approved` within a single assessed scope (one milestone in Phase 5, one release in Phase 6) at a time; when a check is rerun after a correction, the new audit replaces the previous one, which is `archived`.
-
-### Versioning (release candidate)
-
-- Each verified milestone receives an RC version, derived from the changes it contains.
-- The RC version is recorded in the verification task and becomes an input to the release.
-- RC numbering restarts when the major version increments. RC versions are Semantic Versioning pre-release identifiers (e.g. `1.2.0-rc.1`).
-- The final release version is chosen in Phase 6, not here.
-
-### RC package
-
-After the checks pass and the RC version is recorded, the orchestrator publishes the verified milestone with `packaging`.
-
-- Each deployable component is built by its own `<component-dir>/scripts/build-package.sh`, created and owned by the technology's `*-dev` agent inside its component folder (`apps/<app>` in a multi-app repository, or the repository root for a single-app project). No ad-hoc build commands, no static pre-check in the quality review.
-- The package is built from the committed tree of the verified milestone; the commit SHA is recorded.
-- It is written to the git-ignored `builds/<version>/` directory of the project, one archive per deployable component, with `MANIFEST.txt` and a `.sha256` per archive.
-- Publication is local only: the package is never staged, committed, tagged, pushed, uploaded, or deployed.
-- A version is immutable: an existing `builds/<version>/` is never overwritten. A rebuild after corrections needs a new RC version.
-- The verification task records the version, commit SHA, script paths and commands, component list, paths, sizes, and checksums.
-- A missing or failing build script creates a task in the milestone for the owning `*-dev` agent; the task runs in Phase 4, verification reruns, a new RC is chosen, and packaging runs again. The packaging run in Phase 5 is also the recurring check that each script still works.
-- The user may waive packaging for the milestone; a waiver is explicit, user-only, and recorded in the verification task with its scope, reason, and timestamp (with timezone).
-- If verification reruns and the RC version changes, the previous package is marked superseded in the verification task and is never handed out as current.
+Audits follow their own lifecycle: `issued → approved → archived`; `approved` records the user's acceptance of the findings at the Phase 6 scope-and-findings review, so a Phase 5 audit stays `issued` until then. Only one audit of a type can be `issued` or `approved` within the release scope at a time; when an audit is rerun after a fix, the new audit replaces the previous one, which is `archived`.
 
 ### Failure handling
 
-| Outcome                  | Action                                                                                           |
-| ------------------------ | ------------------------------------------------------------------------------------------------ |
-| Quality review fails     | Create correction tasks with the failure description; Phase 4 executes them; verification reruns |
-| Code audit finds defects | Create correction tasks with the failure description; Phase 4 executes them; verification reruns |
-| RC package build fails or a build script is missing | Record the failure; create a task for the owning `*-dev` agent; Phase 4 executes it; verification reruns; package again with the new RC |
-| Package directory is not git-ignored or already exists | Stop; the user fixes the ignore rules, and changed content needs a new RC version |
-| Deferred finding         | The finding is recorded with an owner and a follow-up task created by planning; the user accepts or rejects it at the Phase 6 scope-and-findings review; the milestone proceeds with the risk documented |
-| Scope creep              | Report the unjustified change; the user decides removal or a requirements change through Phase 2 |
+| Outcome                             | Action                                                                                                     |
+| ----------------------------------- | ---------------------------------------------------------------------------------------------------------- |
+| A feature is not implemented properly | Create fix tasks with the failure description; Phase 4 executes them; the audits rerun                     |
+| Code-guideline or maintainability finding | Create fix tasks; Phase 4 executes them; the code audit reruns                                        |
+| Security finding                    | Create fix tasks for rejected findings; accepted findings are recorded with an owner and follow-up at the Phase 6 review |
+| Audit cannot run or lacks evidence  | Stop and report; the missing input is supplied before verification continues                              |
+| Accepted finding                    | Record it with an owner and a follow-up task; the finding is reviewed at the Phase 6 gate                  |
+| Scope creep                         | Report the unjustified change; the user decides removal or lifts the freeze through Phase 2                |
 
 Verification never silently lowers a criterion or accepts a failure. It records the failure and returns the work.
 
@@ -112,41 +102,31 @@ Verification never silently lowers a criterion or accepts a failure. It records 
 
 Phase 5 is complete when:
 
-- the milestone scope is complete and all its execution tasks are `Done`;
-- the whole change set of the milestone is covered by the checks;
-- every correction task created by a failed check is `Done`;
-- verification ran again after the corrections and passed;
-- deferred findings have an owner and a follow-up task;
-- the verification task is `Done` with the RC version and the milestone verification result; the quality audit and the code audit are recorded as Audit artifacts (types: quality, code) with status `issued`; the user reviews them at the Phase 6 release gate;
-- the RC package is published for the recorded version under the git-ignored `builds/<version>/` using each component's own script, its checksums verified, and its evidence recorded in the verification task; nothing of it is staged, committed, tagged, pushed, or uploaded, or the user explicitly waived packaging and the waiver is recorded.
+- the freeze is recorded with its frozen scope, and the codebase is verified at its baseline commit;
+- all three audits cover the whole codebase;
+- the quality audit, code audit, and security audit pass;
+- every fix task created by a failed audit is `Done`;
+- the audits ran again after the fixes and passed;
+- accepted findings have an owner and a follow-up task;
+- the release verification task is `Done` with the audit results and the verification result; the audits are recorded as Audit artifacts (types: quality, code, security) with status `issued`, to be reviewed by the user at the Phase 6 gate.
 
 ### Boundaries
 
 Phase 5 never:
 
-- fixes or reworks code directly; it creates correction tasks and returns the work;
-- changes requirements, acceptance criteria, milestone scope, dependencies, or ordinals; corrections stay within the approved scope and follow the planner's rules;
-- verifies more than one milestone in a pass;
+- fixes or reworks code directly; it creates fix tasks and returns the work;
+- changes requirements, acceptance criteria, milestone scope, or the frozen scope; findings become fix work only;
+- lifts or changes the freeze; that is a user decision;
+- verifies one milestone only, or samples the codebase instead of auditing it whole;
+- assigns or changes a version, or builds a package; RC and final builds belong to Phases 4 and 6;
 - approves or closes a release; Phase 6 does that;
-- inspects unchanged areas or the whole release; Phase 6 does the full release inspection;
-- runs the release review, release quality, code, or security audit, or final release tests; those belong to Phase 6;
-- packages code that has not passed verification;
-- commits, tags, pushes, uploads, or deploys a package; publication is local to `builds/<version>/` only;
-- overwrites or rebuilds an existing package version;
-- verifies around an incomplete task;
-- writes reports outside the verification task and the audit artifact.
+- writes reports outside the release verification task and the audit artifacts.
 
 ### Stop conditions
 
-- A task in the milestone is not `Done`: return to Phase 4.
-- Tests fail or cannot be run: record the failure and create correction tasks; do not accept reported evidence instead.
+- No recorded feature freeze: stop; verification does not run.
+- A frozen milestone has an incomplete task or no RC package: return to Phase 4.
+- Tests fail or cannot be run: record the failure and create fix tasks; do not accept reported evidence instead.
 - An acceptance criterion is ambiguous or unverifiable: stop and report; the criterion is fixed by its owner.
-- Unresolved finding without an owner: stop; a finding is never carried without an owner.
-- A reviewer discovers a requirement gap rather than an implementation defect: return to Phase 2.
-- The working tree is dirty or `builds/` is not git-ignored: stop; package only a committed, verified tree into an ignored directory.
-- A package build fails or a build script is missing: no package is published; the failure becomes task work.
-
-### Open points
-
-- Whether the code audit is mandatory for every milestone or proportional to the change size is not yet fixed.
-- How the change set is delimited for a milestone is not yet fixed.
+- A finding has no owner: stop; a finding is never carried without an owner.
+- A reviewer discovers a requirement gap rather than an implementation defect: the user lifts the freeze and the gap goes through Phase 2.
