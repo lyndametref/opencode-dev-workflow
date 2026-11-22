@@ -104,7 +104,7 @@ Record command, result, and counts. A failure creates fix work and returns to st
 
 After the tests pass, load `packaging` and publish the final version. Milestone RC packages from Phase 5 are never reused as the release package; the release is built and packaged under its final version.
 
-- each deployable component is built by its own `<component-dir>/scripts/build-package.sh`, created and owned by the technology's `*-dev` agent; never use ad-hoc build commands;
+- each deployable component is built by its own `apps/<app>/scripts/build-package.sh`, created and owned by the technology's `*-dev` agent inside its app folder; never use ad-hoc build commands;
 - build from the committed release tree and record the commit SHA;
 - write `builds/<version>/` with one archive per deployable component, `MANIFEST.txt`, and a `.sha256` per archive;
 - confirm `builds/` is git-ignored; nothing is staged, committed, tagged, pushed, uploaded, or deployed;

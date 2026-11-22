@@ -93,7 +93,7 @@ Rules:
 
 The release itself is packaged here, at the end of Phase 6, after the final build and tests pass and the final version is recorded. The orchestrator publishes it with `packaging`, in the same way as each milestone's RC package in Phase 5.
 
-- Each deployable component is built by its own `<component-dir>/scripts/build-package.sh`, which is created and owned by the `*-dev` agent of that technology. Packaging never uses ad-hoc build commands.
+- Each deployable component is built by its own `apps/<app>/scripts/build-package.sh`, which is created and owned by the `*-dev` agent of that technology inside its own app folder; there is no shared or repository-level script folder. Packaging never uses ad-hoc build commands.
 - Built from the committed release tree; the commit SHA is recorded.
 - Written to the git-ignored `builds/<version>/` with one archive per deployable component, `MANIFEST.txt`, and a `.sha256` per archive.
 - Local only: nothing is staged, committed, tagged, pushed, uploaded, or deployed.

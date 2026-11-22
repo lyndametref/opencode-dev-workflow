@@ -169,7 +169,7 @@ Tasks use the same three fields: for them, `Dependencies` is an ordering constra
 | Related          | other milestones, through roadmap order                                                                                                                                                                   |
 | Never contains   | Task-level acceptance criteria (`task-refiner`), execution status, and approval decisions.                                                                                                                |
 | Verified by      | Phase 5 milestone verification, including the published RC package for the recorded version.                                                                                                                                                                           |
-| Notes            | The RC package is published by the orchestrator with `packaging` into the git-ignored `builds/<version>/` using the component scripts; its evidence lives in the milestone verification task, not on the milestone record. |
+| Notes            | The RC package is published by the orchestrator with `packaging` into the git-ignored `builds/<version>/` using each component's own app-folder script; its evidence lives in the milestone verification task, not on the milestone record. |
 
 ### Release
 
@@ -307,13 +307,13 @@ Tasks use the same three fields: for them, `Dependencies` is an ordering constra
 | Owner / approver | the assigned `*-dev` agent / none: the work closes when the fulfilment proof is provided on the task                                                                                                                          |
 | Produced by      | Phase 4, implementation task kind                                                                                                                                                                                             |
 | Lifecycle        | none                                                                                                                                                                                                                          |
-| Required fields  | none: the repository defines its own structure. Every deployable building block carries `<component-dir>/scripts/build-package.sh`, committed as source, per the `build-package-script` contract. |
+| Required fields  | none: the repository defines its own structure. Every deployable building block carries `apps/<app>/scripts/build-package.sh`, committed as source inside the owning `*-dev` agent's own app folder, per the `build-package-script` contract; there is no shared or repository-level script folder. |
 | Dependencies     | tasks (requirements, specifications, decisions, and test cases are indirect, through the tasks)                                                                                                                               |
 | Dependents       | milestone verification task; release final package                                                                                                                                                                             |
 | Related          | none                                                                                                                                                                                                                          |
 | Never contains   | Requirements, acceptance criteria, plans, design approval, and review verdicts.                                                                                                                                               |
 | Verified by      | Phase 5 milestone verification: tests rerun and the code audit; Phase 6 final build, tests, and the package built from each component's script.                                                                                |
-| Notes            | The codebase implements both the requirements and the test cases; a test case without an implemented integration test is not covered.<br/>Low-level tests protect the code itself; test cases cover the feature as a whole.<br/>A build script is added by a task when packaging reports it missing; each packaging run is the check that it still works. |
+| Notes            | The codebase implements both the requirements and the test cases; a test case without an implemented integration test is not covered.<br/>Low-level tests protect the code itself; test cases cover the feature as a whole.<br/>The build script lives in the owning dev agent's app folder so that agent can create and maintain it; it is added by a task when packaging reports it missing, and each packaging run is the check that it still works. |
 
 ### Audit
 

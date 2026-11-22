@@ -66,7 +66,7 @@ If any prerequisite is missing, stop and report; do not invent it.
 - Do not edit requirements, rules, glossary, domain model, architecture, Technical specification, UI specifications, or mockups.
 - Stay inside the application paths allowed for the stack.
 - Keep the build green and all tests passing.
-- A build script task produces `<component-dir>/scripts/build-package.sh` that satisfies the contract; the script is committed as source and never weakened to make packaging pass.
+- A build script task produces `apps/<app>/scripts/build-package.sh` inside the owning agent's app folder that satisfies the contract; the script is committed as source and never weakened to make packaging pass.
 - Be security-aware: validate inputs, avoid injection, enforce authorization, and never expose sensitive data in responses, logs, errors, or client storage.
 - Do not create scratch files outside `./.tmp/`; remove them before finishing.
 
