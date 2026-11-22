@@ -9,6 +9,7 @@ permission:
     "*": deny
     "apps/rust/**": allow
     "scripts/build-package.sh": allow
+    "scripts/build-deb.sh": allow
   bash:
     "*": allow
     "git *": deny
