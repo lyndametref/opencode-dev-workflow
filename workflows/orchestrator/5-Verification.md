@@ -42,7 +42,7 @@ flowchart LR
     CA --> COK{"Code audit<br/>passes?"}
     COK -->|"No"| CORR
     COK -->|"Yes"| RCV["Determine the RC version"]
-    RCV --> PKG["Publish the RC package<br/>with each component's app-folder script"]
+    RCV --> PKG["Publish the RC package<br/>with each component's own script"]
     PKG --> OUT["Complete the verification task<br/>Hand verified milestone<br/>to Release"]
 ```
 
@@ -85,7 +85,7 @@ Audits follow their own lifecycle: `issued → approved → archived`; `approved
 
 After the checks pass and the RC version is recorded, the orchestrator publishes the verified milestone with `packaging`.
 
-- Each deployable component is built by its own `apps/<app>/scripts/build-package.sh`, created and owned by the technology's `*-dev` agent inside its own app folder; there is no shared or repository-level script folder. No ad-hoc build commands, no static pre-check in the quality review.
+- Each deployable component is built by its own `<component-dir>/scripts/build-package.sh`, created and owned by the technology's `*-dev` agent inside its component folder (`apps/<app>` in a multi-app repository, or the repository root for a single-app project). No ad-hoc build commands, no static pre-check in the quality review.
 - The package is built from the committed tree of the verified milestone; the commit SHA is recorded.
 - It is written to the git-ignored `builds/<version>/` directory of the project, one archive per deployable component, with `MANIFEST.txt` and a `.sha256` per archive.
 - Publication is local only: the package is never staged, committed, tagged, pushed, uploaded, or deployed.
@@ -118,7 +118,7 @@ Phase 5 is complete when:
 - verification ran again after the corrections and passed;
 - deferred findings have an owner and a follow-up task;
 - the verification task is `Done` with the RC version and the milestone verification result; the quality audit and the code audit are recorded as Audit artifacts (types: quality, code) with status `issued`; the user reviews them at the Phase 6 release gate;
-- the RC package is published for the recorded version under the git-ignored `builds/<version>/` using each component's own app-folder script, its checksums verified, and its evidence recorded in the verification task; nothing of it is staged, committed, tagged, pushed, or uploaded, or the user explicitly waived packaging and the waiver is recorded.
+- the RC package is published for the recorded version under the git-ignored `builds/<version>/` using each component's own script, its checksums verified, and its evidence recorded in the verification task; nothing of it is staged, committed, tagged, pushed, or uploaded, or the user explicitly waived packaging and the waiver is recorded.
 
 ### Boundaries
 

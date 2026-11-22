@@ -1,6 +1,6 @@
 ---
 name: packaging
-description: 'Publish a versioned deliverable package: build every deployable component through its own `apps/<app>/scripts/build-package.sh` with the recorded version, assemble per-component archives plus a manifest and checksums under builds/<version>/, gate on the directory being git-ignored, and record the evidence without committing, tagging, pushing, or uploading. Used for the RC package at the end of Phase 5 and the final package in Phase 6.'
+description: 'Publish a versioned deliverable package: build every deployable component through its own component script (`apps/<app>/scripts/build-package.sh` in a multi-app repository, or `scripts/build-package.sh` when the component is the repository root) with the recorded version, assemble per-component archives plus a manifest and checksums under builds/<version>/, gate on the directory being git-ignored, and record the evidence without committing, tagging, pushing, or uploading. Used for the RC package at the end of Phase 5 and the final package in Phase 6.'
 argument-hint: 'Provide the milestone ID and its recorded RC version, or the release ID and its recorded final version.'
 user-invocable: true
 disable-model-invocation: false
@@ -27,7 +27,7 @@ Do not use this skill to verify a milestone, fix code, choose versions, tag, pus
 
 - The version is recorded: the RC version in the verification task, or the final version on the release. Take the version string verbatim from `next-version`; never re-derive it here.
 - All source changes of the scope are committed: `git status --porcelain` is empty. Record the commit SHA with `git rev-parse HEAD`.
-- Every deployable component has an executable `apps/<app>/scripts/build-package.sh` at the commit, inside the owning `*-dev` agent's own app folder. The script is created and owned by that agent; there is no shared or repository-level script folder.
+- Every deployable component has an executable `<component-dir>/scripts/build-package.sh` at the commit, inside the owning `*-dev` agent's own folder. In a multi-app repository `<component-dir>` is `apps/<app>`; in a single-app repository whose deployable component is the repository root, the script is `scripts/build-package.sh` at the repository root. The script is created and owned by that agent; components never share one script.
 - The project's `.gitignore` contains the package directory (`builds/`). If it does not, ask the user to add it before building; never build into a tracked path.
 
 If a build script is missing, stop and report it. The planner creates a task for the owning `*-dev` agent: in the milestone during Phase 5, in the release's fix milestone in Phase 6. This skill never writes or patches the build itself.
@@ -59,9 +59,9 @@ builds/<version>/
 
 1. **Confirm the version and the tree** — read the recorded version and the commit SHA. Stop if the tree is dirty, the version is missing, or `builds/<version>/` already exists.
 2. **Resolve the deployable components** — read the architecture's deployment view and list every deployable building block with its directory.
-3. **Require the build scripts** — for each one, confirm `apps/<app>/scripts/build-package.sh` exists and is executable. A missing script is a stop condition; report it for a task. If the user waived packaging for this scope, stop here and record the waiver; nothing is built or published.
+3. **Require the build scripts** — for each one, confirm `<component-dir>/scripts/build-package.sh` (e.g. `apps/<app>/scripts/build-package.sh`, or `scripts/build-package.sh` for a repository-root component) exists and is executable. A missing script is a stop condition; report it for a task. If the user waived packaging for this scope, stop here and record the waiver; nothing is built or published.
 4. **Confirm the destination is ignored** — run `git check-ignore -q builds/<version>`. Stop if it fails.
-5. **Build each component with its script** — run `apps/<app>/scripts/build-package.sh --version <version> --out builds/<version>/.build/<component>` from the repository root. Capture stdout (produced paths), stderr, exit status, and the script path. Never fall back to ad-hoc build commands.
+5. **Build each component with its script** — run `<component-dir>/scripts/build-package.sh --version <version> --out builds/<version>/.build/<component>` from the repository root. Capture stdout (produced paths), stderr, exit status, and the script path. Never fall back to ad-hoc build commands.
 6. **Assemble the archives** — archive only the produced deliverables. Exclude build intermediates, dependency caches, VCS metadata, IDE files, environment files, secrets, credentials, logs, and local databases.
 7. **Validate the contents** — list every archive: every entry is an intended deliverable, no file outside the verified scope, no secret material.
 8. **Write the manifest and checksums** — write `MANIFEST.txt`, then a `.sha256` next to every archive.
@@ -73,7 +73,7 @@ builds/<version>/
 
 - The package is a deliverable, not scratch: it lives in the git-ignored `builds/` directory and is never cleaned up like `./.tmp/`.
 - Local publication only. This skill never tags, pushes, uploads, or deploys; those need explicit user approval outside this skill.
-- Every deployable component is built by its own `apps/<app>/scripts/build-package.sh` in its app folder; the orchestrator never improvises commands.
+- Every deployable component is built by its own `<component-dir>/scripts/build-package.sh`; the orchestrator never improvises commands.
 - A version is immutable: never overwrite or rebuild into an existing `builds/<version>/`. A rebuild after corrections requires a new RC version; a changed release requires a new final version.
 - A packaging waiver is explicit and user-only. Without one, a missing script blocks the scope; no skipping, no partial package.
 - Build from the recorded commit SHA; the manifest must let someone else reproduce the package.

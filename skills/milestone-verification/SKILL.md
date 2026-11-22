@@ -1,6 +1,6 @@
 ---
 name: milestone-verification
-description: 'Run Phase 5 for one milestone: open the milestone verification task, dispatch the quality review and code audit, drive corrections through the planner, record the RC version, publish the versioned RC package with each component's own app-folder script, and close the task only when every check passes.'
+description: 'Run Phase 5 for one milestone: open the milestone verification task, dispatch the quality review and code audit, drive corrections through the planner, record the RC version, publish the versioned RC package with each component's own script, and close the task only when every check passes.'
 argument-hint: 'Provide a milestone ID whose execution tasks are Done.'
 user-invocable: true
 disable-model-invocation: false
@@ -38,7 +38,7 @@ Do not use this skill to fix code, change milestone scope, verify more than one 
    - rerun the failed check. The new audit replaces the previous one, which is archived.
 6. **Handle deferred findings** — a deferred finding is recorded with an owner and a follow-up task created by `planner`. The user accepts or rejects it at the Phase 6 scope-and-findings review. The milestone may proceed with the risk documented.
 7. **Determine the RC version** — load `next-version` in RC mode for the verified milestone. Record the recommended version in the verification task.
-8. **Publish the RC package** — load `packaging` and build the recorded version from the committed tree into the git-ignored `builds/<version>/` by running each deployable component's `apps/<app>/scripts/build-package.sh --version <version> --out builds/<version>/.build/<component>`. Stop if the tree is dirty, the directory already exists, or `builds/` is not git-ignored. A missing or failing script becomes a task for the owning `*-dev` agent; do not patch or improvise the build. If the user waived packaging, record the waiver and publish nothing.
+8. **Publish the RC package** — load `packaging` and build the recorded version from the committed tree into the git-ignored `builds/<version>/` by running each deployable component's `<component-dir>/scripts/build-package.sh --version <version> --out builds/<version>/.build/<component>` (e.g. `apps/<app>/scripts/...`, or `scripts/...` for a repository-root component). Stop if the tree is dirty, the directory already exists, or `builds/` is not git-ignored. A missing or failing script becomes a task for the owning `*-dev` agent; do not patch or improvise the build. If the user waived packaging, record the waiver and publish nothing.
 9. **Record the result** — write the change set, checks run, evidence, findings, `AUD` IDs, correction tasks, deferred findings, RC version, package evidence (commit SHA, scripts, component archives, paths, sizes, sha256) or the waiver, and final result into the verification task description or comments (manage-tasks).
 10. **Close the verification task** — set it to `Done` only when:
     - the milestone scope is complete and all execution tasks are `Done`;
@@ -61,7 +61,7 @@ Do not use this skill to fix code, change milestone scope, verify more than one 
 - A Phase 5 audit stays `issued` until the user accepts or rejects its findings at the Phase 6 review.
 - Scope, dependency, and ordinal changes go to `planner`; verification never changes them.
 - The milestone verification task is the only check of the milestone. The milestone is not complete before it is `Done`.
-- The RC package is built from the committed, verified tree with each component's own app-folder script and published only to the git-ignored `builds/<version>/`; it is never staged, committed, tagged, pushed, uploaded, or deployed.
+- The RC package is built from the committed, verified tree with each component's own script and published only to the git-ignored `builds/<version>/`; it is never staged, committed, tagged, pushed, uploaded, or deployed.
 - A version is immutable: an existing `builds/<version>/` is never overwritten; changed content needs a new RC version.
 - A missing or failing build script is task work, not a lowered criterion. The quality review does not run the script; packaging does.
 

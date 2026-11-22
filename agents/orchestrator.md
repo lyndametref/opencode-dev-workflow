@@ -7,6 +7,7 @@ permission:
   grep: allow
   edit:
     "*": deny
+    "builds/**": allow
   bash:
     "*": allow
     "papyrus *": allow

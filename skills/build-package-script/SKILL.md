@@ -1,7 +1,7 @@
 ---
 name: build-package-script
 description: 'Create or update the component build script that produces a deployable artifact from a given version, so packaging can build it without ad-hoc commands. Defines the script path, interface, behavior, and per-technology examples.'
-argument-hint: 'Provide the app folder (`apps/<app>`), its technology, and the version format to inject.'
+argument-hint: 'Provide the component directory (`apps/<app>` in a multi-app repository, or the repository root for a single-app project), its technology, and the version format to inject.'
 user-invocable: true
 disable-model-invocation: false
 ---
@@ -13,8 +13,10 @@ disable-model-invocation: false
 One executable, committed script per deployable component:
 
 ```text
-apps/<app>/scripts/build-package.sh
+<component-dir>/scripts/build-package.sh
 ```
+
+In a multi-app repository `<component-dir>` is `apps/<app>`; in a single-app repository whose deployable component is the repository root, the script is `scripts/build-package.sh` at the repository root.
 
 It builds that component's deliverables for a given version into a given output directory. Packaging runs it at the end of Phase 5 for the RC and in Phase 6 for the final release; nobody has to reconstruct the build command by hand.
 
@@ -28,7 +30,7 @@ Do not use this skill to package a release, choose versions, change requirements
 ## Ownership
 
 - The `*-dev` agent of the component's technology owns the script: `android-dev` for Kotlin/Android, `backend-dev` for the backend stack, `frontend-dev` for web front ends, `rust-dev` for Rust.
-- The script lives inside the owning agent's own app folder, so that agent can create and maintain it; there is no shared or repository-level script folder.
+- The script lives inside the owning agent's own component folder, so that agent can create and maintain it; components never share one script.
 - The script is source code: it is committed, reviewed, and changed only through a task.
 - Packaging never writes or patches scripts; it only runs them.
 
@@ -36,14 +38,14 @@ Do not use this skill to package a release, choose versions, change requirements
 
 Path and permissions:
 
-- `apps/<app>/scripts/build-package.sh`, mode `755`.
+- `<component-dir>/scripts/build-package.sh`, mode `755`.
 - Shebang `#!/usr/bin/env bash`; `set -euo pipefail`.
 
 Interface:
 
 ```bash
-apps/<app>/scripts/build-package.sh --version <X.Y.Z> --out <dir>
-apps/<app>/scripts/build-package.sh --help
+<component-dir>/scripts/build-package.sh --version <X.Y.Z> --out <dir>
+<component-dir>/scripts/build-package.sh --help
 ```
 
 - `--version` is the version exactly as packaging received it (RC or final).
@@ -72,7 +74,7 @@ Prohibited:
 
 ## Procedure
 
-1. **Read the app folder** — its technology, build tool, and the artifact it must produce (from the architecture, technical specification, and existing build files).
+1. **Read the component** — its directory, technology, build tool, and the artifact it must produce (from the architecture, technical specification, and existing build files).
 2. **Write the script** — implement the contract above for that technology. Keep it thin: delegate to the build tool, do not reimplement it.
 3. **Self-check** — run `--help`; then run `--version 0.0.0-test --out ./.tmp/script-check/<component>/`; confirm the expected files appear, are non-empty, and carry the injected version where applicable; rerun to confirm idempotency.
 4. **Clean up** — remove `./.tmp/script-check/`.

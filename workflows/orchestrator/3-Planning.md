@@ -134,7 +134,7 @@ Refinement may split a task within the plan. Any split that changes dependencies
 
 Reordering or re-scoping an in-progress task requires the user's agreement first.
 
-A failed release audit adds a **fix milestone** to the release: the planner creates the fix milestone and its fix tasks, scoped only to what the release needs to become releasable. A deployable component reported without its `apps/<app>/scripts/build-package.sh` during packaging gets a task for its `*-dev` agent, in the milestone being verified or in the fix milestone.
+A failed release audit adds a **fix milestone** to the release: the planner creates the fix milestone and its fix tasks, scoped only to what the release needs to become releasable. A deployable component reported without its `<component-dir>/scripts/build-package.sh` during packaging gets a task for its `*-dev` agent, in the milestone being verified or in the fix milestone.
 
 ### Priority change
 
