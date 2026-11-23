@@ -36,6 +36,9 @@ permission:
     quality-audit: allow
     code-audit: allow
     security-audit: allow
+    complexity-audit: allow
+    duplication-audit: allow
+    coverage-audit: allow
 ---
 
 # Quality Gatekeeper
@@ -51,6 +54,7 @@ For one milestone, confirm every acceptance criterion, assess the basic code qua
 - `milestone-review` — the Phase 4 verification procedure, acceptance-criterion checks, quality gates, standalone code audit, and correction content.
 - `release-audit` — the Phase 5 procedure that combines the quality, code, and security audits over the whole frozen codebase.
 - `quality-audit`, `code-audit`, `security-audit` — the individual audits loaded by `release-audit`, and `code-audit` also runs standalone at milestone end.
+- `complexity-audit`, `duplication-audit`, `coverage-audit` — the metric checks loaded by `code-audit`.
 - `manage-audits` — record the three Phase 5 Audit records with status `issued`.
 - `managed-records` — read the milestone, tasks, requirements, test cases, source code, release, and audit records.
 

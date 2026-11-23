@@ -20,6 +20,7 @@ An evidence-based code audit of the specified code base and test suite, severity
 
 - Read access to the source, tests, build files, and Technical specification.
 - Available build and test commands for the stacks present.
+- Load `complexity-audit`, `duplication-audit`, and `coverage-audit` for the metric checks.
 
 ## Scope
 
@@ -27,9 +28,9 @@ The scope provided in the instruction. When none is given, audit the whole codeb
 
 ## Checks
 
-- **Complexity** — functions/classes that are hard to understand or test. Expressed with cyclomatic complexity, cognitive complexity, mean max and p95 function length metrics. ...need skill...
-- **Duplication** — repeated logic that should be shared. ...need skill...
-- **Test coverage** — changed and unchanged behavior has meaningful tests; integration tests implement the approved test cases. ...need skill...
+- **Complexity** — functions/classes that are hard to understand or test. Load `complexity-audit` for cyclomatic complexity, cognitive complexity where available, and mean/max/p95 function length.
+- **Duplication** — repeated logic that should be shared. Load `duplication-audit` for clone count, duplicated lines/tokens, and duplication percentage.
+- **Test coverage** — changed and unchanged behavior has meaningful tests; integration tests implement the approved test cases. Load `coverage-audit` for coverage metrics and test-case mapping.
 - **Naming** — unclear, misleading, or inconsistent names.
 - **Structure** — boundary violations, misplaced responsibilities, dead code, unintended coupling.
 - **Style-guide compliance** — the stack's style guide, formatter, and linter.
@@ -38,7 +39,7 @@ The scope provided in the instruction. When none is given, audit the whole codeb
 
 1. **Confirm scope** — depending on the instruction choose the code part (or whole) to review.
 2. **Read the evidence** — source, tests, build output. Do not trust a summary.
-3. **Run the checks** — build, full test suite, formatter check, and linter; inspect the scope and its tests against the checks above.
+3. **Run the checks** — build, full test suite, formatter check, and linter; run `complexity-audit`, `duplication-audit`, and `coverage-audit` over the scope; inspect the scope and its tests against the checks above.
 4. **Classify findings** — severity `low`, `medium`, `high`, or `blocker`, each with evidence and location.
 5. **Decide the verdict** — `pass` when no finding requires action; otherwise `findings reported`.
 6. **Report findings** — every finding with its severity, evidence, and recommendation.
@@ -59,6 +60,7 @@ The scope provided in the instruction. When none is given, audit the whole codeb
 
 - **Scope**: the scope and baseline commit, files and test suites inspected.
 - **Checks run**: commands and results.
+- **Metric checks**: complexity distribution, duplication percentage, coverage summary, or the reason a metric is unavailable.
 - **Findings**: severity | finding | evidence | location | recommendation.
 - **Severity counts**: blocker / high / medium / low.
 - **Verdict**: pass / findings reported.
@@ -67,6 +69,7 @@ The scope provided in the instruction. When none is given, audit the whole codeb
 
 - The scope was confirmed.
 - Build, tests, formatter, and linter were run or explicitly marked unavailable.
+- The complexity, duplication, and coverage checks ran or their limitations are recorded.
 - The whole scope and its test suite were covered.
 - Every finding has severity, evidence, and location.
 - No fix, task creation, or approval action was performed.
