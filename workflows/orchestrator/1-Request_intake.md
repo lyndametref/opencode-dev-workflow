@@ -1,6 +1,6 @@
 ## 1. Request intake
 
-Phase 1 turns incoming requests into a **request artifact** that requirements engineering can act on. There is exactly one intake path: `key-account-manager`. Nothing is specified, prioritized, or planned here; requests are summarized in canonical business terminology, their obvious gaps are asked about, and they are checked against what already exists.
+Phase 1 turns incoming requests into a **request artifact** that requirement analysis can act on. There is exactly one intake path: the `orchestrator`, started with `/new-request`. Nothing is specified, prioritized, or planned here; requests are summarized in canonical business terminology, their obvious gaps are asked about, and they are checked against what already exists.
 
 Phase position: `Phase 1 → Phase 2 Requirements` (see [End-to-End](./0-End-to-End.md)). The `Requests` artifact is defined in [artifacts.md](./artifacts.md).
 
@@ -8,14 +8,16 @@ The workflow is tool-agnostic: it names artifacts, owners, and states, not stora
 
 ### Actors and boundaries
 
-`key-account-manager` is the sole intake owner; no other agent captures requests. `orchestrator` boundary: a user making a request is redirected to Phase 1 with `key-account-manager`. Orchestrator conversations may only lead development or regenerate an existing artifact from settled requirements; they never add, soften, or reinterpret scope.
+`orchestrator` is the sole intake owner; no other agent captures requests. Intake is the only phase in which the orchestrator writes project content: the request artifact. The orchestrator never adds, softens, or reinterprets scope, and never starts requirement analysis itself.
+
+`/new-request` starts this phase with the orchestrator. `/handoff-intake` hands the captured request artifact to Phase 2, where `requirements-engineer` takes over; the request is never re-captured on handoff.
 
 ### Flow
 
 ```mermaid
 %%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 18}}}%%
 flowchart LR
-    START([Incoming requests]) --> CAP["key-account-manager:<br/>capture"]
+    START([/new-request]) --> CAP["orchestrator:<br/>capture"]
     CAP --> GAP["Collect obvious gaps<br/>and ask for broad clarification"]
     GAP --> GROUP["Group by theme,<br/>quality concerns, unassigned"]
     GROUP --> CONFIRM{"Requester confirms<br/>content, gaps, grouping?"}
@@ -25,6 +27,7 @@ flowchart LR
     HOLD -->|"Parked"| PARK["Create request artifact<br/>status: parked"]
     ART --> LIST["Show open request list"]
     PARK --> LIST
+    LIST --> HANDOFF["On user command:<br/>/handoff-intake → Phase 2"]
 ```
 
 ### Request artifact
@@ -51,11 +54,11 @@ Status meanings:
 - `closed` — the work is planned in Phase 3.
 - `rejected` — the need will not be fulfilled, with a reason.
 
-`status` and `references` may be updated by the actor that owns the step recording them; every other field belongs to `key-account-manager`.
+`status` and `references` may be updated by the actor that owns the step recording them; every other field belongs to `orchestrator`.
 
 ### Open-request list
 
-`key-account-manager` can list open requests at any time, on demand. The list is derived from artifact status and shows, per request: identifier, title and open-question count. Parked requests are listed separately and reactivated when their time has come; `in-progress`, `closed`, and `rejected` requests are reported separately, not re-offered.
+`orchestrator` can list open requests at any time, on demand. The list is derived from artifact status and shows, per request: identifier, title and open-question count. Parked requests are listed separately and reactivated when their time has come; `in-progress`, `closed`, and `rejected` requests are reported separately, not re-offered.
 
 ### Capture
 
@@ -68,15 +71,15 @@ Status meanings:
 
 ### Obvious gaps, not requirement engineering
 
-`key-account-manager` collects the facts needed to understand the request. Nothing more.
+`orchestrator` collects the facts needed to understand the request. Nothing more.
 
-| `key-account-manager` does                                                             | `key-account-manager` does not                                      |
-| -------------------------------------------------------------------------------------- | ------------------------------------------------------------------- |
+| `orchestrator` does                                                                   | `orchestrator` does not                                             |
+| ------------------------------------------------------------------------------------- | ------------------------------------------------------------------- |
 | Ask who is affected, when it happens, and what "done" would look like to the requester | Elicit or author requirements, acceptance criteria, or user stories |
-| Record contradictions between statements                                               | Resolve contradictions by choosing an interpretation                |
-| Record missing context as a precise open question                                      | Fill gaps with assumptions or domain invention                      |
-| Check vocabulary against the business glossary                                         | Define, extend, or correct glossary terms                           |
-| Check whether the need already exists in project records                               | Decide business rules, scope, priority, or solution                 |
+| Record contradictions between statements                                              | Resolve contradictions by choosing an interpretation                |
+| Record missing context as a precise open question                                     | Fill gaps with assumptions or domain invention                      |
+| Check vocabulary against the business glossary                                        | Define, extend, or correct glossary terms                           |
+| Check whether the need already exists in project records                              | Decide business rules, scope, priority, or solution                 |
 
 An unresolved gap stays an open question on the artifact. Requirements engineering decides whether it blocks Phase 2.
 
@@ -108,7 +111,8 @@ Phase 1 never:
 - defines scope, solution, architecture, or design;
 - creates or reorders tasks, milestones, or releases;
 - modifies existing requirements or specifications;
-- hands off to a specialist agent directly;
+- starts requirement analysis or specialist work itself;
+- hands the request to a specialist without `/handoff-intake`;
 - persists a request before the requester confirms it;
 - changes content after the artifact exists, except `status` and `references`.
 
