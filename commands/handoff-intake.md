@@ -1,14 +1,13 @@
 ---
-description: Hand a captured request artifact to the orchestrator for requirement intake
+description: Hand captured requests to Phase 2 requirement analysis
 agent: orchestrator
 ---
 
-Run the requirement intake flow for the request artifact(s) referenced above.
+Run the requirement handoff for the request artifact(s) referenced above. Follow the `intake-routing` skill.
 
 - Read the referenced request artifact(s) via `manage-requests`. Do not ask me to repeat the request content.
+- Delegate to `requirements-engineer`; never write requirements yourself.
 - A request with category `bug` goes directly to planning; it bypasses requirements.
-- Follow the `intake-routing` skill.
+- Stop on an unresolved product decision, an unresolved conflict with an existing requirement, or a validation gap.
 
-Stop before implementation. Report created/changed REQ/NFR IDs, validation status and open
-product decisions, architecture impact flags, plan corrections (or `no change needed`),
-request closure, and the next eligible task.
+Stop before planning. Report created/changed REQ/NFR IDs, validation status, resolved conflicts, open product decisions, impact outcomes, and the next action (`/plan REQUEST-xxx` or `/plan`).

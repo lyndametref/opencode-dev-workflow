@@ -1,7 +1,7 @@
 ---
 name: quality-audit
-description: 'Run the Phase 5 milestone quality review or the Phase 6 release quality audit: verify acceptance criteria, completeness, tests, scope, and NFR coverage, record the quality audit, and report findings and corrections.'
-argument-hint: 'Provide a milestone ID, its milestone-verification task ID, or a release ID.'
+description: 'Run the Phase 5 quality audit over the whole frozen codebase: verify feature completeness against requirements, business rules, milestone acceptance criteria, NFRs, scope, and tests, record the Audit artifact, and report findings for the user fix-or-own decision.'
+argument-hint: 'Provide the release ID and the feature freeze; no milestone mode exists.'
 user-invocable: true
 disable-model-invocation: false
 ---
@@ -10,81 +10,84 @@ disable-model-invocation: false
 
 ## Outcome
 
-An evidence-based quality audit for one assessed scope: a milestone at its Phase 5 boundary, or the whole release in Phase 6. The audit is recorded as a managed audit record of type `quality` with status `issued`, severity-ranked findings, and either a pass or the correction/fix content the reviewer defines.
+An evidence-based quality audit of the whole frozen codebase, recorded as a managed audit record of type `quality` with status `issued`, severity-ranked findings, and a recommendation. The user decides for every finding whether it is fixed or owned. The audit never fixes, approves, or releases.
 
 ## When to use
 
-- Phase 5: the milestone verification task is opened after every execution task is `Done`.
-- Phase 6: the release quality audit runs over the whole release.
+- Phase 5, after the user declares the feature freeze.
+- The frozen milestone scope and baseline commit are recorded.
 
-Do not use this skill to fix, rework, approve, or release.
+Do not use this skill for a single milestone (use `milestone-review`), for code style (use `code-audit`), or for exploitability (use `security-audit`).
 
 ## Prerequisites
 
-- Load `manage-audits`; read milestones, releases, and tasks through their `manage-*` skills.
-- Read access to the milestone/release, its tasks, requirements, specifications, UI, tests, and source code.
+- Load `manage-audits`; read releases, milestones, tasks, and requirements through their `manage-*` skills.
+- Read access to the frozen codebase, test suite, requirements, business rules, Technical specification, UI specifications, test cases, and task evidence.
+- The baseline commit of the last completed milestone.
 
-## Scopes
+## Scope
 
-| Mode | Scope | Reference |
-|---|---|---|
-| Milestone quality review (Phase 5) | Only the milestone's change set and the behavior it touches | Milestone `MS` and its verification task |
-| Release quality audit (Phase 6) | The whole release: all milestones, the cumulative change set, integration, regression, consistency, and NFR coverage | Release `REL` |
+The whole frozen codebase, including code unchanged since the last release. There is no milestone-scoped quality audit in Phase 5.
+
+## Checks
+
+- **Requirement coverage** — every verified `REQ`/`NFR` is implemented and traceable to a milestone and task.
+- **Acceptance criteria** — every milestone acceptance criterion is fulfilled in the frozen build, with evidence.
+- **Business rules** — every rule is exercised by a test and behaves as stated.
+- **NFR coverage** — each quality target or constraint has evidence.
+- **Scope creep** — no unjustified behavior outside the frozen scope.
+- **Tests** — the full suite is rerun and passes; every approved test case has an implemented integration test.
+- **Integration** — features delivered by different milestones work together.
+- **Consistency** — requirements, Technical specification, UI specifications, and code do not contradict each other.
 
 ## Procedure
 
-1. **Resolve the scope** — read the milestone or release, its tasks, and the acceptance criteria. A release has no acceptance criteria of its own; project-wide criteria apply. Confirm every task in scope is `Done`; if not, stop and return the scope to Phase 4.
-2. **Read the evidence** — read the fulfilment proof, test results, requirements, specifications, UI, and the change set. Do not accept reported evidence on trust; rerun the checks.
-3. **Run the checks**:
-   - every acceptance criterion is met, with evidence per criterion;
-   - required fields and artifacts are complete;
-   - the test suite is rerun and passes;
-   - the change set stays inside the approved scope (scope creep);
-   - referenced NFRs are addressed;
-   - in release mode: milestones are complete and verified, the change set is consistent across milestones, integration and regression pass, and cumulative change is covered.
+1. **Confirm the freeze and baseline** — read the release, its frozen milestone scope, the baseline commit, and the complete milestones. If the freeze is missing or a milestone is incomplete, stop.
+2. **Read the evidence** — tasks, fulfilment proof, requirements, rules, specifications, test cases, and the change set. Do not trust reported results; rerun the checks.
+3. **Run every check above** over the frozen codebase.
 4. **Classify findings** — severity `low`, `medium`, `high`, or `blocker`, each with evidence, location, and recommendation.
-5. **Decide** — `pass` when no finding blocks the scope; otherwise `corrections required`. In release mode, a `blocker` or an unresolved `high` finding blocks the release.
-6. **Record the audit** — create the audit record (manage-audits), type `quality`, with the `issued` label. Only one quality audit may be `issued` or `approved` per assessed scope at a time; when the check is rerun after corrections, the new audit replaces the previous one, which is archived.
-7. **Report corrections** — define the correction content: the failure description and the acceptance criteria it blocks. Do not create tasks; the orchestrator routes the content to `planner`, who creates the correction or fix task in the owning milestone.
-8. **Report** — the audit ID, verdict, per-criterion results, severity counts, findings, corrections, and the next action.
+5. **Decide the verdict** — `pass` when no finding blocks the release; otherwise `findings reported`. A `blocker` or unresolved `high` finding prevents a passing audit.
+6. **Record the audit** — create the record via `manage-audits`, type `quality`, reference the release, and set status `issued`. Only one quality audit may be `issued` or `approved` in the release scope at a time; a rerun replaces the previous audit, which is archived.
+7. **Report findings** — every finding with its severity, evidence, and recommendation, ready for the user's `fix` or `own` decision.
+8. **Report** — audit ID, verdict, per-check results, severity counts, findings, and the next action.
 
 ## Rules
 
-- Reviewers are independent of implementation and read-only.
-- Scope is exactly one milestone or one release per pass; never batch.
-- Rerun tests and re-read evidence; never trust a summary.
-- In Phase 5, changes are correction tasks inside the milestone's approved scope; scope, dependency, or ordinal changes go to `planner`.
-- In Phase 6, rejected findings or failed checks become fix tasks in the release's fix milestone.
-- A reviewer never fixes what it finds and never approves or closes a release.
-- A finding the user does not accept becomes correction or fix work; after the correction a new audit is issued and the old one is archived.
-- Accepted findings require an owner and a follow-up task.
+- The audit is independent and read-only. It never fixes what it finds.
+- The scope is the whole frozen codebase; never sample or audit a single milestone.
+- Every finding is traceable to evidence; unverifiable checks are reported as gaps, not passes.
+- A finding the user chooses to fix becomes a fix milestone executed in Phase 4; the audit reruns after it passes. The previous audit is archived.
+- A finding the user chooses to own is documented with an owner and a follow-up note; the audit can then be `approved`.
+- The audit does not create tasks, change scope, approve the release, version, package, or deploy.
 - Do not write reports outside the audit record and the response.
 
 ## Stop conditions
 
-- A task in scope is not `Done`: return to Phase 4.
-- Tests fail or cannot be run: record the failure and require corrections; do not accept reported evidence.
-- An acceptance criterion is ambiguous or unverifiable: stop; the criterion is fixed by its owner.
-- A finding has no owner: stop; a finding is never carried without an owner.
-- A reviewer discovers a requirement gap rather than an implementation defect: return to Phase 2.
+- No recorded feature freeze: stop; the audit does not run.
+- A frozen milestone is incomplete or its verification task is not `Done`: return to Phase 4.
+- Tests fail or cannot be run: record the failure as a finding; do not accept reported evidence.
+- An acceptance criterion is ambiguous or unverifiable: stop; its owner fixes it.
+- A finding has no evidence: stop; a finding is never carried without evidence.
+- A requirement gap is discovered rather than an implementation defect: the user lifts the freeze and the gap goes through Phase 2.
 
 ## Report format
 
-- **Scope**: milestone or release ID, title, change set.
+- **Scope**: release ID, freeze, baseline commit, frozen milestones.
 - **Checks run**: commands and evidence.
-- **Acceptance criteria**: criterion -> pass/fail -> evidence (release mode: project-wide criteria).
+- **Requirement coverage**: `REQ`/`NFR` -> implemented / missing.
+- **Acceptance criteria**: criterion -> pass / fail -> evidence.
+- **Test results**: suite result, counts, coverage gaps.
 - **Findings**: severity | finding | evidence | location | recommendation.
 - **Severity counts**: blocker / high / medium / low.
-- **Verdict**: pass / corrections required.
+- **Verdict**: pass / findings reported.
 - **Audit record**: `AUD` ID, type `quality`, status `issued`.
-- **Corrections**: failure description and blocked criteria, or `none`.
-- **Next action**: who does what next.
+- **Next action**: user fix-or-own decision.
 
 ## Completion checks
 
-- Scope and change set are stated and complete.
-- Every check was rerun or re-read, not trusted.
-- Every acceptance criterion has a pass/fail and evidence.
-- Every finding has severity, evidence, and an owner or required correction.
-- The `AUD` record exists, references the scope, and is `issued`.
-- No fix, approval, task creation, or release action was performed.
+- The freeze and baseline were confirmed.
+- The checks covered the whole frozen codebase.
+- Every requirement and milestone acceptance criterion has a result with evidence.
+- Every finding has severity, evidence, location, and recommendation.
+- The `AUD` record exists, references the release, and is `issued`.
+- No fix, task creation, approval, or release action was performed.

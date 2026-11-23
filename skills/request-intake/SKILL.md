@@ -1,6 +1,6 @@
 ---
 name: request-intake
-description: 'Capture incoming requests as persistent request artifacts, check obvious gaps and existing records, group them, and hand them to the orchestrator. Implements Phase 1 of the orchestrator workflow.'
+description: 'Capture incoming requests as persistent request artifacts, check obvious gaps and existing records, group them, and hand them over for requirements or planning. Implements Phase 1 of the orchestrator workflow, started with /new-request.'
 argument-hint: 'Capture a request, review open requests, or park/reactivate a request.'
 user-invocable: true
 disable-model-invocation: false
@@ -14,9 +14,9 @@ One persistent request artifact per request, written in canonical business termi
 
 ## When to use
 
-- A user, account, or stakeholder states a need, complaint, or wish.
+- `/new-request` is invoked, or the user states a need, complaint, or wish.
 - The user asks to list, park, reactivate, or review requests.
-- The user orders the handoff to the orchestrator.
+- The user orders the handoff to requirement analysis with `/handoff-intake`.
 
 Do not use this skill to write requirements, acceptance criteria, business rules, priority, scope, architecture, tasks, milestones, or releases.
 
@@ -29,8 +29,8 @@ Do not use this skill to write requirements, acceptance criteria, business rules
 
 Create and update each request via `manage-requests`.
 
-- **Owner** — `key-account-manager` owns every field.
-- **Status and references** — the only fields another actor may update, each from the step that records it: `requirements-engineer` sets `in-progress`; `planner` sets `closed` or `rejected`.
+- **Owner** — `orchestrator` owns every field.
+- **Status and references** — the only fields another actor may update, each from the step that records it: `requirements-engineer` sets `in-progress`; the `orchestrator` sets `closed` or `rejected` during planning.
 
 The request's category, requested outcome, requester, items, grouping, open questions, and history are recorded in the record title and content body.
 
@@ -58,7 +58,7 @@ Body:
 
 ## History
 
-- YYYY-MM-DD: created as open by key-account-manager.
+- YYYY-MM-DD: created as open by orchestrator.
 ```
 
 ## Status meanings
@@ -67,15 +67,15 @@ Body:
 |---|---|
 | `open` | Ready for Phase 2, or for Phase 3 when the category is `bug`. |
 | `parked` | The need is approved but held; intake reactivates it when its time has come. |
-| `in-progress` | Requirements work, or planning for a `bug`, has started. Set by `requirements-engineer` or `planner`. |
-| `closed` | The work is planned. Set by `planner`. |
-| `rejected` | The need will not be fulfilled, with a reason. Set by `planner`. |
+| `in-progress` | Requirements work, or planning for a `bug`, has started. Set by `requirements-engineer` or the orchestrator. |
+| `closed` | The work is planned. Set by the orchestrator during Phase 3. |
+| `rejected` | The need will not be fulfilled, with a reason. Set by the orchestrator during Phase 3. |
 
 ## Procedure
 
 ### 1. Start the intake session
 
-1. Confirm the requester, channel, and affected product area. Ask only for what is missing.
+1. `/new-request` starts the phase with the orchestrator. Confirm the requester, channel, and affected product area. Ask only for what is missing.
 2. Never invent account names, severity, or priority.
 
 ### 2. Capture
@@ -126,11 +126,11 @@ Then create the record via `manage-requests` (`create`); the body is multiline, 
 
 ### 8. Hand off
 
-The orchestrator is the only handoff target. Handoff happens only on an explicit order.
+Requirement handoff happens only on the user's explicit order with `/handoff-intake`; a `bug` is planned with `/plan`.
 
 1. Select the request IDs to hand off. Default: all open requests. Confirm the selection.
-2. State the request IDs, category, open-question count, and the requested orchestrator returns.
-3. Instruct the user to run `/handoff-intake`. The command switches the session to `orchestrator`; the artifact is the captured request, so the user must not repeat it.
+2. State the request IDs, category, open-question count, and what the requirements step will return.
+3. Instruct the user to run `/handoff-intake` for requirements, or `/plan` for a `bug`. The artifact is the captured request, so the user must not repeat it.
 4. Do not edit requirements, create tasks, or reorder the backlog.
 
 ## Categories
@@ -150,7 +150,7 @@ Phase 1 never:
 - sets priority;
 - creates or reorders tasks, milestones, or releases;
 - modifies existing requirements or specifications;
-- hands off to a specialist agent directly;
+- starts requirement analysis or specialist work itself;
 - persists a request before the requester confirms it;
 - changes content after creation, except `status` and `references` by the owning step.
 
@@ -174,11 +174,13 @@ Phase 1 never:
 ## Open questions for product
 - ...
 
-## Requested orchestrator returns
+## User ADRs already created (optional)
+- ADR-... — <title> — <status>
+
+## Requested requirements returns
 - created/changed REQ/NFR IDs and validation status
-- architecture decisions and constraints, when applicable
-- plan corrections or `no change needed`
-- next eligible task
+- existing-requirement conflicts and their resolution
+- plan-ready IDs; no plan is created in Phase 2
 ```
 
 ## Completion checks
@@ -186,4 +188,4 @@ Phase 1 never:
 - Every captured item is on exactly one request artifact.
 - The artifact has identifier, title, category, requested outcome, status, items, open questions, grouping, and requester confirmation.
 - No requirement, acceptance criterion, priority, scope, task, milestone, or release was authored.
-- Handoff happened only on explicit order, through `/handoff-intake`, and the user was told what the orchestrator will return.
+- Handoff happened only on explicit order, through `/handoff-intake` or `/plan`, and the user was told what the next phase will return.

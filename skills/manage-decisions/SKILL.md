@@ -1,28 +1,28 @@
 ---
 name: manage-decisions
-description: 'Create, read, update, and deprecate architecture (ADR) and business (BDR) decision records through the management tool.'
-argument-hint: 'ADR title or description of the architectural decision to record.'
+description: 'Create, read, update, and deprecate decision records (ADRs) for business and technical choices through the management tool.'
+argument-hint: 'ADR title or description of the business or technical decision to record.'
 user-invocable: true
 disable-model-invocation: false
 ---
 
-# Architecture Decision Record (ADR) Management
+# Decision Record (ADR) Management
 
 ## Outcome
 
-Create, revise, and manage Architecture Decision Records (ADRs) as Papyrus `decision` records. Once an ADR reaches a final status (`Accepted`, `Refused`), its body becomes immutable — only status transitions to `Deprecated` or `Superseded` are permitted. The Papyrus browser is the ADR index; no `index.html` is generated.
+Create, revise, and manage decision records (ADRs) as Papyrus `decision` records. An ADR fixes a business or technical choice and documents its trade-offs and resolution. Once an ADR reaches a final status (`Accepted`, `Refused`), its body becomes immutable — only status transitions to `Deprecated` or `Superseded` are permitted. The Papyrus browser is the ADR index; no `index.html` is generated.
 
 ## When To Use
 
-- Record a significant architectural decision with rationale.
-- Propose a new architectural approach for discussion.
+- The user creates an ADR between Phases 1 and 2 to enforce a business or technical choice before requirement analysis.
+- `task-refiner` records a technical decision during Phase 4 refinement.
+- Read ADRs as constraints on requirements, the Technical specification, and development.
 - Supersede or deprecate a previously accepted/refused decision.
-- Document the context, trade-offs, and consequences of a decision.
 
 Do not use this skill for:
-- Business or project management decisions (use the Papyrus `decision` command with type `bdr`).
-- Implementation notes or task-level choices.
-- Casual discussions that do not impact architecture.
+- Task-level implementation notes.
+- Casual discussions with no recorded trade-off.
+- A decision the user has not made: record it only after the user decides, or leave it `Proposed`.
 
 ## ADR Location and Discovery
 
@@ -68,9 +68,10 @@ Every procedure ends by confirming the record is visible through `papyrus decisi
 ### 1. Create a new ADR (Proposed)
 
 1. **Resolve the title** — short, descriptive noun phrase.
-2. **Create through Papyrus** — one multiline field per command; the decision first, then context and consequences by `edit`:
+2. **Choose the decision type** — `adr` for a technical or architecture decision, `bdr` for a business decision.
+3. **Create through Papyrus** — one multiline field per command; the decision first, then context and consequences by `edit`:
    ```bash
-   papyrus decision create "<Title>" --decision-type adr --reference <REQ-ID> --decision - <<'EOF'
+   papyrus decision create "<Title>" --decision-type <adr|bdr> --reference <REQ-ID> --decision - <<'EOF'
    <the decision>
    EOF
 
@@ -82,8 +83,9 @@ Every procedure ends by confirming the record is visible through `papyrus decisi
    <positive, negative, migration>
    EOF
    ```
-3. **Confirm status** — the new record is `Proposed`; if not, set it with `papyrus decision edit <ADR-ID> --status Proposed`.
-4. **Confirm visibility** with `papyrus decision list`.
+4. **Confirm status** — the new record is `Proposed`; if not, set it with `papyrus decision edit <ADR-ID> --status Proposed`.
+5. **Record the trade-offs** — put the options considered and why the chosen resolution wins in `--context`, and the resulting benefits and costs in `--consequences`.
+6. **Confirm visibility** with `papyrus decision list`.
 
 ### 2. Accept or Refuse a Proposed ADR
 

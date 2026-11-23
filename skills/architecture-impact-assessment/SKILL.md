@@ -1,7 +1,7 @@
 ---
 name: architecture-impact-assessment
-description: 'Run the Phase 4 architecture impact assessment, maintain the Architecture artifact, record architecture decisions, delegate Technical specification sections, and verify specification conformance.'
-argument-hint: 'Provide a milestone or architecture task ID. Use the conformance mode to verify a technical specification section before refinement.'
+description: 'Analyse the architecture impact of a milestone during Phase 4 refinement: decide the technical approach, update the Technical specification, record technical decisions, and record an explicit no-impact outcome when that is the case.'
+argument-hint: 'Provide the milestone or refinement task ID.'
 user-invocable: true
 disable-model-invocation: false
 ---
@@ -10,85 +10,72 @@ disable-model-invocation: false
 
 ## Outcome
 
-For one milestone, an assessed architectural impact, an updated Architecture artifact, accepted architecture decisions, delegated Technical specification sections, and a user-verified architecture. In conformance mode, a pass/fail verdict on a Technical specification section's conformance with the architecture and decisions.
+For one milestone, an assessed architecture impact, the technical approach for the milestone as a whole, the affected Technical specification sections, and the technical decisions that fix non-obvious choices. When the change has no architecture impact, that outcome is recorded explicitly with its reason.
 
 ## When to use
 
-- The architecture impact assessment task of a milestone is executed in Phase 4.
-- The first architecture assessment of a project establishes the architecture baseline.
-- The orchestrator asks for Technical specification conformance before refinement.
-- A technical improvement or `bug` milestone may affect architecture and the planner included the task.
+- The refinement task of a milestone is executed in Phase 4.
+- A milestone changes behavior, interfaces, data, validation, error handling, cross-cutting concepts, quality attributes, or the technology stack.
 
 Do not use this skill to edit requirements, write code, design UI, plan milestones or tasks, or approve a release.
 
-## Architecture artifact
+## Prerequisites
 
-- The Architecture is a plain Markdown set of files under `docs/architecture/`.
-- It contains context, building block, runtime, and deployment views; the global solution design; the technology stack; external interfaces and contracts; and cross-cutting concepts.
-- Each file carries its own `status: draft | verified` marker. Update it to `verified` only after the user verified the architecture.
-- The Architecture never contains requirements, detailed design, source code, acceptance criteria, or building-block specifications (those are the Technical specification).
-- Building blocks are the sections of the Technical specification.
+- The user's ADRs are read and accepted as constraints.
+- The Technical specification baseline exists; on the first milestone of a project, establish it.
+- The changed `REQ`/`NFR`, business rules, glossary, and domain artifacts are available.
 
-## Procedure — impact assessment
+## Technical record
 
-1. **Read the task and scope** — read the assigned task, the milestone acceptance criteria, and the changed `REQ`/`NFR` IDs.
-2. **Read the baseline** — architecture files, Technical specification, business rules, glossary, domain model, current decisions, and the current stack.
-3. **Judge impact** — decide whether the change affects context boundaries, building blocks, runtime or deployment views, technology stack, external interfaces, cross-cutting concepts, or quality attributes. Record the impact as `none` when it does not.
-4. **Update the Architecture** — edit only `docs/architecture/`. Keep files marked `draft` until user verification.
-5. **Record decisions** — for each non-obvious trade-off, create or update a Decision (manage-decisions). Status starts `proposed`. Ask the user for explicit validation before setting `accepted`; never auto-accept.
-6. **Delegate specification sections** — call `tech-writer` with the affected building blocks, the architecture constraints, the decision IDs, and the requirement references. Require the returned `TECH` section IDs and a draft status. Do not edit the Technical specification yourself.
-7. **Present for verification** — present the architecture and the decisions to the user. The gate before dependent design and implementation is the user's verification of the architecture and acceptance of the decisions.
-8. **Record the result** — set architecture files to `verified` only after the user verified them. Report the changed files, decision IDs and statuses, affected building blocks, delegated `TECH` sections, and open questions.
+There is no separate Architecture artifact. The technical record is:
 
-## Procedure — specification conformance
+- the project-wide Technical specification, organized in sections per building block;
+- the Decision records (ADRs) that fix technical choices, including the user's ADRs and the technical decisions recorded in refinement; Papyrus records them with decision type `adr`.
 
-Run after `tech-writer` drafted a section and before refinement.
+The user's ADRs created between Phases 1 and 2 are binding. A refinement decision may refine them but never supersedes them.
 
-1. Read the Technical specification section, the Architecture, and every referenced decision.
-2. Check:
-   - the section belongs to a building block of the Architecture;
-   - it respects the architecture constraints and accepted decisions;
-   - it keeps traceability in references and does not restate requirements;
-   - its body contains behavior, flows and states, data and API-facing attributes, validation and error behavior, and interface contracts, with no traceability lists and no Task/Milestone/Release IDs.
-3. Report `conformant` or `not conformant` with specific findings and the required corrections. Do not edit the Technical specification yourself.
-4. A `not conformant` verdict returns the section to `tech-writer`; refinement does not start.
+## Procedure
+
+1. **Read the scope** — read the milestone, its acceptance criteria, the changed `REQ`/`NFR`, the Technical specification, business rules, glossary, domain artifacts, and all user ADRs.
+2. **Judge the impact** — decide whether the milestone affects building blocks, interfaces, runtime or deployment structure, technology stack, cross-cutting concepts, or quality attributes. Record `no architecture impact` with the reason when it does not.
+3. **Decide the technical approach** — describe how the milestone will be implemented as a whole: building blocks touched, contracts, data, validation, error behavior, and cross-cutting concerns.
+4. **Update the Technical specification** — load `technical-specification` and create or update the affected `TECH` sections. The specification is the implementation contract.
+5. **Record technical decisions** — for each non-obvious trade-off, create an `ADR` through `manage-decisions`, with context, decision, trade-offs and their resolution, and consequences. Status starts `proposed`; set it to `accepted` only with the user's validation when the decision fixes a direction the user did not already set.
+6. **Confirm the baseline** — on the first milestone, establish the building blocks the Technical specification is organized by.
+7. **Report** — impact, affected building blocks, `TECH` IDs, decision IDs and statuses, open questions, and readiness.
 
 ## Rules
 
-- The architecture impact assessment comes first in every feature and technical-improvement milestone.
-- Update only the artifacts you own: Architecture, and Decisions with type `architecture`.
-- `tech-writer` owns the Technical specification; delegate its sections and wait for the result.
-- The user verifies the architecture and accepts architecture decisions. A positively completed verification approves the artifact.
-- When the change is technical but not architectural, record `no architecture impact` with the reason.
-- Do not invent user-facing behavior or business rules to fill product gaps; return those to `requirements-engineer` through the orchestrator.
-- Do not modify `REQ`/`NFR`, business rules, glossary, domain model, UI, or source code.
-- Do not move or rename decision records by hand; use `manage-decisions`. Never create an ADR index.
+- The assessment covers the milestone as a whole; it is not a per-development-task design step.
+- Update only the Technical specification and the technical decisions. Never edit requirements, business rules, glossary, domain model, UI, or source code.
+- Never create or maintain a separate Architecture artifact.
+- Never supersede a user ADR; report the conflict to the orchestrator.
+- Do not invent user-facing behavior or business rules to fill product gaps; report the gap.
+- Every decision goes through `manage-decisions`; never edit decision files by hand.
+- The Technical specification body documents behavior only; traceability is attached as references.
+- Use only project-local `./.tmp/` for drafts; remove them before finishing.
 
 ## Stop conditions
 
 - A required product decision is missing: stop and report.
-- The Architecture baseline is missing on a first assessment and cannot be established from requirements and decisions: stop and ask.
-- A decision is required but the user has not accepted it: dependent design and implementation do not start.
-- A Technical specification section is not conformant: return it to `tech-writer`; do not start refinement.
-- A requirement gap is discovered: report it to the orchestrator; do not patch requirements.
+- The Technical specification baseline is missing on a first milestone and cannot be established: stop and ask.
+- A needed decision contradicts a user ADR: stop; the user decides.
+- Requirements are missing or contradictory: report to the orchestrator; do not invent behavior.
 
 ## Report format
 
-- **Task/milestone**: ID and title.
-- **Impact**: affected views, building blocks, interfaces, stack, cross-cutting concerns, or `none`.
-- **Architecture changes**: files and status.
+- **Milestone / refinement task**: IDs and titles.
+- **Impact**: affected building blocks, interfaces, stack, quality attributes, or `none` with the reason.
+- **Technical approach**: summary for the milestone as a whole.
+- **Technical specification**: `TECH`/`SPEC` IDs and status.
 - **Decisions**: `ADR` IDs and status (`proposed` / `accepted` / `superseded`).
-- **Delegated specification sections**: `TECH` IDs and draft status.
-- **User verification**: pending / verified / changes requested.
-- **Conformance** (conformance mode): conformant / not conformant with findings.
 - **Open questions**: or `none`.
 - **Next action**: who does what next.
 
 ## Completion checks
 
 - Impact was assessed and recorded, including the explicit `none` case.
-- Architecture files changed only under `docs/architecture/`.
-- Every architecture decision was recorded through `manage-decisions` and user acceptance was obtained where required.
-- Affected Technical specification sections were delegated to `tech-writer`.
-- Architecture and decisions were presented for user verification before dependent work.
-- In conformance mode, the verdict is evidence-based and the Technical specification was not edited.
+- The technical approach covers the milestone as a whole.
+- Affected `TECH` sections were created or updated.
+- Every technical decision is recorded as an ADR and respects the user's ADRs.
+- No separate Architecture artifact, code, UI, or requirement was written.

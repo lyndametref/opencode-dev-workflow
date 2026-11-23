@@ -41,7 +41,7 @@ EOF
 - Content is code documentation only: behavior, flows and states, data and API-facing attributes, validation and error behavior, interface contracts.
 - Traceability is metadata: attach `REQ`/`NFR`, `BR`, `ADR`, glossary, and domain IDs with `--reference`. Never write them, requirement text, acceptance criteria, or Task/Milestone/Release IDs into the description.
 - `--reference` accepts only `REQ`/`NFR`, `BR`, `ADR`, glossary, and domain IDs. Never reference a `TASK`, `MS`, or `REL`.
-- Status: `draft` → `verified` (conformance approved by architect) → `archived`.
+- Status: `draft` → `verified` (self-verified by `task-refiner` when complete and consistent with the decisions) → `archived`.
 
 ## References
 

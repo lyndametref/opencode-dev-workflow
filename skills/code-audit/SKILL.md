@@ -1,7 +1,7 @@
 ---
 name: code-audit
-description: 'Run the Phase 5 change-scoped code audit or the Phase 6 release-wide code audit: review complexity, duplication, naming, structure, coverage, and style, record the code audit, and report corrections.'
-argument-hint: 'Provide a milestone ID or a release ID.'
+description: 'Run the Phase 5 code audit over the whole frozen codebase: review complexity, duplication, naming, structure, test coverage, and style, record the Audit artifact, and report findings for the user fix-or-own decision.'
+argument-hint: 'Provide the release ID and the feature freeze; no milestone mode exists.'
 user-invocable: true
 disable-model-invocation: false
 ---
@@ -10,27 +10,24 @@ disable-model-invocation: false
 
 ## Outcome
 
-An evidence-based code audit for one assessed scope: the code and tests changed in a milestone (Phase 5), or the whole codebase and test suite (Phase 6). The audit is recorded as a managed audit record of type `code` with status `issued`, severity-ranked findings, and correction/fix content.
+An evidence-based code audit of the whole frozen codebase and test suite, recorded as a managed audit record of type `code` with status `issued`, severity-ranked findings, and a recommendation. The user decides for every finding whether it is fixed or owned. The audit never fixes, approves, or releases.
 
 ## When to use
 
-- Phase 5: after the quality review of the milestone passes.
-- Phase 6: the release-wide code audit runs over the whole codebase.
+- Phase 5, after the user declares the feature freeze.
+- The frozen milestone scope and baseline commit are recorded.
 
-Do not use this skill to fix code, approve, or release.
+Do not use this skill for a single milestone (use `milestone-review`), for feature completeness (use `quality-audit`), or for exploitability (use `security-audit`).
 
 ## Prerequisites
 
-- Load `manage-audits`; read milestones, releases, and tasks through their `manage-*` skills.
-- Read access to the source, tests, build files, and specification.
+- Load `manage-audits`; read releases, milestones, and tasks through their `manage-*` skills.
+- Read access to the source, tests, build files, and Technical specification.
 - Available build and test commands for the stacks present.
 
-## Scopes
+## Scope
 
-| Mode | Scope |
-|---|---|
-| Milestone code audit (Phase 5) | Only the code and tests created or modified in the milestone. Pre-existing code is not audited here. |
-| Release code audit (Phase 6) | The whole codebase and test suite, including code unchanged in this release. |
+The whole codebase and test suite, including code unchanged in the frozen milestones. There is no milestone-scoped code audit in Phase 5.
 
 ## Checks
 
@@ -38,52 +35,53 @@ Do not use this skill to fix code, approve, or release.
 - **Duplication** — repeated logic that should be shared.
 - **Naming** — unclear, misleading, or inconsistent names.
 - **Structure** — boundary violations, misplaced responsibilities, dead code, unintended coupling.
-- **Test coverage** — changed behavior has tests; integration tests implement the approved test cases; tests are meaningful, not superficial.
+- **Test coverage** — changed and unchanged behavior has meaningful tests; integration tests implement the approved test cases.
 - **Style-guide compliance** — the stack's style guide, formatter, and linter.
-- **Security-relevant code patterns** — only as code-quality observations; the security audit is Phase 6.
+- **Security-relevant code patterns** — only as code-quality observations; exploitability belongs to `security-audit`.
 
 ## Procedure
 
-1. **Resolve the scope** — read the milestone or release and its change set. Confirm every task in scope is `Done`.
-2. **Read the evidence** — read the changed files, tests, build output, and specification. Do not trust a summary.
-3. **Run the checks** — run the build, test suite, formatter check, and linter; inspect the changed code and tests against the checks above.
+1. **Confirm the freeze and baseline** — read the release, its frozen milestone scope, the baseline commit, and the complete milestones. If the freeze is missing or a milestone is incomplete, stop.
+2. **Read the evidence** — source, tests, build output, and the Technical specification. Do not trust a summary.
+3. **Run the checks** — build, full test suite, formatter check, and linter; inspect the whole codebase and tests against the checks above.
 4. **Classify findings** — severity `low`, `medium`, `high`, or `blocker`, each with evidence and location.
-5. **Decide** — `pass` when no finding blocks the scope; otherwise `corrections required`.
-6. **Record the audit** — create the audit record (manage-audits), type `code`, with status `issued` (approval is documented by `status`, not labels), e.g. `papyrus audit create --title "Code audit <scope>" --audit-type code --reference <scope> --content -` then `papyrus audit status <AUD-ID> issued`. Only one code audit may be `issued` or `approved` per assessed scope at a time; a rerun after corrections replaces the previous audit, which is archived.
-7. **Report corrections** — define the failure description and the acceptance criteria it blocks. Do not create tasks; the orchestrator routes the content to `planner`.
-8. **Report** — audit ID, verdict, checks, severity counts, findings, corrections, and next action.
+5. **Decide the verdict** — `pass` when no finding blocks the release; otherwise `findings reported`.
+6. **Record the audit** — create the record via `manage-audits`, type `code`, reference the release, and set status `issued`. Only one code audit may be `issued` or `approved` in the release scope at a time; a rerun replaces the previous audit, which is archived.
+7. **Report findings** — every finding with its severity, evidence, and recommendation, ready for the user's `fix` or `own` decision.
+8. **Report** — audit ID, verdict, checks, severity counts, findings, and next action.
 
 ## Rules
 
-- Auditors are independent of implementation and read-only.
-- Phase 5 audits only the milestone's change set; Phase 6 audits the whole codebase.
+- The audit is independent and read-only. It never fixes what it finds.
+- The scope is the whole frozen codebase; never sample or audit a single milestone.
 - Every finding is severity-ranked with evidence and location.
-- Accepted findings require an owner and a follow-up task.
-- A reviewer never fixes what it finds and never approves or closes a release.
+- A finding the user chooses to fix becomes a fix milestone executed in Phase 4; the audit reruns after it passes. The previous audit is archived.
+- A finding the user chooses to own is documented with an owner and a follow-up note; the audit can then be `approved`.
+- The audit does not create tasks, change scope, approve the release, version, package, or deploy.
 - Do not write reports outside the audit record and the response.
 
 ## Stop conditions
 
-- A task in scope is not `Done`: return to Phase 4.
-- The build or test suite fails: record the failure and require corrections.
-- The change set cannot be delimited for the milestone: stop and report; the scope is fixed by the orchestrator/planner.
-- A finding has no owner: stop; a finding is never carried without an owner.
+- No recorded feature freeze: stop; the audit does not run.
+- A frozen milestone is incomplete: return to Phase 4.
+- The build or test suite fails: record the failure as a finding; the audit does not pass.
+- A finding has no evidence: stop; a finding is never carried without evidence.
 
 ## Report format
 
-- **Scope**: milestone or release ID, change set, files inspected.
+- **Scope**: release ID, freeze, baseline commit, files and test suites inspected.
 - **Checks run**: commands and results.
 - **Findings**: severity | finding | evidence | location | recommendation.
 - **Severity counts**: blocker / high / medium / low.
-- **Verdict**: pass / corrections required.
+- **Verdict**: pass / findings reported.
 - **Audit record**: `AUD` ID, type `code`, status `issued`.
-- **Corrections**: failure description and blocked criteria, or `none`.
-- **Next action**: who does what next.
+- **Next action**: user fix-or-own decision.
 
 ## Completion checks
 
-- Scope and change set are stated and complete.
+- The freeze and baseline were confirmed.
 - Build, tests, formatter, and linter were run or explicitly marked unavailable.
+- The whole codebase and test suite were covered.
 - Every finding has severity, evidence, and location.
-- The `AUD` record exists, references the scope, and is `issued`.
-- No fix, approval, task creation, or release action was performed.
+- The `AUD` record exists, references the release, and is `issued`.
+- No fix, task creation, approval, or release action was performed.

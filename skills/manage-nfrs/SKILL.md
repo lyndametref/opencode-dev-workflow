@@ -79,7 +79,7 @@ NFR edits are multi-record. If interrupted, re-run a validation pass on the affe
 
 ## Handoff
 
-After changing NFRs, report the changed `NFR` IDs to the caller (planner / architect / orchestrator) so specs and verification plans can be aligned.
+After changing NFRs, report the changed `NFR` IDs to the caller (`requirements-engineer` / orchestrator) so specs and verification plans can be aligned.
 
 ## Completion Checks
 

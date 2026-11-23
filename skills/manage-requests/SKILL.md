@@ -50,7 +50,7 @@ EOF
 - Papyrus owns the `RE` ID, metadata, and archive state. Never edit managed request files directly.
 - The installed Papyrus must provide the `request` command; confirm with `papyrus request --help`. If it does not, stop and report the version gap. Never store requests as plain Markdown or substitute another command.
 - Request bodies are multiline: pass `--content -` and the body on stdin.
-- Only `status` and `references` may be updated by the actor that owns the step recording them. All other fields belong to `key-account-manager`.
+- Only `status` and `references` may be updated by the actor that owns the step recording them. All other fields belong to `orchestrator`.
 - Use only project-local `./.tmp/` for scratch work and remove it before finishing.
 
 ## References

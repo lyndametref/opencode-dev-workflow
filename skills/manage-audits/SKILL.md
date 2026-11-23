@@ -10,13 +10,13 @@ disable-model-invocation: false
 
 ## Outcome
 
-Audit records are created, read, updated, and deprecated through the management tool, so IDs, type, scope, content, references, and labels stay consistent.
+Audit records are created, read, updated, and deprecated through the management tool, so IDs, type, scope, content, references, and status stay consistent.
 
 ## When to use
 
-- Create an audit record for a milestone or release.
-- Read an audit record's content, type, or labels.
-- Update an audit record's content or labels.
+- Create an audit record for the frozen release.
+- Read an audit record's content, type, or status.
+- Update an audit record's content or status.
 - Deprecate an archived audit.
 
 ## Commands
@@ -30,8 +30,8 @@ Audit records are created, read, updated, and deprecated through the management 
 Audit reports are multiline; pass `-` and the report on stdin.
 
 ```bash
-papyrus audit create --title "Quality audit MS-001" --audit-type quality \
-  --reference MS-001 --content - <<'EOF'
+papyrus audit create --title "Quality audit REL-001" --audit-type quality \
+  --reference REL-001 --content - <<'EOF'
 ## Checks
 - Acceptance criteria: pass
 ## Findings
@@ -41,9 +41,10 @@ EOF
 
 ## Rules
 
-- The auditor reports; the orchestrator records the audit.
+- The orchestrator runs the audit skills and records each audit.
 - Audit approval is documented by the `status` field (`issued`/`approved`), not by labels. Use `papyrus audit status <AUD-ID> issued|approved`; labels are not used for approval.
-- Only one audit of a type may be `issued` or `approved` within a single assessed scope at a time.
+- Only one audit of a type may be `issued` or `approved` within the release scope at a time.
+- `approved` when every finding is `owned` and documented, or the audit has no finding. A finding chosen for fix is resolved through a fix milestone and a new audit, which replaces the previous one.
 - Never edit managed audit files directly.
 
 ## References

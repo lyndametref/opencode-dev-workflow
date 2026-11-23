@@ -28,7 +28,7 @@ Milestones are created, read, updated, assigned to a release, and archived throu
 
 ## Rules
 
-- A milestone has no status; completion is derived from its tasks and confirmed by Phase 5 verification.
+- A milestone has no status; completion is derived from its tasks and confirmed by its Phase 4 verification task.
 - Assign a milestone to a release with `papyrus milestone edit <MS-ID> --release <REL-ID>`.
 - Milestone acceptance criteria are written in the description, each with an identifier and a testable statement. Multiline descriptions use `--description -` and stdin:
   ```bash

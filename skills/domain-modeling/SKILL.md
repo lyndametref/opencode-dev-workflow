@@ -20,14 +20,13 @@ Use this skill when you need to:
 
 ## Inputs
 - Business requirements (manage-requirements)
-- Architecture documentation from `docs/architecture/`
+- Decisions and Technical specifications (manage-decisions, manage-tech-specs)
 - Existing domain model files from `docs/domain-model/`
-- Technical specifications (manage-tech-specs)
 
 ## Workflow
 
 1. **Clarify scope** — Understand the specific domain modeling task. Ask clarifying questions if the task is ambiguous.
-2. **Read source of truth** — Read business requirements, architecture docs, specs, and the existing domain model.
+2. **Read source of truth** — Read business requirements, decisions, Technical specifications, and the existing domain model.
 3. **Check for existing model** — If a domain model already exists in `docs/domain-model/`, review it to understand the current state and identify necessary changes.
 4. **Identify bounded contexts** — Group requirements into coherent bounded contexts (e.g. Individual Management, Genealogy, Observations & Events, Medication, Calendar, References).
 5. **Define business objects** — For each context, identify the main business objects, their attributes, and relationships. Respect the domain rules in the requirements.

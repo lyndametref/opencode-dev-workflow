@@ -1,7 +1,7 @@
 ---
 name: implementation
-description: 'Execute one refined implementation task: verify prerequisites, implement the complete task with tests, run the checks, commit on the task branch, and report fulfilment evidence.'
-argument-hint: 'Provide the refined implementation task ID.'
+description: 'Execute one refined development task: verify the refinement prerequisites, implement the complete task with tests, run the checks, commit on the task branch, and report fulfilment evidence. Phase 6 packaging is the separate `packaging` skill.'
+argument-hint: 'Provide the refined development task ID.'
 user-invocable: true
 disable-model-invocation: false
 ---
@@ -10,21 +10,24 @@ disable-model-invocation: false
 
 ## Outcome
 
-A refined implementation task is delivered: code and low-level tests, integration tests implementing the approved test cases, a green build, and a structured evidence block. The task is ready for the orchestrator's acceptance check.
+A refined development task is delivered: code and low-level tests, integration tests implementing the approved test cases, a green build, and a structured evidence block. The task is ready for the orchestrator's acceptance check.
 
 ## When to use
 
-- The implementation task of a milestone is assigned to a `*-dev` agent.
+- A development task of a milestone is assigned to a `*-dev` agent.
+- The milestone's refinement task is `Done`.
 
-Do not use this skill to refine scope, change requirements, plan tasks, review the milestone, or audit the release.
+Phase 6 package builds use the separate `packaging` skill; do not use this skill for packaging.
+
+Do not use this skill to refine scope, change requirements, plan tasks, verify the milestone, or audit the release.
 
 ## Prerequisites
 
 Before starting, confirm all hold:
 
-- the task exists and is refined, with a complete description and acceptance criteria;
-- the architecture impact assessment is settled and the architecture is user-verified;
-- the relevant Technical specification section is conformant and `verified`;
+- the task exists and is refined, with a complete description and precise acceptance criteria;
+- the milestone's refinement task is `Done`;
+- the affected Technical specification sections are `verified`;
 - every `MOCK` referenced by the task is `approved`;
 - the test cases for the changed requirements and rules are `approved` and linked to the task;
 - the task's dependencies are `Done`.
@@ -33,11 +36,11 @@ If any prerequisite is missing, stop and report; do not invent it.
 
 ## Procedure
 
-1. **Read the task and context** — read the refined task, its acceptance criteria, the linked `REQ`/`NFR`, `BR`, Technical specification, UI specification, mockups, test cases, and decisions.
+1. **Read the task and context** — read the refined development task, its acceptance criteria, the linked `REQ`/`NFR`, `BR`, Technical specification, UI specification, mockups, test cases, and decisions.
 2. **Map acceptance criteria** — list every acceptance criterion and the implementation and verification that will satisfy it.
 3. **Work on the prepared branch** — the orchestrator has prepared `task/<TASK-ID>`. If you are not on it, stop and report; do not create, switch, or clean branches. Preserve existing changes; never discard work.
-4. **Implement the complete scope** — implement the smallest change that fulfils every acceptance criterion and test case. Do not stop at a partial scope. Use the `tdd` skill to make the implementation
-5. **Run the checks** — build, full test suite, lint/static checks, and the stack's security checks. Reconcile the results against every acceptance criterion. 
+4. **Implement the complete scope** — implement the smallest change that fulfils every acceptance criterion and test case. Do not stop at a partial scope. Use the `tdd` skill to drive the implementation.
+5. **Run the checks** — build, full test suite, lint/static checks, and the stack's security checks. Reconcile the results against every acceptance criterion.
 6. **Commit** — commit the changes on the task branch. Do not push, stash, reset, clean, or discard.
 7. **Report evidence** — return the evidence block below. Do not change the task status; the orchestrator owns status and acceptance.
 
@@ -45,14 +48,14 @@ If any prerequisite is missing, stop and report; do not invent it.
 
 - **Task**: ID and title.
 - **Acceptance criteria covered**: each criterion and how it is met.
-- **Test cases implemented**: test cases IDs and the integration tests that implement them.
+- **Test cases implemented**: test case IDs and the integration tests that implement them.
 - **Files changed**: created and modified paths.
 - **Tests run**: command, pass/fail, counts, and test files/classes added or updated.
 - **Static checks**: lint/compile result.
 - **Security checks**: input validation, authorization, data exposure, and other relevant mitigations.
 - **Build package script**: path, contract self-check result, and produced artifacts, when the task provides one.
 - **NFR coverage**: referenced NFRs and how they are addressed, or `none`.
-- **Architecture/spec conformance**: any deviation and its resolution.
+- **Technical specification conformance**: any deviation and its resolution.
 - **Branch and commit**.
 - **Gaps/open items**: anything not completed or needing follow-up.
 
@@ -60,7 +63,7 @@ If any prerequisite is missing, stop and report; do not invent it.
 
 - Implement the complete task scope; the task and its acceptance criteria are the contract.
 - Do not change the task, its scope, acceptance criteria, dependencies, or ordinal.
-- Do not edit requirements, rules, glossary, domain model, architecture, Technical specification, UI specifications, or mockups.
+- Do not edit requirements, rules, glossary, domain model, Technical specification, UI specifications, or mockups.
 - Stay inside the application paths allowed for the stack.
 - Keep the build green and all tests passing.
 - Do not create scratch files outside `./.tmp/`; remove them before finishing.
@@ -69,9 +72,9 @@ If any prerequisite is missing, stop and report; do not invent it.
 
 - A prerequisite is missing or an artifact is not approved/verified: stop and report.
 - An acceptance criterion is ambiguous or cannot be met with the available information: stop and report; do not guess.
-- A required architecture, specification, or requirement change is discovered: stop; it returns to Phase 2/3, never absorbed silently.
+- A required Technical specification or requirement change is discovered: stop; it returns to Phase 2 or refinement, never absorbed silently.
 - Tests fail and the fix requires scope outside the task: stop and report.
-- A security issue requires a design change: stop and report to the architect.
+- A security issue requires a design change: stop and report to the orchestrator.
 
 ## Completion checks
 

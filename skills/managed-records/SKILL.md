@@ -14,7 +14,7 @@ All backlog and managed documentation records are created, read, and changed thr
 
 ## Golden rule
 
-Never edit Papyrus-managed files directly. Use the CLI for every read and write. Plain (non-Papyrus) records are normal Markdown (requests, test cases, release reports, architecture, domain model).
+Never edit Papyrus-managed files directly. Use the CLI for every read and write. Plain (non-Papyrus) records are normal Markdown (release reports, domain model, and similar).
 
 ## Tool commands
 

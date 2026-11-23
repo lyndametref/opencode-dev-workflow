@@ -37,7 +37,7 @@ milestones: [<MS-ID>, ...]
 ---
 ```
 
-Body (per the Release Report artifact): version, release scope, owned milestones, implemented requests, change log, completed tasks with traceability, final test results, per-milestone verification, audit severity counts, accepted risks, findings, follow-ups, fix milestone and its fix tasks, exclusions and open questions, recommendation.
+Body (per the Release Report artifact): version, release scope, owned milestones, implemented requests, change log, completed tasks with traceability, final test results, package evidence, deployment evidence, per-milestone verification, audit results and finding decisions, audit severity counts, owned risks, findings, follow-ups, fix milestone and its fix tasks, exclusions and open questions, recommendation.
 
 ## Status values
 
@@ -49,7 +49,7 @@ Body (per the Release Report artifact): version, release scope, owned milestones
 
 ## Rules
 
-- The report is assembled from verification evidence; it creates no new verification.
+- The report is assembled from audit and release evidence; it creates no new verification.
 - Set `issued` only when the report is presented for release approval.
 - Never edit Papyrus-managed files here.
 - Use only project-local `./.tmp/` for scratch work and remove it before finishing.

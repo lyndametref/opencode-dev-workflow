@@ -27,7 +27,7 @@ Papyrus owns the `TC` identifier, filename, and metadata. Do not choose an ID or
 | Field        | Content                                                              |
 | ------------ | -------------------------------------------------------------------- |
 | Title        | Short scenario title.                                                |
-| Description  | One Gherkin scenario and its traceability, supplied via `--description <text|->` or `--editor`. |
+| Description  | One Gherkin scenario and its traceability, supplied via `--description <text\|->` or `--editor`. |
 | References   | Covered requirement and business rule IDs, supplied with `--reference`. |
 | Status       | `draft`, `approved`, `verified`, or `archived`.                      |
 
@@ -86,7 +86,7 @@ EOF
 | `archived` | Cleaned up. |
 
 - `approved` only after explicit user verification. Never treat silence or another reviewer's approval as approval.
-- `verified` is set when the implemented test passes in Phase 5.
+- `verified` is set when the implemented test passes in Phase 4 milestone verification.
 
 ## Rules
 

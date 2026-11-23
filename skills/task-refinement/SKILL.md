@@ -1,7 +1,7 @@
 ---
 name: task-refinement
-description: 'Refine one planned task into a self-contained, implementation-ready work item after the architecture, specification, UI, and test cases are settled. Implements the refinement task kind of Phase 4.'
-argument-hint: 'Provide a task ID (e.g. TASK-0042).'
+description: 'Refine a whole milestone in Phase 4: analyse architecture impact, produce the Technical specification and technical decisions, design the UI and mockups when needed, write the Gherkin test cases, and create the development tasks with precise acceptance criteria. Fulfilled by task-refiner with multiple skills.'
+argument-hint: 'Provide the refinement task ID or the milestone ID (e.g. MS-001).'
 user-invocable: true
 disable-model-invocation: false
 ---
@@ -10,74 +10,125 @@ disable-model-invocation: false
 
 ## Outcome
 
-One task has a complete, self-contained description, explicit assumptions, tracked dependencies, testable acceptance criteria, and a definition of done. The task is execution-ready, or reported as blocked with the open questions.
+One milestone is implementation-ready: the affected Technical specification sections and technical decisions exist, the UI specifications and at most one approved mockup exist or the no-UI outcome is recorded, the Gherkin test cases are approved, and one or more development tasks carry precise, testable acceptance criteria. The refinement task is `Done`, or reported as blocked with the open questions.
 
 ## When to use
 
 - The refinement task of a milestone is executed in Phase 4.
-- A planned task is ambiguous, incomplete, or missing structure before implementation.
+- The milestone covers architecture impact, UI design, test-case design, and development task creation.
 
-Do not use this skill to create tasks, plan milestones, write implementation code, or change dependencies/ordinals.
+Do not use this skill to implement code, plan milestones, verify the milestone, audit the release, or change milestone scope.
 
 ## Prerequisites
 
 Load `manage-tasks`; read linked artifacts through their `manage-*` skills. Refinement does not start before all hold:
 
-- the architecture impact assessment is settled and the architecture is user-verified;
-- the Technical specification conformance is verified by `architect`;
-- the UI design task, when planned, is `Done` and its mockup is `approved`;
-- the test design task is `Done` and its test cases are `approved`;
-- the task's dependencies are `Done`.
+- the requirements are `verified` and the milestone acceptance criteria are recorded;
+- the user's ADRs are read and accepted as constraints;
+- no product or business decision needed by the milestone is open;
+- the milestone has exactly one refinement task and at least one planned development task.
 
 If a prerequisite is missing, stop and report.
 
+## Inputs
+
+- The milestone, its acceptance criteria, and its planned tasks.
+- The changed `REQ`/`NFR`, `BR`, glossary terms, domain artifacts, and user ADRs.
+- The existing Technical specification, UI specifications, mockups, test cases, and decisions.
+
 ## Procedure
 
-1. **Read the target task** — read the task (manage-tasks). Read the full description, acceptance criteria, references, dependencies, and milestone.
-2. **Read the inputs** — the linked `REQ`/`NFR`, `BR`, Technical specification, UI specification, approved mockups, approved test cases, decisions, and domain artifacts.
-3. **Audit the task** — identify missing or weak scope, behavior, assumptions, dependencies, acceptance criteria, and definition of done. Check that the task is traceable to its requirement or request.
-4. **Ask targeted questions** — clarify user-visible behavior, boundaries, data, validation, errors, and verification. Do not mark the task execution-ready while a material question is open. Do not turn assumptions into requirements.
-5. **Complete the task fields** through `manage-tasks`:
-   - update the description (manage-tasks);
-   - add each acceptance criterion (manage-tasks);
-   - set references and documentation (manage-tasks);
-   - set dependencies (manage-tasks).
-6. **Split only when needed** — if the task is too broad for one implementation unit, propose an implementation split. Do not change dependencies, ordinals, or milestone scope yourself; report the proposed split to the orchestrator so `planner` can update the plan.
-7. **Report readiness** — execution-ready yes/no, changes made, assumptions, open questions, and any proposed split.
+### 1. Read the milestone
+
+Read the milestone and its refinement task (manage-milestones, manage-tasks). Read the changed requirements, business rules, glossary, domain artifacts, user ADRs, Technical specification, UI specifications, mockups, and test cases.
+
+### 2. Analyse the architecture impact
+
+Load `architecture-impact-assessment`. For the milestone as a whole:
+
+- decide the technical approach and its impact;
+- create or update the affected `TECH` sections through `technical-specification`;
+- record technical decisions as `ADR` records through `manage-decisions`;
+- record `no architecture impact` explicitly with the reason when that is the outcome.
+
+The user's ADRs are binding; a technical decision may refine them but never supersede them.
+
+### 3. Design the UI, when needed
+
+Load `ui-design` when the milestone has UI impact:
+
+- create or update the UI specifications;
+- produce at most one mockup for the milestone;
+- present the mockup for the user's verification; the mockup is `approved` only after explicit approval.
+
+When the milestone has no UI impact, record that explicitly instead of producing UI artifacts.
+
+### 4. Design the test cases
+
+Load `test-design`:
+
+- write one Gherkin scenario per verification scenario for every changed requirement and business rule;
+- trace every test case to its requirement and rules;
+- present the test cases for the user's verification; they are `approved` only after explicit approval.
+
+### 5. Create the development tasks
+
+From the architecture impact analysis, the Technical specification, the test cases, and the milestone acceptance criteria:
+
+1. Complete the planned development tasks and create additional tasks when the milestone needs them.
+2. Give every development task a self-contained scope, behavior, references, and precise acceptance criteria through `manage-tasks`.
+3. Link each task to its `TECH` subsections, `REQ`/`NFR`, `BR`, test cases, and decisions.
+4. Set dependencies and ordinals inside the milestone. Any change to milestone scope, or any dependency or ordinal change that alters the plan, is reported to the orchestrator for planning.
+
+### 6. Confirm the milestone is ready
+
+Refinement is `Done` only when all hold:
+
+- the affected Technical specification sections and technical decisions exist;
+- the UI artifacts exist and the mockup is approved, or the no-UI outcome is recorded;
+- the test cases exist and are approved;
+- at least one development task exists, with precise acceptance criteria and references;
+- every open material question is answered or reported as a blocker.
+
+### 7. Report
+
+Report the `TECH`/`SPEC` IDs, `ADR` IDs and statuses, `UI`/`MOCK` IDs and approval status, `TC` IDs and approval status, created or updated development task IDs, open questions, and readiness.
 
 ## Rules
 
-- The task and its acceptance criteria are the implementation contract. Requirement and specification links provide context and rationale; they do not substitute for task content.
-- The task record has no notes, plan, or definition-of-done field. Put the definition of done in the description or express it as acceptance criteria.
-- Do not change the task's milestone, ordinal, dependencies, or scope beyond refinement. Scope, dependency, and ordinal changes go to `planner`.
-- Do not delegate UI design, test design, domain artifacts, or architecture work; those are separate milestone tasks. Report a missing input instead.
-- Do not edit requirements, rules, glossary, domain model, architecture, Technical specification, UI specifications, mockups, test cases, or source code.
-- All task changes go through `manage-tasks`; never edit task records directly.
-- Flag any requirement or behavior not traceable to documentation as an open question.
+- The milestone is the unit of refinement; a development task alone is not.
+- The Technical specification, UI specifications, mockups, and test cases are yours to write through their `manage-*` skills. Never edit requirements, business rules, glossary, domain model, or source code.
+- Every technical decision goes through `manage-decisions`; never edit decision files by hand.
+- Every development task acceptance criterion is specific, testable, and traceable to a requirement, rule, or milestone criterion.
+- Do not change the milestone acceptance criteria or scope.
+- Do not implement, review, audit, or change task status; the orchestrator owns status.
+- Do not turn assumptions into requirements. Ask targeted questions; a material open question means refinement is not ready.
+- Use only project-local `./.tmp/` for scratch work and remove it before finishing.
 
 ## Stop conditions
 
 - A prerequisite artifact is missing or unapproved: stop and report.
-- A material behavior, scope, or verification question is unanswered: the task is not execution-ready.
-- A specification or requirement inconsistency is found: report it; do not resolve it by guessing.
-- The task needs a dependency, ordinal, or milestone change: report it to the orchestrator for `planner`.
+- A material behavior, scope, or verification question is unanswered: refinement is not ready.
+- A requirement or rule inconsistency is found: report it; do not resolve it by guessing.
+- The change requires milestone scope, dependency, or ordinal changes outside refinement: report it to the orchestrator.
+- A user ADR is contradicted by the technical approach: stop; the user decides.
 
 ## Report format
 
-- **Task**: ID and title.
-- **Execution-ready**: yes / no, with blockers.
-- **Changes made**: description, acceptance criteria, references, dependencies.
-- **Assumptions**: list or `none`.
-- **Open questions**: list or `none`.
-- **Proposed split**: tasks and dependencies, or `none`.
-- **Next action**: who does what next.
+- **Milestone / refinement task**: IDs and titles.
+- **Architecture impact**: affected building blocks and `TECH` IDs, technical `ADR` IDs and statuses, or `none` with the reason.
+- **UI**: `UI` IDs, `MOCK` ID and approval status, or `no UI impact`.
+- **Test cases**: `TC` IDs, coverage of changed requirements and rules, approval status.
+- **Development tasks**: task IDs, scope, acceptance criteria count, dependencies, ordinals.
+- **Blocked**: open questions or `none`.
+- **Refinement task**: ready / blocked.
 
 ## Completion checks
 
-- The task has a clear, self-contained description with concrete scope.
-- Acceptance criteria are specific, testable, and numbered.
-- Assumptions and dependencies are explicit.
-- A definition of done is present.
-- Every claim is traceable to documentation, user input, or an open question.
-- No implementation detail, dependency change, ordinal change, or milestone change was made.
-- All changes were made through `manage-tasks`.
+- The milestone was refined as a whole.
+- Architecture impact was assessed and recorded, including the explicit `none` case.
+- Technical decisions are recorded as ADR decisions and respect the user's ADRs.
+- UI artifacts exist and are approved, or no UI impact is recorded.
+- Every changed requirement and rule has an approved Gherkin test case.
+- Every development task has precise, testable acceptance criteria and references.
+- No code was written, no milestone scope changed, and no task status was set.

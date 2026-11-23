@@ -1,7 +1,7 @@
 ---
 name: test-design
-description: 'Run the Phase 4 test design task: write integration test cases for changed requirements and business rules, trace them, and obtain the user verification that approves them.'
-argument-hint: 'Provide a test design task ID or the changed requirement/business-rule IDs.'
+description: 'Design the integration test cases as part of the Phase 4 refinement task: write Gherkin scenarios for changed requirements and business rules, trace them, and obtain the user verification that approves them.'
+argument-hint: 'Provide the refinement task ID or the changed requirement/business-rule IDs.'
 user-invocable: true
 disable-model-invocation: false
 ---
@@ -10,14 +10,14 @@ disable-model-invocation: false
 
 ## Outcome
 
-One integration test case per verification scenario for every changed requirement and business rule, written as a Gherkin scenario (`GIVEN` / `WHEN` / `THEN`), stored and accessed via `manage-test-cases`, traced to its requirement and rules, and `approved` after the user verified it. The approved test cases are input to refinement and implementation.
+One integration test case per verification scenario for every changed requirement and business rule, written as a Gherkin scenario (`GIVEN` / `WHEN` / `THEN`), stored and accessed via `manage-test-cases`, traced to its requirement and rules, and `approved` after the user verified it. The approved test cases are input to the development tasks.
 
 ## When to use
 
-- The test design task of a milestone is executed in Phase 4.
+- The refinement task of a milestone covers a changed requirement or business rule.
 - A requirement or business rule is created or edited.
 
-Do not use this skill to write test implementation code, requirements, architecture decisions, or verification evidence.
+Do not use this skill to write test implementation code, requirements, technical decisions, or verification evidence.
 
 ## Prerequisites
 
@@ -30,7 +30,7 @@ Create and update each test case via `manage-test-cases`.
 
 - **File** — naming and path are owned by `manage-test-cases`.
 - **Identifier** — auto-assigned by `manage-test-cases`, unique and stable.
-- **Owner** — `test-manager` is the sole editor. The user verifies the test case; a positive verification approves it.
+- **Owner** — `task-refiner` is the sole editor. The user verifies the test case; a positive verification approves it.
 - **Title** — short scenario title.
 - **Description** — one Gherkin scenario and traceability.
 - **References** — covered requirement and business rule IDs.
@@ -93,18 +93,18 @@ THEN the transfer is rejected
 
 - A test case describes an integration test: does the feature still work. Low-level tests live with the code and are not described here.
 - Every test case is written as one Gherkin scenario with `GIVEN`, `WHEN`, and `THEN`; a test case in another format is not ready for verification.
-- Every changed requirement and business rule needs at least one test case. A changed item without a test case is a coverage gap and blocks refinement.
+- Every changed requirement and business rule needs at least one test case. A changed item without a test case is a coverage gap and blocks development.
 - Do not invent requirements or rules to fill a gap; report the gap.
 - Do not edit requirements, business rules, the Technical specification, or source code.
 - Do not write test implementation code. Implementation tasks implement the approved test cases as integration tests.
-- When the implemented test passes in Phase 5, its status becomes `verified`; the actor recording the result may update only the status.
+- When the implemented test passes in Phase 4 milestone verification, its status becomes `verified`; the actor recording the result may update only the status.
 
 ## Stop conditions
 
 - A changed requirement or rule has no testable expected outcome: stop and report; the requirement or rule owner fixes it.
 - A behavior cannot be expressed as a single `GIVEN` / `WHEN` / `THEN` scenario: stop and report; split it into separate test cases instead of merging scenarios.
 - The requirement or rule is unclear: ask; do not guess.
-- The user denies a test case: record the requested changes, revise, and present again. Refinement and implementation of the affected behavior do not start.
+- The user denies a test case: record the requested changes, revise, and present again. Development of the affected behavior does not start.
 
 ## Report format
 

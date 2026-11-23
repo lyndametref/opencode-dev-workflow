@@ -28,7 +28,7 @@ Detect inconsistent business terminology and propose precise replacements aligne
   - Specifications and mockups, read through `manage-tech-specs`, `manage-ui-specs`, and `manage-ui-mockups`
   - Tasks, milestones, releases, decisions, and audits, read through `manage-tasks`, `manage-milestones`, `manage-releases`, `manage-decisions`, and `manage-audits`
   - `docs/domain-model/`
-  - `docs/architecture/`
+  - Technical specifications and decisions, read through `manage-tech-specs` and `manage-decisions`
 - Exclude by default:
   - `.ai/`
   - `.github/skills/`

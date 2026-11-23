@@ -38,10 +38,10 @@ Exact and case-sensitive: `ToDo`, `Initiated`, `Refined`, `Implemented`, `Valida
 
 - No priority field. Use `--ordinal` (lower first) and dependencies.
 - No `--ready` flag. Compute readiness from `metadata.dependencies` and the `Done` set.
-- `--ac` adds acceptance criteria. There is no checkbox toggle; the quality review records pass/fail.
+- `--ac` adds acceptance criteria. There is no checkbox toggle; milestone verification records pass/fail.
 - `--description` is multiline: pass `-` and the text on stdin. `--ac` and `--comment` are single-line and stay inline.
 - No notes or final-summary fields. Record evidence and decisions with `--comment`.
-- Never change task scope, acceptance criteria, or dependencies outside `task-refiner` or `planner`.
+- Never change task scope, acceptance criteria, or dependencies outside `task-refiner` or planning.
 - Never edit managed task files directly.
 
 ## Evidence

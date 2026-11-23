@@ -69,7 +69,7 @@ EOF
     "milestone": "MS-001",
     "dependencies": [],
     "ordinal": 0,
-    "documentation": ["docs/architecture/system-overview.md"],
+    "documentation": ["docs/system-overview.md"],
     "type": "feature"
   }
 }

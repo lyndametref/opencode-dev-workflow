@@ -1,7 +1,7 @@
 ---
 name: ui-design
-description: 'Run the Phase 4 UI design task: maintain UI specifications, create at most one clickable mockup per milestone, and obtain the user verification that approves the mockup.'
-argument-hint: 'Provide a UI design task or milestone ID.'
+description: 'Design the UI as part of the Phase 4 refinement task: maintain UI specifications, create at most one clickable mockup per milestone, and obtain the user verification that approves the mockup.'
+argument-hint: 'Provide the milestone ID or refinement task ID.'
 user-invocable: true
 disable-model-invocation: false
 ---
@@ -14,7 +14,7 @@ Updated UI specification entries and at most one approved clickable mockup for t
 
 ## When to use
 
-- The UI design task of a milestone is executed in Phase 4.
+- The refinement task of a milestone has UI impact.
 - A view, screen, navigation, or layout changes.
 
 Do not use this skill to define requirements, business rules, validation semantics, backend behavior, production styling, or implementation technology.

@@ -18,12 +18,12 @@ One executable, committed script per deployable component:
 
 In a multi-app repository `<component-dir>` is `apps/<app>`; in a single-app repository whose deployable component is the repository root, the script is `scripts/build-package.sh` at the repository root.
 
-It builds that component's deliverables for a given version into a given output directory. Packaging runs it at the end of Phase 5 for the RC and in Phase 6 for the final release; nobody has to reconstruct the build command by hand.
+It builds that component's deliverables for a given version into a given output directory. Packaging runs it in Phase 6 for the final release; nobody has to reconstruct the build command by hand.
 
 ## When to use
 
 - A task explicitly asks to create or update a component's build script.
-- Packaging reported a missing or failing build script, and the planner created the corresponding task.
+- Packaging reported a missing or failing build script, and the orchestrator created the corresponding task.
 
 Do not use this skill to package a release, choose versions, change requirements, or edit code outside the assigned component.
 
@@ -48,7 +48,7 @@ Interface:
 <component-dir>/scripts/build-package.sh --help
 ```
 
-- `--version` is the version exactly as packaging received it (RC or final).
+- `--version` is the final release version exactly as packaging received it.
 - `--out` is the directory that receives the deliverables.
 - `--help` prints usage without building; exit 0.
 - Unknown or missing arguments: clear error on stderr, non-zero exit.
@@ -74,7 +74,7 @@ Prohibited:
 
 ## Procedure
 
-1. **Read the component** — its directory, technology, build tool, and the artifact it must produce (from the architecture, technical specification, and existing build files).
+1. **Read the component** — its directory, technology, build tool, and the artifact it must produce (from the Technical specification and existing build files).
 2. **Write the script** — implement the contract above for that technology. Keep it thin: delegate to the build tool, do not reimplement it.
 3. **Self-check** — run `--help`; then run `--version 0.0.0-test --out ./.tmp/script-check/<component>/`; confirm the expected files appear, are non-empty, and carry the injected version where applicable; rerun to confirm idempotency.
 4. **Clean up** — remove `./.tmp/script-check/`.
@@ -125,7 +125,7 @@ Adapt the exact commands to the component; the contract, not the tool, is fixed.
 ## Stop conditions
 
 - The component is not a deployable building block.
-- The build cannot produce an artifact without a product or architecture decision.
+- The build cannot produce an artifact without a product or technical decision.
 - The required version format is unknown.
 - The build requires credentials the task does not provide.
 

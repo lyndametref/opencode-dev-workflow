@@ -81,7 +81,7 @@ Requirements edits are multi-record. If interrupted, re-run a validation pass on
 
 ## Handoff
 
-After changing requirements, report the changed `REQ` IDs to the caller (planner / business-analyst / orchestrator) so specs, tasks, and business rules can be aligned.
+After changing requirements, report the changed `REQ` IDs to the caller (`requirements-engineer` / `business-analyst` / orchestrator) so specs, tasks, and business rules can be aligned.
 
 ## Completion Checks
 

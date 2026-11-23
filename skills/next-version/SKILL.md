@@ -1,21 +1,21 @@
 ---
 name: next-version
-description: 'Choose a Semantic Version for a verified milestone release candidate (Phase 5) or a final release (Phase 6) from the changes it contains, handling major/minor/patch classification and RC numbering with reset on major increment.'
-argument-hint: 'Provide a milestone ID for an RC, or a release ID for the final version. If omitted, resolve from the managed records and ask when ambiguous.'
+description: 'Choose the final Semantic Version of a release from the changes it contains, handling major/minor/patch classification. There are no RC versions in this workflow.'
+argument-hint: 'Provide a release ID. If omitted, resolve from the managed records and ask when ambiguous.'
 user-invocable: true
 disable-model-invocation: false
 ---
 
-# Next Version Selection
+# Final Version Selection
 
 ## Outcome
 
-One recommended version string (`X.Y.Z` or `X.Y.Z-rc.N`) with its rationale, increment class, baseline, RC number, and the changes considered. No backlog state, version file, or Git tag is changed. The recommendation is recorded by the orchestrator in the Phase 5 verification task or on the release in Phase 6.
+One recommended final version string (`X.Y.Z`) with its rationale, increment class, baseline, and the changes considered. No backlog state, version file, or Git tag is changed. The orchestrator records the recommendation on the release in Phase 6.
 
 ## When to use
 
-- Phase 5, after a milestone verification passes: choose the milestone RC version.
-- Phase 6, after the scope-and-findings approval: choose the final release version.
+- Phase 6, after the scope-and-findings approval and before the final build.
+- The user asks which version the release should carry.
 
 Do not use this skill to verify a milestone, close a release, or create tags.
 
@@ -23,7 +23,7 @@ Do not use this skill to verify a milestone, close a release, or create tags.
 
 - Load `manage-releases`.
 - Read access to Git tags and the project's version files.
-- The milestone or release scope in the managed records.
+- The release scope in the managed records: its milestones and their `Done` tasks.
 
 ## Versioning rules
 
@@ -32,10 +32,9 @@ The project follows Semantic Versioning (`MAJOR.MINOR.PATCH`).
 - **Breaking** — a change to a public API, file format, or command-line argument (renamed, removed, or changed semantics): **major**.
 - **Feature** — a backward-compatible addition (new capability, endpoint, option, field): **minor**.
 - **Chore** — documentation, dependency updates, refactors with no behavior change, tests, build changes: **patch**.
-- **Pre-1.0.0** — breaking changes are allowed, but the increment rule still applies. When a breaking change is detected on `0.x`, ask the user whether to go to `1.0.0` or `0.(MAJOR+1).0`.
+- **Pre-1.0.0** — breaking changes are allowed, but the increment rule still applies. When a breaking change is detected on `0.x`, ask the user whether to go to `1.0.0` or `0.(MINOR+1).0`.
 - **Highest wins** — any breaking change makes it major; otherwise any feature makes it minor; otherwise patch.
-- **RC** — each verified milestone gets `X.Y.Z-rc.N`. The final `X.Y.Z` is chosen only in Phase 6, after all release milestones are verified and the release audits and approvals pass.
-- **RC reset** — when the base version changes from the latest RC's base, the RC number resets to 1. When the base is unchanged, increment the RC number.
+- **No RC versions** — milestones have no release-candidate version and no package. The final version is chosen once in Phase 6.
 
 ## Procedure
 
@@ -49,13 +48,6 @@ The project follows Semantic Versioning (`MAJOR.MINOR.PATCH`).
 3. Record `baseline = MAJOR.MINOR.PATCH` from the last final release.
 
 ### 2. Resolve the scope
-
-**RC mode (Phase 5):**
-
-1. Read the milestone and its tasks.
-2. Consider only the milestone's `Done` tasks and the changes they delivered.
-
-**Release mode (Phase 6):**
 
 1. Read the release and its assigned milestones.
 2. Consider every `Done` task in every release milestone.
@@ -83,31 +75,16 @@ Produce a table: Task ID | Title | Class | Evidence.
    - patch: `MAJOR.MINOR.(PATCH+1)`.
 4. Pre-1.0.0 breaking change: ask which base to use and stop.
 
-### 5. Determine RC or final
-
-**RC mode:**
-
-1. Find the latest RC for the same base: `git tag --list '*-rc.*' --sort=-v:refname` and managed release titles.
-2. Same base -> next RC number = latest + 1. Different base -> 1. No prior RC -> 1.
-3. Recommended version = `X.Y.Z-rc.N`.
-
-**Release mode:**
-
-1. Use the RC versions recorded in the verified milestones as inputs.
-2. Recommended version = the new base version `X.Y.Z`.
-3. If the final version differs from the latest milestone RC base, report why.
-
-### 6. Report
+### 5. Report
 
 - Baseline and its source.
-- Scope: milestone or release, and included tasks.
+- Scope: release and included tasks.
 - Classification table.
 - Increment class and reason.
-- RC handling (reset or increment).
-- **Recommended version**.
-- Caveats: non-`Done` work was excluded; a later breaking change may reset the version.
+- **Recommended final version**.
+- Caveats: non-`Done` work was excluded; a later breaking change may invalidate the choice.
 
-Do not create tags, edit version files, or change managed record state. The orchestrator records the recommendation in the Phase 5 verification task or on the release.
+Do not create tags, edit version files, or change managed record state. The orchestrator records the recommendation on the release.
 
 ## Stop conditions
 
@@ -124,6 +101,5 @@ Do not create tags, edit version files, or change managed record state. The orch
 - Only `Done` work considered; excluded work noted.
 - Classification table has evidence for every task.
 - Increment justified by the highest-severity change.
-- RC numbering explains reset or increment.
-- Recommended version is printed separately from the rationale.
+- Recommended final version is printed separately from the rationale.
 - No repository, managed record, tag, or version file was modified.

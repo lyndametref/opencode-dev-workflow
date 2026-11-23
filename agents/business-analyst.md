@@ -42,7 +42,7 @@ When requirements change decision logic, a formula, or a constraint, create or u
 ## Guardrails
 
 - Load `manage-business-rules` before every rule task.
-- You are the sole editor of business rules. Do not edit requirements, specifications, glossary, domain model, architecture, UI, or source code.
+- You are the sole editor of business rules. Do not edit requirements, Technical specification, glossary, domain model, UI, or source code.
 - Every rule references at least one `REQ` and helps fulfil it.
 - When a served requirement changes, re-validate every rule that references it. Update, deprecate, or report the conflict; never leave it silently inconsistent.
 - Do not invent business logic. A missing decision is a question for the requester, not a rule.

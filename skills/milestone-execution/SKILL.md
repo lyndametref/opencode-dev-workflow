@@ -1,6 +1,6 @@
 ---
 name: milestone-execution
-description: 'Execute the planned tasks of one milestone in ordinal order: select tasks, dispatch them to their assigned actors, enforce artifact verification, record fulfilment proof, and stop at the milestone boundary. Implements Phase 4 of the orchestrator workflow.'
+description: 'Execute the planned tasks of one milestone in ordinal order: refinement, development, and verification, with correction tasks until verification passes. Implements Phase 4 of the orchestrator workflow.'
 argument-hint: 'Provide a milestone ID, or ask to continue execution until a stop boundary.'
 user-invocable: true
 disable-model-invocation: false
@@ -10,14 +10,14 @@ disable-model-invocation: false
 
 ## Outcome
 
-One milestone's execution tasks are delivered in ordinal order: architecture impact assessment, optional UI design, test design, refinement, and implementation. Every task is `Done` or explicitly reported as in progress with its blocker. Execution stops at the milestone boundary; the milestone is then handed to Phase 5 verification.
+One milestone is delivered in ordinal order: its refinement, one or more development tasks, and its verification task. Every task is `Done` or explicitly reported as in progress with its blocker. Correction tasks created by verification run inside the same milestone. Execution stops at the milestone boundary.
 
 ## When to use
 
 - The user asks to execute a milestone, continue development, or reach a stop boundary.
-- A release needs remaining milestone work completed before Phase 5/6.
+- A fix milestone must be executed after an audit finding or a release failure.
 
-Do not use this skill to plan, reorder, refine scope, verify a milestone, or release.
+Do not use this skill to plan, reorder, refine scope, run Phase 5 audits, or release.
 
 ## Inputs and preconditions
 
@@ -37,53 +37,52 @@ The workflow uses `To Do`, `In-Progress`, and `Done`. The tool-specific status v
 | Actor | Role |
 |---|---|
 | `orchestrator` | Drives execution, selects tasks, sets statuses, prepares the repository, records fulfilment proof, reports. Never edits project content. |
-| `architect` | Architecture impact assessment; Technical specification conformance. |
-| `ui-designer` | UI design and mockup. |
-| `test-manager` | Test design. |
-| `task-refiner` | Refinement. |
-| `android-dev`, `backend-dev`, `frontend-dev`, `rust-dev` | Implementation. |
-| `quality-gatekeeper` | Phase 5 verification only; not selected in Phase 4. |
-| `planner` | Plan repairs, priority changes, correction/fix tasks. Never executes. |
-| User | Priority, stop boundary, and verification of artifacts that require it. |
+| `task-refiner` | Refinement: architecture impact, Technical specification, technical decisions, UI/mockups, test cases, development tasks. |
+| `android-dev`, `backend-dev`, `frontend-dev`, `rust-dev` | Development tasks. |
+| `quality-gatekeeper` | Milestone verification task and correction definitions. |
+| User | Stop boundary, and verification of mockups and test cases. |
 
 ## Procedure
 
 ### 1. Resolve the milestone
 
 1. Use the milestone named by the user.
-2. Otherwise read the milestone list (manage-milestones) and take the first milestone with unfinished execution tasks.
-3. If no milestone exists, report it and hand off to `planner`.
+2. Otherwise read the milestone list (manage-milestones) and take the first milestone with unfinished tasks.
+3. If no milestone exists, run `/plan` or report the gap.
 
 ### 2. Read state
 
-Read the milestone and task lists (manage-milestones, manage-tasks) and the milestone acceptance criteria. Select only tasks whose milestone equals the target milestone and whose type is an execution kind. The milestone verification task is not selected in Phase 4.
+Read the milestone and task lists (manage-milestones, manage-tasks) and the milestone acceptance criteria. Select only tasks whose milestone equals the target milestone.
 
-Record total, `Done`, in-progress, and remaining executable counts.
+Record total, `Done`, in-progress, and remaining counts.
 
 ### 3. Select the next task
 
-1. Resume the lowest-ordinal in-progress task first.
+1. Resume the lowest-ordinal in-progress task first, except a failed verification task, which waits until its correction tasks are `Done`.
 2. Otherwise take the lowest-ordinal `ToDo` task whose dependencies are all `Done`.
 3. Never ask the user to choose among eligible tasks; ordinal is the priority.
 4. Never take a task from another milestone.
+5. Correction tasks are ordered after the verification task that created them and before its rerun.
 
 If no eligible task exists:
 
-- no `ToDo` or in-progress execution task remains: the milestone's execution tasks are complete; stop at the milestone boundary;
+- no `ToDo` or in-progress task remains: the milestone is complete; report the boundary;
 - otherwise the milestone is blocked: report the blockers and stop.
 
 ### 3b. Resume by status
 
 - `ToDo`: start at step 4.
 - `Initiated`: resume at the next uncompleted task kind.
-- `Refined`: skip refinement; continue with implementation or the acceptance check.
-- `Implemented`: skip implementation; run the acceptance check.
+- `Refined`: skip refinement; continue with development or the acceptance check.
+- `Implemented`: skip development; run the acceptance check.
 - `Validated`: skip the checks; complete any required artifact verification and set `Done`.
 - `Done`: skip the task.
 
 Never move a status backward. Check the current status before dispatching and skip stages already completed.
 
 ### 4. Prepare the repository (once per task branch)
+
+Skip this step for a `verification` task; it is read-only and works on the current tree.
 
 Inspect the working tree before task work.
 
@@ -94,16 +93,15 @@ Inspect the working tree before task work.
 
 ### 5. Dispatch the task by kind
 
-Set the task to `Initiated` when work starts. Dispatch with the `subagent` tool to the actor assigned by the planner.
+Set the task to `Initiated` when work starts. Dispatch with the `subagent` tool to the actor assigned by planning.
 
 | Task kind (`--type`) | Actor | Skill |
 |---|---|---|
-| `architecture` | `architect` | `architecture-impact-assessment` |
-| `ui-design` | `ui-designer` | `ui-design` |
-| `test-design` | `test-manager` | `test-design` |
-| `refinement` | `task-refiner` | `task-refinement` |
-| `implementation` | `android-dev`, `backend-dev`, `frontend-dev`, or `rust-dev` | `implementation` plus the stack skills |
-| `milestone-verification` | `quality-gatekeeper` | not Phase 4; Phase 5 |
+| `refinement` | `task-refiner` | `task-refinement` (loads `architecture-impact-assessment`, `technical-specification`, `ui-design`, and `test-design`) |
+| `development` | `android-dev`, `backend-dev`, `frontend-dev`, or `rust-dev` | `implementation` plus the stack skills |
+| `verification` | `quality-gatekeeper` | `milestone-review`; the orchestrator drives the task with `milestone-verification` |
+
+For a `verification` task, load `milestone-verification`, which opens the task, dispatches `quality-gatekeeper`, and drives corrections before closing it.
 
 Pass the task ID, the milestone acceptance criteria, the linked requirements/specifications, and the expected output. Wait for the actor's report.
 
@@ -115,17 +113,15 @@ The order is fixed: acceptance criteria first, then the required artifact verifi
 
 | Task or artifact | Required user verification | Before |
 |---|---|---|
-| Architecture impact assessment | Architecture verified by the user; architecture decisions accepted | Dependent design and implementation |
-| UI design | Mockup explicitly verified by the user | Implementing the affected UI |
-| Test design | Test cases verified by the user | Refinement and implementation |
-| Technical specification | Conformance with the architecture and decisions verified by the architect | Refinement |
+| UI design (inside refinement) | Mockup explicitly verified by the user | Development of the affected UI |
+| Test cases (inside refinement) | Test cases verified by the user | Development of the milestone |
 | Any other task | None beyond its own acceptance criteria | — |
 
 When a verification is required, ask the user to verify the artifact. A pending response holds the task at the ask step. A denial is recorded with its reason; the task stays in progress and returns to rework with the user's feedback; the ask step runs again after rework.
 
-Set the status to `Refined` after refinement, `Implemented` after implementation, and `Validated` after the acceptance check. Tasks with no refinement or implementation stage stay `Initiated` until `Done`; the intermediate statuses record a stage, not a required sequence. Set `Done` only when the acceptance criteria are fulfilled and the required verification is obtained.
+Set the status to `Refined` after refinement, `Implemented` after development, and `Validated` after the acceptance check. Tasks with no refinement or development stage stay `Initiated` until `Done`; the intermediate statuses record a stage, not a required sequence. Set `Done` only when the acceptance criteria are fulfilled and the required verification is obtained.
 
-After a task is `Done`, merge its `task/<TASK-ID>` branch into the main branch with `--no-ff`: stage and commit any remaining changes first, run `git merge --no-ff task/<TASK-ID>`, and leave the repository on the main branch. Do not push. If the merge fails, stop and report.
+After a task is `Done`, merge its `task/<TASK-ID>` branch into the main branch with `--no-ff`: stage and commit any remaining changes first, run `git merge --no-ff task/<TASK-ID>`, and leave the repository on the main branch. Do not push. If the merge fails, stop and report. A `verification` task has no branch; skip the merge for it.
 
 - `--no-ff` is mandatory: every task branch integration creates a merge commit, even when a fast-forward is possible.
 - Never run `git merge` without `--no-ff`, and never use `--ff`, `--ff-only`, or a plain fast-forward.
@@ -136,16 +132,17 @@ After a task is `Done`, merge its `task/<TASK-ID>` branch into the main branch w
 
 - Acceptance criteria not met: the task stays in progress and work continues. There is no intermediate failure status.
 - Missing decision, dependency, or information: stop execution and report. Do not invent the missing input.
-- A defect found in the implementation reopens the task and returns it to rework; it does not create unplanned work.
+- A defect found in the development work reopens the task and returns it to rework; it does not create unplanned work.
 - A denied verification returns the task to rework with the user's feedback; it does not create unplanned work.
-- New scope discovered during implementation stops execution and returns to Phase 2 or 3; it is never absorbed silently.
-- A correction task created by a Phase 5 reviewer is delivered within the milestone's approved scope; the reviewer defines its content and the planner creates it.
+- New scope discovered during execution stops execution and returns to Phase 2 or 3; it is never absorbed silently.
+- A failed milestone verification creates correction tasks or reopens refinement inside the milestone's approved scope; the verification task yields until they are `Done`.
+- A defect in a refinement artifact reopens the refinement task instead of creating a correction task.
 
 ### 8. Stop boundary and milestone boundary
 
 - The user may state, before or during execution, the last task to complete automatically.
 - Execution stops after that task is `Done`; the next task is not started.
-- Every milestone end is a stop point: execution stops when the last execution task is `Done`, regardless of the boundary.
+- Every milestone end is a stop point: execution stops when the verification task is `Done`, regardless of the boundary.
 - On a stop request, finish the current task: if its acceptance criteria are met it becomes `Done`; otherwise it stays in progress and the state is reported.
 - The boundary is recorded in the session, not in the backlog.
 - Without a boundary, execution continues until the backlog ends, a blocker appears, or a pending verification holds the task.
@@ -155,27 +152,33 @@ After a task is `Done`, merge its `task/<TASK-ID>` branch into the main branch w
 Report:
 
 - milestone ID, title, goal, and completion ratio;
-- tasks completed in this run, in order, with fulfillment proof;
+- tasks completed in this run, in order, with fulfilment proof;
 - tasks remaining, blocked, or waiting for verification;
 - release assignment;
 - stop reason and the next action.
 
-When the milestone's execution tasks are complete, hand the milestone to Phase 5 verification: `quality-gatekeeper` runs the quality review and `code-analyzer` runs the code audit on the milestone verification task.
+When the verification task is `Done`, the milestone is complete. Report it and continue with the next milestone until the user stops execution or declares the feature freeze. Do not run a per-milestone audit.
+
+## Feature freeze
+
+- The user declares the freeze; execution finishes the current task and stops.
+- No new refinement, development, or verification work starts, except in a fix milestone created after the freeze.
+- The orchestrator records the frozen milestone scope; Phase 5 audits the whole codebase.
 
 ## Priority and re-planning
 
-- Execution order comes from the planned ordinals; the orchestrator never reorders.
+- Execution order comes from the planned ordinals; the orchestrator never reorders during execution.
 - A user priority change recalls Phase 3; execution resumes from the new order once the plan is revalidated.
 - Work already `Done` or in progress keeps its place.
-- A plan defect (missing dependency, wrong order, missing scope) stops execution and returns to `planner`.
+- A plan defect (missing dependency, wrong order, missing scope) stops execution and returns to planning.
 
 ## Exit criteria
 
 Phase 4 is complete when:
 
-- the stop boundary is reached, the milestone's execution tasks complete, the user stops execution, or the backlog is exhausted;
+- the stop boundary is reached, a milestone completes, the user stops execution, the feature freeze is declared, or the backlog is exhausted;
 - every executed task is `Done` or explicitly reported as in progress with its blocker;
-- every milestone whose execution tasks are `Done` is reported as ready for Phase 5 verification;
+- every completed milestone has its verification task `Done`, or is reported as incomplete with the failing criterion;
 - the report states tasks completed in order, fulfilment proof, milestone boundaries reached, remaining work, and the reason execution stopped.
 
 ## Boundaries
@@ -190,15 +193,16 @@ This skill never:
 - skips a verification-required artifact;
 - absorbs new scope discovered during execution;
 - merges a task branch without `--no-ff` or delegates a merge to another agent;
-- verifies a milestone or runs a release audit.
+- runs a Phase 5 audit or builds a milestone package.
 
 ## Stop conditions
 
 - Dependency not `Done` or a task unassigned: report and stop.
 - A required artifact verification is denied: record the denial, keep the task in progress, rework, and ask again; dependent work does not start.
 - Acceptance criteria cannot be met with the current information: stop and return to Phase 2 or 3.
-- Milestone verification fails and rework does not resolve it: stop and report.
+- Milestone verification fails and correction work does not resolve it within scope: stop and report; the user decides on scope.
 - Priority or scope conflict: stop and return to Phase 3.
+- User declares the feature freeze: finish the current task and stop; Phase 5 audits the codebase.
 - User requests a stop: finish the current task, then stop.
 
 ## Completion checks

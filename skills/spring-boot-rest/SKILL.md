@@ -34,7 +34,7 @@ Do not use this skill for:
 
 ## Procedure
 
-1. **Define the contract** — method, path, request/response shapes, status codes, error cases. Confirm with `@architect` if unresolved.
+1. **Define the contract** — method, path, request/response shapes, status codes, error cases. Confirm with the Technical specification and the milestone's refinement if unresolved.
 2. **Create DTOs** — request/response records/classes with validation annotations.
 3. **Create the controller** — thin adapter delegating to a use case/port.
 4. **Implement error handling** — map domain exceptions to HTTP statuses via `@RestControllerAdvice`.

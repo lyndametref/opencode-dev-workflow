@@ -1,6 +1,6 @@
 ---
 name: manage-ui-mockups
-description: 'Generate a single self-contained HTML review package for a milestone UI design task: a review landing and clickable per-platform prototypes, saved as one Papyrus MOCK record, using a shared wireframe.css.'
+description: 'Generate a single self-contained HTML review package for a milestone refinement: a review landing and clickable per-platform prototypes, saved as one Papyrus MOCK record, using a shared wireframe.css.'
 argument-hint: 'generate the review package for the create-order flow (MOCK-0010); simulate the checkout scenario'
 user-invocable: true
 disable-model-invocation: false
@@ -21,8 +21,8 @@ Saved as a Papyrus `MOCK` record, sharing `wireframe.css`. It demonstrates layou
 
 - A requirement or specification describes a view/screen whose layout must be visualized for stakeholders or implementers.
 - A requirement or specification describes a multi-step flow or scenario that must be clickable for review.
-- A UI design task needs one review artifact covering several views and several platforms.
-- The `@ui-designer` agent is asked to design a mockup.
+- The refinement of a milestone needs one review artifact covering several views and several platforms.
+- The `@task-refiner` agent is asked to design a mockup during Phase 4 refinement.
 
 Do not use this skill for:
 - Business process/state diagrams (use `business-process-diagramming` / `state-diagram-creation`).

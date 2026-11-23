@@ -61,7 +61,7 @@ Describe the business domain independently of implementation: its contexts, busi
 - Do not invent business logic. Ground every concept, state, attribute, and process in existing documentation or the requester's answer; report unresolved gaps.
 - Every artifact carries its own identifier and `draft`/`verified` status.
 - Terminology must match the Business Glossary; report a conflict to `terminologist`.
-- When a concept or process spans solutions, report the integration question to the orchestrator; do not decide architecture.
+- When a concept or process spans solutions, report the integration question to the orchestrator; do not decide the technical solution.
 - Use only project-local `./.tmp/` for scratch work and remove it before finishing.
 
 ## Handoff

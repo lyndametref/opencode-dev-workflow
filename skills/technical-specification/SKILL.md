@@ -1,6 +1,6 @@
 ---
 name: technical-specification
-description: 'Maintain the project-wide Technical specification as managed TECH sections organized by architecture building blocks, traceable to requirements, rules, and decisions and approved by the architect.'
+description: 'Maintain the project-wide Technical specification as managed TECH sections organized by building blocks, traceable to requirements, rules, and decisions. Owned and verified by task-refiner during Phase 4 refinement.'
 argument-hint: 'Provide the affected building block, requirements, and decisions.'
 user-invocable: true
 disable-model-invocation: false
@@ -10,43 +10,41 @@ disable-model-invocation: false
 
 ## Outcome
 
-An implementation-consumable Technical specification, organized in sections per architecture building block, updated for the changed requirements and decisions, traceable through references, and approved by the architect for conformance.
+An implementation-consumable Technical specification, organized in sections per building block, updated for the milestone's requirements and decisions, traceable through references, and `verified` by its owner before the development tasks start.
 
 ## When to use
 
-- After the architecture impact assessment, when a Technical specification section must be created or updated.
+- The refinement task of a milestone creates or updates a Technical specification section.
 - A milestone changes behavior, interfaces, data, validation, error handling, or cross-cutting concepts.
-- The architect delegated affected specification sections.
+- The first milestone of a project establishes the specification baseline.
 
-Do not use this skill to write requirements, acceptance criteria, architecture decisions, UI design, or source code.
+Do not use this skill to write requirements, acceptance criteria, business rules, UI design, or source code.
 
 ## Specification model
 
 - One specification for the whole project, stored and accessed via `manage-tech-specs`.
-- Organized in sections per building block of the Architecture. At least one section per building block.
+- Organized in sections per building block. The first refinement establishes the building blocks; later milestones add sections only when a new building block appears.
 - A feature does not get its own specification: it updates the sections it affects.
 - Section identifier `SPEC-001`; subsection identifier `SPEC-001.01`.
 - The specification documents the code: behavior; flows and states; data and API-facing attributes; validation and error behavior; interface contracts. The body carries nothing else.
-- Traceability is metadata, not prose: `REQ`/`NFR`, `BR`, `ADR`, glossary, and domain IDs are attached as references (see `manage-tech-specs`), never written into the body.
+- Traceability is metadata, not prose: `REQ`/`NFR`, `BR`, `ADR`, glossary, and domain IDs are attached as references, never written into the body.
 - The body never lists traceability, requirements text, acceptance criteria, or Task/Milestone/Release IDs. Links are one-way: a task references the `TECH` section; the section never references the task.
-- Status: `draft` -> `verified` (conformance approved by `architect`); `archived` when cleaned up. No versioning.
+- Status: `draft` -> `verified` by the owner when the section is complete and consistent with the decisions; `archived` when cleaned up. No versioning.
 
 ## Procedure
 
-1. **Read the baseline** — read the architecture building blocks, changed `REQ`/`NFR`, `BR`, glossary terms, domain artifacts, decisions, and existing `TECH` sections.
+1. **Read the baseline** — read the changed `REQ`/`NFR`, `BR`, glossary terms, domain artifacts, the milestone's technical decisions, and existing `TECH` sections.
 2. **Map the change to sections** — identify the building blocks and subsections the change affects. Do not create a feature-specific document.
 3. **Draft the sections** — create or update `TECH` records (manage-tech-specs). Cover behavior, flows and states, data and API-facing attributes, validation and error behavior, and interface contracts. Keep status `draft`.
 4. **Attach references, do not write them** — attach every traced `REQ`/`NFR`, `BR`, `ADR`, glossary, and domain ID as a reference through `manage-tech-specs`. Never copy requirement text, acceptance criteria, traceability lists, or planning IDs into the body.
-5. **Request conformance** — report the draft to the caller with the affected building blocks and decision references, and state that architect conformance is required before refinement. Do not mark the section `verified` yourself.
-6. **Apply corrections** — after the architect reports `not conformant`, update the section and request conformance again.
-7. **Record verification** — set the section to `verified` only after the architect reports `conformant`.
-8. **Report** — section IDs, files, changed content, references, status, and open questions.
+5. **Self-verify** — check that the section is complete, consistent with the decisions and the requirements, and free of traceability prose; then set it to `verified`.
+6. **Report** — section IDs, changed content, references, status, and open questions.
 
 ## Rules
 
-- You are the sole editor of the Technical specification. Do not let other agents edit it; they report required changes to you.
-- The `architect` approves conformance; the user does not approve the specification in this phase.
-- Do not change the architecture or decisions; report a needed architecture change to the architect.
+- You are the sole editor of the Technical specification. Other agents report required changes to you.
+- The owner verifies the specification; no separate approval role exists.
+- Do not change decisions; report a needed decision change to the milestone's refinement.
 - Do not edit requirements, business rules, glossary, domain model, UI specifications, mockups, or source code.
 - Do not generate or edit `index.html`; use the managed-records skill.
 - If behavior is unclear, report the gap instead of inventing it.
@@ -55,10 +53,10 @@ Do not use this skill to write requirements, acceptance criteria, architecture d
 
 ## Stop conditions
 
-- The architecture baseline or building blocks are missing: stop and ask the architect.
-- A required decision is not `accepted`: stop; the specification cannot be verified.
+- The building blocks are missing: establish them in the first refinement, or stop and ask.
 - Requirements are missing or contradictory: report to the orchestrator; do not invent behavior.
-- The architecture reports `not conformant`: revise and resubmit; refinement does not start.
+- A decision contradicts a user ADR: stop; the user decides.
+- A required decision is still `proposed`: the section cannot be marked complete.
 
 ## Report format
 
@@ -66,7 +64,6 @@ Do not use this skill to write requirements, acceptance criteria, architecture d
 - **Content changed**: behavior, flows, data, validation, contracts.
 - **References (metadata)**: `REQ`/`NFR`, `BR`, `ADR`, glossary, domain.
 - **Status**: draft / verified.
-- **Conformance**: requested / conformant / not conformant.
 - **Open questions**: or `none`.
 
 ## Completion checks
@@ -74,5 +71,5 @@ Do not use this skill to write requirements, acceptance criteria, architecture d
 - Every affected building block has a section or subsection.
 - The section contains the required behavior content and no traceability, requirement text, acceptance criteria, or planning IDs.
 - Every traced `REQ`/`NFR`, `BR`, `ADR`, glossary, and domain ID is attached as a reference.
-- Architect conformance is recorded before the section is `verified`.
+- The section is `verified` before the dependent development tasks start.
 - No code, UI, requirement, rule, glossary, or domain artifact was written.

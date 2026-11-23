@@ -1,7 +1,7 @@
 ---
 name: security-audit
-description: 'Run the Phase 6 release security audit across the whole release: secrets, dependency supply chain, authentication and authorization, input handling, data protection, platform-specific and cross-feature risks, and security NFR coverage. Produces a read-only, severity-ranked report with a Pass / Pass with findings / Block recommendation.'
-argument-hint: 'Provide the release ID, feature task ID, branch, or audit target. Example: "REL-001", "Release 1.0", or "TASK-0042".'
+description: 'Run the Phase 5 security audit over the whole frozen codebase: secrets, dependency supply chain, authentication and authorization, input handling, data protection, platform-specific and cross-feature risks, and security NFR coverage. Produces a read-only, severity-ranked Audit artifact for the user fix-or-own decision.'
+argument-hint: 'Provide the release ID and the feature freeze.'
 user-invocable: true
 disable-model-invocation: false
 ---
@@ -10,32 +10,31 @@ disable-model-invocation: false
 
 ## Outcome
 
-One release or one explicitly named target receives an independent security audit report with severity-ranked findings and a release recommendation: `Pass`, `Pass with findings`, or `Block`. The audit is read-only; the orchestrator owns approval and release closure.
+One security audit of the frozen codebase, recorded as a managed audit record of type `security` with status `issued`, severity-ranked findings, and a recommendation. The user decides for every finding whether it is fixed or owned. The audit is read-only; the orchestrator records it and owns approval and release closure.
 
-## When To Use
+## When to use
 
-- At the end of every release, before the release is declared complete.
-- The user asks for a security audit, security review, or security gate.
-- A change touches authentication, authorization, secrets, personal data, file upload, network boundaries, or dependencies.
+- Phase 5, after the user declares the feature freeze.
+- The user asks for a security audit, security review, or security gate at the freeze.
 
 Do not use this skill for:
 
 - Fixing vulnerabilities or writing code/configuration.
-- Style, accessibility, or general code-quality review (use `quality-audit` or `code-audit`).
-- Delivering milestone work (use `milestone-execution`) or closing the release (use `release-management`).
-- Auditing multiple unrelated releases in one pass.
+- Style, accessibility, or general code-quality review (use `code-audit` or `quality-audit`).
+- Delivering milestone work (use `milestone-execution`) or closing a release (use `release-management`).
+- Auditing one milestone; Phase 5 audits the whole frozen codebase.
 
 ## Prerequisites
 
-- **managed-records skill (REQUIRED)** — Load it before any managed read. All release, milestone, task, requirement, decision, and specification reads go through the management tool.
-- Read access to requirements, architecture, specifications, and application source.
-- Optional: available scanners and test commands for the stacks present.
+- **managed-records skill (REQUIRED)** — load it before any managed read. All release, milestone, task, requirement, decision, and specification reads go through the management tool.
+- Read access to requirements, Technical specification, decisions, and application source.
+- Available scanners and test commands for the stacks present, when possible.
 
 ## Constraints
 
 - Read-only: do not modify code, configuration, requirements, tasks, decisions, or status.
 - Never edit managed files directly; read through the matching `manage-*` skills.
-- Never create the audit record; the orchestrator records the report (manage-audits).
+- The orchestrator runs this skill and records the audit (manage-audits). Never create or edit the audit record yourself.
 - Never reveal secrets, credentials, tokens, personal data, or exploit-ready payloads. Redact values and give the location.
 - Report only findings traceable to evidence. Mark unverifiable controls as `not verified`, not as passed.
 - Do not invent threats unrelated to the audited scope.
@@ -46,12 +45,11 @@ Do not use this skill for:
 
 ### 1. Establish scope
 
-1. Load `manage-audits`; read milestones, releases, and tasks through their `manage-*` skills.
-2. Read the target release record, its assigned milestones, and the included tasks (manage-releases, manage-milestones, manage-tasks). For a feature target, read the task (manage-tasks).
-3. Confirm included tasks are `Done`; report any exception.
-4. Read linked requirements and security/privacy NFRs (manage-requirements, manage-nfrs), specifications (manage-tech-specs, manage-ui-specs), architecture documents, and decisions (manage-decisions).
-5. Record scope boundaries and anything explicitly out of scope.
-6. Identify cross-feature risks: combinations of features delivered by the release that create a risk no single milestone reveals (combined permissions, shared data flows, chained integrations, cumulative attack surface).
+1. Load `manage-audits`; read the release, its frozen milestones, and tasks through the `manage-*` skills.
+2. Confirm the feature freeze is recorded and every frozen milestone's verification task is `Done`; report any exception.
+3. Read linked requirements and security/privacy NFRs (manage-requirements, manage-nfrs), the Technical specification (manage-tech-specs), UI specifications, and decisions (manage-decisions).
+4. Record the baseline commit, scope boundaries, and anything explicitly out of scope.
+5. Identify cross-feature risks: combinations of features that create a risk no single milestone reveals (combined permissions, shared data flows, chained integrations, cumulative attack surface).
 
 ### 2. Inventory the attack surface
 
@@ -120,7 +118,7 @@ Run every check that applies. Use available tools; if a tool is unavailable, rec
 - Flag NFRs with no implementation evidence as gaps.
 
 **Cross-feature risks**
-- Assess risks created by combining the release's features: privilege composition, shared secrets or sessions, data crossing feature boundaries, and cumulative exposure of entry points.
+- Assess risks created by combining the features: privilege composition, shared secrets or sessions, data crossing feature boundaries, and cumulative exposure of entry points.
 
 ### 4. Verify
 
@@ -133,48 +131,46 @@ Run every check that applies. Use available tools; if a tool is unavailable, rec
 
 Assign severity:
 
-- **Critical** — exploitable now with severe impact: auth bypass, remote code execution, exposed production secrets, unauthenticated sensitive-data access.
+- **Blocker** — exploitable now with severe impact: auth bypass, remote code execution, exposed production secrets, unauthenticated sensitive-data access.
 - **High** — serious impact requiring limited preconditions: stored XSS, SQL injection behind authentication, missing object-level authorization, vulnerable critical dependency.
 - **Medium** — meaningful risk with mitigating preconditions or limited scope.
 - **Low** — hardening issue with low impact.
-- **Info** — observation or recommendation.
 
 Decision:
 
-- `Block` — any unresolved Critical or High finding.
-- `Pass with findings` — no unresolved Critical or High; Medium/Low/Info findings remain and are documented with owners.
-- `Pass` — no findings or only informational items.
+- `findings reported` — any unresolved Blocker or High finding prevents a passing audit.
+- `pass` — no findings, or only Medium/Low findings documented with recommendations.
 
 ### 6. Report
 
-Produce the report in the response and hand it to the orchestrator. Do not change status, close the release, or request approval.
+Produce the report in the response and hand it to the orchestrator. The orchestrator records the `AUD` record. Do not change status, close the release, or request approval.
 
 ## Output Format
 
-- **Audit target**: release, milestone, feature, branch, or commit.
+- **Audit target**: release, freeze, baseline commit.
 - **Scope covered**: applications, components, entry points, requirement IDs, and exclusions.
 - **Method**: checks and scanners run, commands, and limitations.
 - **Findings**: table with severity | finding | evidence | impact | recommendation.
-- **Severity counts**: Critical / High / Medium / Low / Info.
+- **Severity counts**: blocker / high / medium / low.
 - **NFR security coverage**: addressed / not applicable / gaps.
 - **Secrets check**: result and redacted locations.
 - **Dependency and supply-chain check**: result.
-- **Release recommendation**: `Pass` / `Pass with findings` / `Block`, with rationale.
-- **Accepted risks and follow-ups**: owner and suggested task for each Medium/Low finding.
+- **Verdict**: `pass` / `findings reported`, with rationale.
+- **Suggested fix or ownership**: for each finding.
 - **Open questions**: missing context or unverifiable controls.
-- **Next required action**: what the orchestrator must do next, including recording the audit (manage-audits).
+- **Next required action**: orchestrator records the audit and collects the user's fix-or-own decision.
 
 Use `none` when a section does not apply.
 
 ## Completion Checks
 
-- Target scope and exclusions stated.
-- Every included task's status verified.
+- Target scope, freeze, and exclusions stated.
+- Every frozen milestone is complete and verified.
 - All applicable check families attempted or explicitly marked as not applicable/unavailable.
 - Every finding has severity and concrete evidence.
 - Secrets are redacted in the report.
 - Security/privacy NFRs mapped to evidence or reported as gaps.
-- Decision follows the severity rule; `Block` for any unresolved Critical/High.
+- The verdict follows the severity rule; any unresolved Blocker/High is reported as a finding.
 - No file, managed record, status, or release was modified by the auditor.
 - Temporary artifacts under `./.tmp/` removed.
 

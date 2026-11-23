@@ -16,7 +16,7 @@ Maintain a consistent, traceable business vocabulary by adding, updating, and co
 
 - Add a new business term to the glossary.
 - Update an existing business definition after requirement or domain changes.
-- Align business wording between requirements, domain model, architecture, specs, and backlog.
+- Align business wording between requirements, domain model, Technical specification, and backlog.
 - Remove ambiguity between related terms.
 - Detect and resolve duplicate or conflicting definitions.
 
@@ -72,7 +72,7 @@ Papyrus stores a **term** and a **definition**. Include supporting context in th
    - `papyrus tech-spec` / `papyrus ui-spec`
    - `papyrus task`
    - `papyrus decision`
-   - plain docs (domain model, architecture).
+   - plain docs (domain model, release reports).
 
    Do not update skills or agent example files under `.ai/` or `.github/skills/` unless explicitly requested. Preserve requirement IDs and avoid changing intent while updating terminology.
 
