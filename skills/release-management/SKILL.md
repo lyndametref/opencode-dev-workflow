@@ -1,6 +1,6 @@
 ---
 name: release-management
-description: 'Inspect and close one release: confirm the approved audits, obtain the scope-and-findings approval, choose the final version, run the final build, have the *-dev agents build the final packages, assemble the release report, obtain release approval, deploy through ops, and record completion. Implements Phase 6 of the orchestrator workflow.'
+description: 'Inspect and close one release: confirm the passed release audit, obtain the scope-and-findings approval, choose the final version, run the final build, have the *-dev agents build the final packages, assemble the release report, obtain release approval, deploy through ops, and record completion. Implements Phase 6 of the orchestrator workflow.'
 argument-hint: 'Provide a release ID or version (e.g. REL-001 or Release 1.2.0).'
 user-invocable: true
 disable-model-invocation: false
@@ -10,20 +10,20 @@ disable-model-invocation: false
 
 ## Outcome
 
-One release is approved, versioned, built, packaged, reported, deployed, and marked complete. Every frozen milestone is verified; the security, quality, and code audits are `approved`; the user approved the scope and findings and then the release; the final build and tests passed; the `*-dev` agents built the final packages under the final version; `ops` deployed successfully or the user waived deployment; the release report exists; the `REL` record has the final version and a completion note.
+One release is approved, versioned, built, packaged, reported, deployed, and marked complete. Every frozen milestone is verified; the Phase 5 release audit passed and every finding is fixed or owned; the user approved the scope and findings and then the release; the final build and tests passed; the `*-dev` agents built the final packages under the final version; `ops` deployed successfully or the user waived deployment; the release report exists; the `REL` record has the final version and a completion note.
 
 ## When to use
 
-- Phase 5 audits are approved and every frozen milestone is complete and verified.
+- The release audit passed and every frozen milestone is complete and verified.
 - The user asks to release, close the release, ship a version, or run the release checklist.
 
-Do not use this skill to verify a milestone, fix a milestone, plan the release scope, or run the Phase 5 audits.
+Do not use this skill to verify a milestone, fix a milestone, plan the release scope, or run the Phase 5 release audit.
 
 ## Prerequisites
 
-- Load `managed-records`, `manage-release-reports`, `next-version`, and `packaging`.
-- Read access to the repository, build files, tests, package evidence, and audit records.
-- Available subagents: `*-dev` agents to build their packages, `ops` to deploy, and `quality-gatekeeper`/`task-refiner`/`*-dev` for fix work when needed.
+- Load `managed-records`, `manage-audits`, `manage-release-reports`, `next-version`, and `packaging`.
+- Read access to the repository, build files, tests, package evidence, the release-audit report, and the three Audit records.
+- Available subagents: `*-dev` agents to build their packages and fix work, `ops` to deploy, `task-refiner` for fix refinement, and `quality-gatekeeper` to rerun the release audit.
 
 ## Release model
 
@@ -55,21 +55,23 @@ For every milestone in scope:
 
 If any check fails, stop; the release is not inspected until every milestone is verified.
 
-### 3. Confirm the approved audits
+### 3. Confirm the release audit
 
-The Phase 5 audits are recorded for this release and `approved`:
+Phase 5 is owned by `quality-gatekeeper`, which runs `release-audit` over the whole frozen codebase and records one Audit record per type (`quality`, `code`, `security`), each status `issued`.
 
-| Audit | Type | Required state |
-|---|---|---|
-| Security audit | `security` | `approved` |
-| Quality audit | `quality` | `approved` |
-| Code audit | `code` | `approved` |
+Confirm from the gatekeeper's report and the Audit records:
 
-Every finding must already have a user decision: `fix` (resolved and rerun) or `own` (documented with an owner and follow-up). If an audit is missing, not approved, or a finding has no decision, return to Phase 5.
+- the quality, code, and security audits all ran over the whole frozen codebase;
+- the three `AUD` records exist, reference the release, and are `issued`;
+- the release-audit verdict passed, or every finding has a user decision;
+- every finding chosen for fix is resolved and the release audit was rerun;
+- every owned finding has an owner and a follow-up.
+
+If the release audit is missing, an Audit record is missing, the audit did not pass, or a finding has no decision, return to Phase 5.
 
 ### 4. Present scope and findings for approval
 
-Print the release scope, the audit summaries, every finding with severity and decision/owner, and the recommendation. Ask a short question: approve the scope and the findings, or reject a finding.
+Print the release scope, the audit summaries with their `AUD` IDs, every finding with severity and decision/owner, and the recommendation. Ask a short question: approve the scope and the findings, or reject a finding.
 
 - Approve all findings: continue to step 5.
 - Reject a finding or the scope: step 6, fix milestone. No final build runs.
@@ -85,8 +87,8 @@ When the user rejects a finding or the scope, or the final build, packaging, or 
 
 1. Create the fix milestone with its refinement, development, and verification tasks, and attach it to the release. The audit or review that reported each finding defines the fix task's content.
 2. The fix milestone contains only the fix work needed for the release to be releasable; no new features, no scope expansion.
-3. Phase 4 executes it and Phase 5 reruns the audits over the whole codebase.
-4. Rerun the release inspection, the scope-and-findings approval, the final build, the packages, and the deployment after the audits pass.
+3. Phase 4 executes it and `quality-gatekeeper` reruns the release audit over the whole codebase.
+4. Rerun the release inspection, the scope-and-findings approval, the final build, the packages, and the deployment after the release audit passes.
 5. The release cannot complete while a fix task is open or the fix milestone is unfinished.
 
 ### 7. Final build and tests
@@ -119,7 +121,7 @@ Create the report via `manage-release-reports` with status `draft`, containing:
 - completed tasks and their requirement traceability;
 - final test results;
 - package evidence: final version, commit SHA, component archives, paths, sizes, and sha256, or the recorded packaging waiver;
-- the audit results, finding decisions, and severity counts by type;
+- the release-audit results, `AUD` IDs, finding decisions, and severity counts by type;
 - owned risks with owners and follow-ups;
 - fix milestones and their fix tasks, if any;
 - findings, exclusions, and open questions;
@@ -140,8 +142,8 @@ The user may waive deployment; a waiver is explicit, user-only, and recorded in 
 
 ## Rules
 
-- The release starts only from approved audits and complete, verified milestones.
-- The audit findings and decisions are already made in Phase 5; Phase 6 presents and confirms them, it does not rerun the audits.
+- The release starts only from a passed release audit and complete, verified milestones.
+- The release-audit findings and decisions are already made in Phase 5; Phase 6 presents and confirms them, it does not rerun the release audit.
 - The final build runs only after the scope and findings are approved and the version is recorded.
 - Packaging is built from the committed release tree; the commit SHA is recorded. Never use ad-hoc build commands.
 - A version directory is immutable; a changed release needs the version decision revisited, never an overwrite.
@@ -155,7 +157,7 @@ The user may waive deployment; a waiver is explicit, user-only, and recorded in 
 | Outcome | Action |
 |---|---|
 | A frozen milestone is incomplete or unverified | Return to Phase 4; no release inspection. |
-| An audit is missing, not approved, or a finding has no decision | Return to Phase 5. |
+| The release audit or an Audit record is missing or did not pass, or a finding has no decision | Return to Phase 5. |
 | Scope or findings not approved | Fix milestone; Phase 4 and Phase 5 run; the gate reruns. |
 | Final build or tests fail | Fix milestone; Phase 4 and Phase 5 run; the gate and build rerun. |
 | A deployable component has no build script | Fix task in the fix milestone for the owning `*-dev` agent; packaging resumes after verification. |
@@ -168,7 +170,7 @@ The user may waive deployment; a waiver is explicit, user-only, and recorded in 
 ## Stop conditions
 
 - A milestone in scope is incomplete or unverified: stop; no inspection.
-- An audit is not approved or a finding is undecided: stop; return to Phase 5.
+- The release audit did not pass or a finding is undecided: stop; return to Phase 5.
 - The user does not approve the scope or findings: create fix work; no final build.
 - Final build or tests fail: create fix work; the release is not completed.
 - The final package fails to build: create fix work; nothing is deployed and the release is not completed.
@@ -180,7 +182,7 @@ The user may waive deployment; a waiver is explicit, user-only, and recorded in 
 
 - **Release**: `REL` ID, version, scope, milestones.
 - **Milestones**: verification result per milestone.
-- **Audits**: security, quality, code `AUD` IDs, verdicts, severity counts.
+- **Release audit**: `AUD` IDs, quality/code/security verdicts, severity counts, and finding decisions.
 - **Findings**: fixed / owned, owner and follow-up.
 - **Final build/tests**: commands, results, counts.
 - **Final packages**: directory, component archives, sizes, sha256, commit SHA; or the recorded waiver.
@@ -193,7 +195,7 @@ The user may waive deployment; a waiver is explicit, user-only, and recorded in 
 ## Completion checks
 
 - Every release milestone is complete and verified.
-- The security, quality, and code audits are approved and every finding is fixed or owned.
+- The release audit passed and the three Audit records are `issued` and every finding is fixed or owned.
 - The user approved the scope and audit findings.
 - The final version is chosen and recorded on the release.
 - The final build and tests ran after the approval and passed.
@@ -206,6 +208,6 @@ The user may waive deployment; a waiver is explicit, user-only, and recorded in 
 
 ## Resume / interruption
 
-Release state is derived from the `REL` record, its milestones, their verification tasks, the audits, the packages, the deployment, and the release report.
+Release state is derived from the `REL` record, its milestones, their verification tasks, the release-audit report and its Audit records, the packages, the deployment, and the release report.
 
 On re-invocation, re-read all of them, skip completed steps, and rerun any check whose evidence is stale. If the release already has the `released` label, report it instead of recording completion again. An existing `builds/<version>/` is never overwritten; a rebuilt release needs a new final version.

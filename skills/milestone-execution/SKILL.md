@@ -17,7 +17,7 @@ One milestone is delivered in ordinal order: its refinement, one or more develop
 - The user asks to execute a milestone, continue development, or reach a stop boundary.
 - A fix milestone must be executed after an audit finding or a release failure.
 
-Do not use this skill to plan, reorder, refine scope, run Phase 5 audits, or release.
+Do not use this skill to plan, reorder, refine scope, run the Phase 5 release audit, or release.
 
 ## Inputs and preconditions
 
@@ -157,13 +157,13 @@ Report:
 - release assignment;
 - stop reason and the next action.
 
-When the verification task is `Done`, the milestone is complete. Report it and continue with the next milestone until the user stops execution or declares the feature freeze. Do not run a per-milestone audit.
+When the verification task is `Done`, the milestone is complete. Report it and continue with the next milestone until the user stops execution or declares the feature freeze. Do not run the release audit; the milestone's standalone code audit is part of verification.
 
 ## Feature freeze
 
 - The user declares the freeze; execution finishes the current task and stops.
 - No new refinement, development, or verification work starts, except in a fix milestone created after the freeze.
-- The orchestrator records the frozen milestone scope; Phase 5 audits the whole codebase.
+- The orchestrator records the frozen milestone scope; `quality-gatekeeper` runs the Phase 5 release audit over the whole codebase.
 
 ## Priority and re-planning
 
@@ -193,7 +193,7 @@ This skill never:
 - skips a verification-required artifact;
 - absorbs new scope discovered during execution;
 - merges a task branch without `--no-ff` or delegates a merge to another agent;
-- runs a Phase 5 audit or builds a milestone package.
+- runs the Phase 5 release audit or builds a milestone package.
 
 ## Stop conditions
 
@@ -202,7 +202,7 @@ This skill never:
 - Acceptance criteria cannot be met with the current information: stop and return to Phase 2 or 3.
 - Milestone verification fails and correction work does not resolve it within scope: stop and report; the user decides on scope.
 - Priority or scope conflict: stop and return to Phase 3.
-- User declares the feature freeze: finish the current task and stop; Phase 5 audits the codebase.
+- User declares the feature freeze: finish the current task and stop; `quality-gatekeeper` runs the release audit.
 - User requests a stop: finish the current task, then stop.
 
 ## Completion checks

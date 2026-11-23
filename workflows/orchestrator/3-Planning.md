@@ -59,7 +59,7 @@ Every milestone uses the same ordered task kinds. Planning decides that the task
 | ----- | ------------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | ------------------- |
 | 1     | Refinement   | Architecture impact analysis, technical specification, technical decisions, UI design and mockups when needed, Gherkin test cases, and the development tasks with precise acceptance criteria                                              | `task-refiner`      |
 | 2..n  | Development  | Implement one development task and fulfil its acceptance criteria                                                                                                                                                                         | Assigned `*-dev`    |
-| last  | Verification | Check that every milestone acceptance criterion is fulfilled, apply the basic code quality gates, and create correction tasks when needed                                                                                                  | `quality-gatekeeper` |
+| last  | Verification | Check that every milestone acceptance criterion is fulfilled, apply the basic code quality gates, run `code-audit` standalone on the milestone change set, and create correction tasks when needed                                                                                                  | `quality-gatekeeper` |
 
 Rules:
 
@@ -129,7 +129,7 @@ The Phase 1–4 loop repeats until the user declares a feature freeze.
 
 - The freeze is a user decision, not a planning decision; the orchestrator records the frozen milestone scope on the release.
 - Planning stops at the freeze: no new requests, requirements, or milestones enter the frozen release.
-- After the freeze the orchestrator only creates fix milestones and their tasks for audit findings or release failures, and follow-up tasks for owned findings.
+- After the freeze the orchestrator only creates fix milestones and their tasks for release-audit findings or release failures, and follow-up tasks for owned findings.
 - Lifting the freeze is a user decision; only then does normal planning resume.
 
 ### Re-planning
@@ -140,7 +140,7 @@ Refinement may add or split a development task within the plan. Any split that c
 
 Reordering or re-scoping an in-progress task requires the user's agreement first.
 
-A failed audit, a finding the user wants fixed, or a failed final build adds a **fix milestone** to the release: the orchestrator creates the fix milestone with its refinement, development, and verification tasks, scoped only to what the release needs to become releasable. A deployable component reported without its `<component-dir>/scripts/build-package.sh` during packaging gets a task for its `*-dev` agent, in the fix milestone or in the milestone being built.
+A failed release audit, a finding the user wants fixed, or a failed final build adds a **fix milestone** to the release: the orchestrator creates the fix milestone with its refinement, development, and verification tasks, scoped only to what the release needs to become releasable. A deployable component reported without its `<component-dir>/scripts/build-package.sh` during packaging gets a task for its `*-dev` agent, in the fix milestone or in the milestone being built.
 
 ### Priority change
 

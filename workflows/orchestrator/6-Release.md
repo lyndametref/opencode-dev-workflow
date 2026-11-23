@@ -1,18 +1,18 @@
 ## 6. Release
 
-Phase 6 turns a **passed audit at the feature freeze** into a published release: it obtains the user's approval of the scope and the audit findings, chooses the final version, runs the final build and tests, has the `*-dev` agents build the final release packages, assembles the release report, requests explicit release approval, deploys the packages through the `ops` agent, and records completion.
+Phase 6 turns a **passed release audit at the feature freeze** into a published release: it obtains the user's approval of the scope and the audit findings, chooses the final version, runs the final build and tests, has the `*-dev` agents build the final release packages, assembles the release report, requests explicit release approval, deploys the packages through the `ops` agent, and records completion.
 
-Phase position: `Phase 5 → Phase 6`. Phase 5 audits the frozen codebase; Phase 6 is the only phase that approves, deploys, or closes a release. Phase 6 does not audit again: it relies on the Phase 5 security, quality, and code audits.
+Phase position: `Phase 5 → Phase 6`. Phase 5 is owned by `quality-gatekeeper`, which audits the frozen codebase through `release-audit`; Phase 6 is the only phase that approves, deploys, or closes a release. Phase 6 does not audit again: it relies on the Phase 5 release audit.
 
 ### Inputs and preconditions
 
-- **Passed audit**: the security, quality, and code audits are `approved`; every finding is fixed or owned.
+- **Passed release audit**: the `release-audit` verdict passed; the three Audit records (`quality`, `code`, `security`) are `issued`; every finding is fixed or owned.
 - **Feature freeze**: recorded with its frozen milestone scope and timestamp (with timezone).
-- **Complete milestones**: every frozen milestone has its verification task `Done`.
+- **Complete milestones**: every frozen milestone has its verification task `Done`, including the standalone code audit.
 - **All included changes**: requirements, specifications, UI, code, tests, and configuration delivered by the release.
 - **Owned findings and follow-ups**, with owners.
 
-Release work does not start while the freeze is missing, a frozen milestone is incomplete, a milestone verification has not passed, or an audit finding has no decision.
+Release work does not start while the freeze is missing, a frozen milestone is incomplete, a milestone verification has not passed, the release audit has not passed, or a finding has no decision.
 
 ### Actors
 
@@ -29,7 +29,7 @@ Release work does not start while the freeze is missing, a frozen milestone is i
 ```mermaid
 %%{init: {"flowchart": {"nodeSpacing": 10, "rankSpacing": 18}}}%%
 flowchart LR
-    IN([Audits approved<br/>at the feature freeze]) --> GATE["Present scope and<br/>audit findings"]
+    IN([Release audit passed<br/>at the feature freeze]) --> GATE["Present scope and<br/>audit findings"]
     GATE --> OK{"Scope and findings<br/>approved?"}
     OK -->|"No"| FIX["Create a fix milestone"]
     OK -->|"Yes"| VERSION["Choose the final version"]
@@ -41,22 +41,22 @@ flowchart LR
     APPROVE -->|"Yes"| DEPLOY["ops deploys the packages"]
     DEPLOY --> CLOSE["Record release completion<br/>with deployment evidence"]
     FIX --> IMPL["Phase 4 executes the fixes"]
-    IMPL --> AUD["Phase 5 audits again"]
-    AUD --> IN
+    IMPL --> RA["Phase 5 release audit again"]
+    RA --> IN
 ```
 
 ### Phase boundary with Audit
 
 | Concern  | Phase 5 Audit                                                        | Phase 6 Release                                                          |
 | -------- | -------------------------------------------------------------------- | ------------------------------------------------------------------------ |
-| Trigger  | The user's feature freeze                                            | Audits approved                                                          |
+| Trigger  | The user's feature freeze                                            | The release audit passed                                                 |
 | Scope    | The whole codebase at the frozen baseline                            | The frozen release scope as approved by the user                         |
-| Checks   | Security, quality, and code audits                                   | Final build and tests on the approved scope; no new audits               |
-| Output   | The three audits and the finding decisions                           | Release report, final packages, deployment, completed release            |
+| Checks   | Quality, code, and security audits by `quality-gatekeeper`           | Final build and tests on the approved scope; no new audits               |
+| Output   | The release-audit report, the three Audit records, and the finding decisions | Release report, final packages, deployment, completed release            |
 | Approval | The user's decision per finding                                      | Scope and findings, then the release itself                              |
-| Failure  | Fix milestone; Phase 4 implements, Phase 5 audits again              | Fix milestone; Phase 4 implements, Phase 5 audits again                  |
+| Failure  | Fix milestone; Phase 4 implements, the release audit reruns          | Fix milestone; Phase 4 implements, the release audit reruns              |
 
-Phase 6 never repeats the Phase 5 audits itself. Outside the fix-milestone loop, it confirms that the audits passed, that the audited baseline is the code being released, and that every finding is fixed or owned.
+Phase 6 never repeats the Phase 5 release audit itself. Outside the fix-milestone loop, it confirms that the release audit passed, that the audited baseline is the code being released, and that every finding is fixed or owned.
 
 ### Release definition
 
@@ -71,7 +71,7 @@ Phase 6 never repeats the Phase 5 audits itself. Outside the fix-milestone loop,
 The audit findings come from Phase 5; Phase 6 presents them and the release scope to the user.
 
 - The user approves or withholds the release scope and the audit findings; this is the first of the two Phase 6 approvals.
-- Presentation includes the three audits, their severity-ranked findings, the owned risks with owners and follow-ups, the frozen milestone scope, and the closed fix milestones.
+- Presentation includes the release-audit results (quality, code, security), the severity-ranked findings, the owned risks with owners and follow-ups, the frozen milestone scope, and the closed fix milestones.
 - A finding is already decided as `fix` or `own` in Phase 5. Here the user confirms the scope including those decisions.
 - A rejected scope or finding returns the work to a fix milestone; no final build runs.
 - No finding may enter the final build while it is neither fixed nor owned.
@@ -115,10 +115,10 @@ When an audit finding is chosen for fix, the user rejects the scope, or the fina
 - The orchestrator creates the fix milestone with its refinement, development, and verification tasks, and attaches it to the release.
 - The audit or review that reported each finding defines the fix task's content.
 - The fix milestone contains only the fix work needed for the release to be releasable; no new features, no scope expansion.
-- It is executed like any milestone: Phase 4 runs refinement, development, and verification, then Phase 5 reruns the audits over the whole codebase.
-- The scope-and-findings gate, the final build, the packages, and the deployment are rerun after the audits pass.
+- It is executed like any milestone: Phase 4 runs refinement, development, and verification, then `quality-gatekeeper` reruns the release audit over the whole codebase.
+- The scope-and-findings gate, the final build, the packages, and the deployment are rerun after the release audit passes.
 - The release cannot be completed while a fix task is open or the fix milestone is unfinished.
-- Findings the user owns are documented in the audit instead and reported in the release report.
+- Findings the user owns are documented in the release-audit report instead and reported in the release report.
 
 ### Release report
 
@@ -131,7 +131,7 @@ The report contains:
 - final test results;
 - package evidence: final version, commit SHA, component archives, paths, sizes, and sha256, or the recorded packaging waiver;
 - deployment evidence: version, targets, result, and timestamp (with timezone), or the recorded deployment waiver;
-- the audit results, the finding decisions, and severity counts by type;
+- the release-audit results, the `AUD` IDs, the finding decisions, and severity counts by type;
 - owned risks with owners and follow-ups;
 - fix milestones and their fix tasks, if any;
 - findings, exclusions, and open questions;
@@ -145,7 +145,7 @@ Phase 6 has two approvals:
 
 | Approval                 | When                                                                             | Effect                                                      |
 | ------------------------ | -------------------------------------------------------------------------------- | ----------------------------------------------------------- |
-| Scope and audit findings | After the Phase 5 audits are presented, before the final build                   | Confirms the release scope and the finding decisions        |
+| Scope and audit findings | After the release audit is presented, before the final build               | Confirms the release scope and the finding decisions        |
 | Release                  | After the final build and tests and the assembled release report                 | Authorizes deployment; completion follows the successful deployment |
 
 - The user approves or withholds each approval explicitly.
@@ -160,7 +160,7 @@ Phase 6 has two approvals:
 
 | Outcome                                              | Action                                                                                                               |
 | ---------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------- |
-| Audits not approved or a finding undecided           | Return to Phase 5; no release work starts                                                                            |
+| Release audit not passed or a finding undecided   | Return to Phase 5; no release work starts                                                                            |
 | Scope or findings not approved                       | Create a fix milestone; Phase 4 and Phase 5 run; the gate reruns                                                     |
 | Final build or tests fail                            | Create a fix milestone; Phase 4 and Phase 5 run; the gate and the build are rerun                                     |
 | A component has no build script                      | Create a fix task in the fix milestone for the owning `*-dev` agent; packaging resumes after verification             |
@@ -174,7 +174,7 @@ Phase 6 has two approvals:
 
 Phase 6 is complete when:
 
-- the feature freeze is recorded, every frozen milestone's verification task is `Done`, and the three audits are approved;
+- the feature freeze is recorded, every frozen milestone's verification task is `Done` including the standalone code audit, the release audit passed, and the three Audit records are `issued`;
 - every finding is either owned and documented, or fixed through a verified fix milestone and audited again;
 - the user approved the release scope and the audit findings;
 - the final version is chosen and recorded on the release;
@@ -189,12 +189,12 @@ Phase 6 is complete when:
 
 Phase 6 never:
 
-- reruns the Phase 5 audits outside the fix-milestone loop;
+- reruns the Phase 5 release audit outside the fix-milestone loop;
 - verifies a milestone again outside the fix-milestone loop;
 - changes requirements, criteria, or the frozen scope;
 - approves on the user's behalf;
 - records completion while a fix task is open, the fix milestone is unfinished, or the deployment failed without a waiver;
-- records completion without a passed audit and explicit approval;
+- records completion without a passed release audit and explicit approval;
 - runs the final build before the scope and audit findings are approved;
 - overwrites or rebuilds an existing package version;
 - performs the deployment itself; deployment belongs to the `ops` agent;
@@ -203,7 +203,7 @@ Phase 6 never:
 ### Stop conditions
 
 - The feature freeze is missing or a frozen milestone is incomplete: stop; the release does not start.
-- The audit has not passed: stop; the release is not inspected until it has.
+- The release audit has not passed: stop; the release is not inspected until it has.
 - The user does not approve the scope or the findings: create a fix milestone; no final build runs.
 - Final build or tests fail: create a fix milestone; the release is not completed.
 - The final package fails to build: create a fix task; nothing is deployed and the release is not completed.

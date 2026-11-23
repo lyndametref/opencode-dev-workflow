@@ -90,8 +90,9 @@ The refinement task makes the milestone implementation-ready. `task-refiner` ful
 - Every milestone has exactly one verification task; it is the last task planned with the milestone. Correction tasks created by it come after it in ordinal order.
 - It checks every milestone acceptance criterion and records pass/fail with evidence.
 - It assesses the basic code quality gates: the build succeeds, the automated test suite passes, the project's linting and style checks pass, and no critical issue remains in the changed code.
-- A failed criterion or gate becomes a correction task with its failure description and the criterion it blocks. The orchestrator assigns it, a `*-dev` fulfils it, and verification reruns. The failed verification task stays `In-Progress` and yields until every correction task is `Done`. A defect in a refinement artifact reopens the refinement task instead of creating a correction task.
-- The verification task is `Done` only when every milestone acceptance criterion and every basic quality gate passes. It is read-only: it never fixes code.
+- It runs `code-audit` standalone on the milestone's change set for complexity, duplication, naming, structure, test coverage, and style. This is not the Phase 5 release audit and creates no audit record.
+- A failed criterion, gate, or code-audit finding becomes a correction task with its failure description and the criterion it blocks. The orchestrator assigns it, a `*-dev` fulfils it, and verification reruns. The failed verification task stays `In-Progress` and yields until every correction task is `Done`. A defect in a refinement artifact reopens the refinement task instead of creating a correction task.
+- The verification task is `Done` only when every milestone acceptance criterion, every basic quality gate, and every standalone code-audit finding passes. It is read-only: it never fixes code.
 - The milestone is complete when its verification task is `Done`; completion is derived, not approved.
 - There is no RC build, no RC version, and no milestone package. Final packages are built in Phase 6.
 
@@ -144,7 +145,7 @@ No end-of-task approval is requested beyond the required artifact verification: 
 
 - The user declares the freeze; execution finishes the current task and stops.
 - No new refinement, development, or verification work starts, except in a fix milestone created after the freeze.
-- The orchestrator records the frozen milestone scope, and Phase 5 audits the whole codebase.
+- The orchestrator records the frozen milestone scope, and `quality-gatekeeper` runs the Phase 5 release audit over the whole codebase.
 
 ### Exit criteria
 
@@ -152,10 +153,10 @@ Phase 4 is complete when:
 
 - the stop boundary is reached, the user stops execution, the feature freeze is declared, or the backlog is exhausted;
 - every executed task is `Done` or explicitly reported as `In-Progress` with its blocker;
-- every completed milestone has its verification task `Done`, or the milestone is reported as incomplete with the failed criterion;
-- the report states tasks completed in order, fulfilment proof, milestone boundaries reached, remaining work, and the reason execution stopped.
+- every completed milestone has its verification task `Done`, including the standalone code audit, or the milestone is reported as incomplete with the failed criterion;
+- the report states tasks completed in order, fulfilment proof, milestone boundaries reached, standalone code-audit results, remaining work, and the reason execution stopped.
 
-Audits, final packaging, and deployment are not Phase 4 work.
+The release audit, final packaging, and deployment are not Phase 4 work.
 
 ### Boundaries
 
@@ -169,6 +170,7 @@ Phase 4 never:
 - skips a verification-required artifact;
 - lets verification fix code, or lets a development agent verify its own milestone;
 - absorbs new scope discovered during execution;
+- runs the Phase 5 release audit;
 - starts new work after the feature freeze, except fix tasks in a fix milestone.
 
 ### Stop conditions
@@ -178,5 +180,5 @@ Phase 4 never:
 - Acceptance criteria cannot be met with the current information: stop and return to Phase 2 or 3.
 - A milestone verification cannot pass and correction tasks cannot resolve it within the milestone scope: stop and report; the user decides on scope.
 - Priority or scope conflict: stop and return to Phase 3.
-- User declares the feature freeze: finish the current task and stop; Phase 5 audits the codebase.
+- User declares the feature freeze: finish the current task and stop; `quality-gatekeeper` runs the release audit.
 - User requests a stop: finish the current task, then stop.

@@ -228,7 +228,7 @@ Mockups start as `pending`. Set `--status approved` after explicit user approval
 | Edit | `papyrus audit edit <AUD-ID> [--title] [--content "<report\|->"] [--audit-type] [--label] [--reference] [--editor]` |
 | Deprecate / restore | `papyrus audit deprecate <AUD-ID>` / `papyrus audit restore <AUD-ID>` |
 
-The security officer reports findings; the orchestrator records the report as an audit record referencing the release.
+The Phase 5 `release-audit` creates the three Audit records (quality, code, security) with status `issued`.
 
 ## Caveats in Papyrus 0.1.0
 

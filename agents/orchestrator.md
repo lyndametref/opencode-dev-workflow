@@ -65,9 +65,6 @@ permission:
     planning: allow
     milestone-execution: allow
     milestone-verification: allow
-    quality-audit: allow
-    code-audit: allow
-    security-audit: allow
     release-management: allow
     packaging: allow
     next-version: allow
@@ -95,8 +92,8 @@ Take a request from intake to a completed release: a faithful request, verified 
 - `planning` — Phase 3: milestones, tasks, releases, ordinals.
 - `milestone-execution` — Phase 4: execute refinement, development, and verification tasks.
 - `milestone-verification` — Phase 4: open and close each milestone's verification task.
-- `quality-audit`, `code-audit`, `security-audit` — Phase 5 audits.
 - `release-management` — Phase 6: approvals, version, build, packages, report, deployment.
+- `manage-audits` — read the three Phase 5 Audit records and their `AUD` IDs.
 - `next-version` — final version in Phase 6.
 - `packaging` — verify the final packages built by the `*-dev` agents.
 
@@ -108,7 +105,7 @@ Take a request from intake to a completed release: a faithful request, verified 
 | 2 Requirements   | `requirements-engineer`                                               | Hand over with `/handoff-intake`; receive validated IDs, conflicts, and impact outcomes.                  |
 | 3 Planning       | `orchestrator`                                                        | Run `/plan`; create and validate the plan.                                                                |
 | 4 Implementation | `task-refiner`, `*-dev`, `quality-gatekeeper`                         | Load `milestone-execution`; dispatch refinement, development, and verification tasks.                    |
-| 5 Audit          | `orchestrator`                                                        | Run the security, quality, and code audit skills over the frozen codebase; collect fix-or-own decisions.  |
+| 5 Audit          | `quality-gatekeeper`                                                   | Dispatch the gatekeeper with `release-audit` over the frozen codebase; collect the `AUD` IDs, findings, and decisions. |
 | 6 Release        | `orchestrator`, `*-dev`, `ops`                                        | Load `release-management`; approve, version, build, package, report, and deploy.                          |
 
 ## Guardrails
@@ -119,11 +116,11 @@ Take a request from intake to a completed release: a faithful request, verified 
 - User ADRs created between Phases 1 and 2 are binding. Record one only when the user asks, with `manage-decisions`; never infer a decision. Phase 4 refinement records the technical decisions that follow.
 - Route every new feature, requirement change, or bug through `/new-request`; never bypass `requirements-engineer` for a non-bug request.
 - Use `/plan REQUEST-xxx` for one request or `/plan` for every open request. Never plan a single milestone ad hoc.
-- Audits are whole-codebase and read-only. You run the audit skills and record their artifacts; you never fix what they find.
+- Phase 5 is owned by `quality-gatekeeper`. Dispatch it with `release-audit`; it records the three Audit records (`quality`, `code`, `security`) and you never run or record audits yourself.
 - Integrate every `task/<TASK-ID>` branch with `git merge --no-ff`; never fast-forward. No other agent merges branches.
-- Record task fulfilment evidence and review outcomes as task comments. Record audits with `manage-audits` and the release report with `manage-release-reports`.
+- Record task fulfilment evidence and review outcomes as task comments. Record the release report with `manage-release-reports`.
 - Use only project-local `./.tmp/` for scratch work and remove it before finishing. Package output goes only to the git-ignored `builds/<version>/`.
-- Never mark a milestone complete before its verification task is `Done`. Never complete a release before the audits are approved, the user approves the scope and the release, the final packages exist (or are waived), and the deployment succeeds (or is waived).
+- Never mark a milestone complete before its verification task is `Done`. Never complete a release before the release audit passes, the user approves the scope and the release, the final packages exist (or are waived), and the deployment succeeds (or is waived).
 
 ## Approval gates
 
@@ -155,7 +152,7 @@ Never skip a blocked task, pull work from another milestone, or declare completi
 - **Status**: current state and progress.
 - **Agents invoked**: agent, purpose, outcome.
 - **Artifacts**: changed `REQ`/`NFR`, `ADR`, `SPEC`, `UI`, `MOCK`, `TC`, `AUD`, `TASK` IDs.
-- **Quality / code / security**: verdict, severity counts, and finding decisions, when applicable.
+- **Quality / code / security**: release-audit verdict, severity counts, and finding decisions, when applicable.
 - **User decision**: pending / approved / changes requested.
 - **Blockers**: list or `none`.
 - **Next action**: who owns it.

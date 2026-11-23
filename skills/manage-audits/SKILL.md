@@ -1,6 +1,6 @@
 ---
 name: manage-audits
-description: 'Create, read, update, and deprecate audit records through the management tool.'
+description: 'Create, read, update, and deprecate the three Phase 5 release Audit records through the management tool.'
 argument-hint: 'Examples: create an audit record; read an audit.'
 user-invocable: true
 disable-model-invocation: false
@@ -14,16 +14,16 @@ Audit records are created, read, updated, and deprecated through the management 
 
 ## When to use
 
-- Create an audit record for the frozen release.
+- Create the three Phase 5 release Audit records (quality, code, security) from the `release-audit` skill.
 - Read an audit record's content, type, or status.
-- Update an audit record's content or status.
-- Deprecate an archived audit.
+- Update an audit record's content or status when the release audit reruns.
+- Deprecate a superseded audit.
 
 ## Commands
 
 - List: `papyrus audit list`
 - View: `papyrus audit view <AUD-ID>`
-- Create: `papyrus audit create --title "<title>" --content <report|-> --audit-type <quality|code|security> --reference <MS/REL-ID>` then `papyrus audit status <AUD-ID> issued` (approval is tracked by status, not labels)
+- Create: `papyrus audit create --title "<title>" --content <report|-> --audit-type <quality|code|security> --reference <REL-ID>` then `papyrus audit status <AUD-ID> issued`
 - Edit: `papyrus audit edit <AUD-ID> --title "<title>" --content <report|-> --audit-type <type> --label <label> --reference <ref>`
 - Deprecate/restore: `papyrus audit deprecate <AUD-ID>`, `papyrus audit restore <AUD-ID>`
 
@@ -41,10 +41,10 @@ EOF
 
 ## Rules
 
-- The orchestrator runs the audit skills and records each audit.
-- Audit approval is documented by the `status` field (`issued`/`approved`), not by labels. Use `papyrus audit status <AUD-ID> issued|approved`; labels are not used for approval.
-- Only one audit of a type may be `issued` or `approved` within the release scope at a time.
-- `approved` when every finding is `owned` and documented, or the audit has no finding. A finding chosen for fix is resolved through a fix milestone and a new audit, which replaces the previous one.
+- `quality-gatekeeper` runs `release-audit` and records one Audit record per type: `quality`, `code`, `security`.
+- Each record is created with status `issued`; no approval status is set in the current workflow.
+- Only one audit of a type may be `issued` within the release scope at a time.
+- A rerun after a fix creates new records and archives the previous ones of the same type.
 - Never edit managed audit files directly.
 
 ## References

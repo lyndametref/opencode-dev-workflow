@@ -15,7 +15,7 @@ Release reports are created, read, updated, issued, and archived as plain Markdo
 ## When to use
 
 - Create a release report for a release.
-- Update a report with build/test results, audit severity counts, accepted risks, findings, or the recommendation.
+- Update a report with build/test results, release-audit severity counts, accepted risks, findings, or the recommendation.
 - Set a report to `issued` when presented for release approval.
 - Archive a report.
 
@@ -37,7 +37,7 @@ milestones: [<MS-ID>, ...]
 ---
 ```
 
-Body (per the Release Report artifact): version, release scope, owned milestones, implemented requests, change log, completed tasks with traceability, final test results, package evidence, deployment evidence, per-milestone verification, audit results and finding decisions, audit severity counts, owned risks, findings, follow-ups, fix milestone and its fix tasks, exclusions and open questions, recommendation.
+Body (per the Release Report artifact): version, release scope, owned milestones, implemented requests, change log, completed tasks with traceability, final test results, package evidence, deployment evidence, per-milestone verification, release-audit results and finding decisions, severity counts, owned risks, findings, follow-ups, fix milestone and its fix tasks, exclusions and open questions, recommendation.
 
 ## Status values
 
@@ -49,7 +49,7 @@ Body (per the Release Report artifact): version, release scope, owned milestones
 
 ## Rules
 
-- The report is assembled from audit and release evidence; it creates no new verification.
+- The report is assembled from release-audit and release evidence; it creates no new verification.
 - Set `issued` only when the report is presented for release approval.
 - Never edit Papyrus-managed files here.
 - Use only project-local `./.tmp/` for scratch work and remove it before finishing.

@@ -29,10 +29,9 @@ Help about papyrus is available with `papyrus --help`
 Papyrus reads multiline field values from stdin. Pass `-` for the option and feed the value with a quoted heredoc; never inline multiline text.
 
 ```bash
-papyrus audit create --title "Quality audit MS-001" \
-  --audit-type quality --content - <<'EOF'
-## Findings
-- low: duplicate validation in the checkout handler
+papyrus milestone edit MS-001 --description - <<'EOF'
+AC-1: the operator can export the monthly report
+AC-2: the export contains every active record
 EOF
 ```
 

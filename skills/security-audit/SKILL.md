@@ -1,7 +1,7 @@
 ---
 name: security-audit
-description: 'Run the Phase 5 security audit over the whole frozen codebase: secrets, dependency supply chain, authentication and authorization, input handling, data protection, platform-specific and cross-feature risks, and security NFR coverage. Produces a read-only, severity-ranked Audit artifact for the user fix-or-own decision.'
-argument-hint: 'Provide the release ID and the feature freeze.'
+description: 'Run a security audit over the specified code base: secrets, dependency supply chain, authentication and authorization, input handling, data protection, and platform-specific and cross-feature risks. Produces a read-only, severity-ranked report and recommendation.'
+argument-hint: 'Provide the scope to audit; the whole codebase when none is given.'
 user-invocable: true
 disable-model-invocation: false
 ---
@@ -10,50 +10,52 @@ disable-model-invocation: false
 
 ## Outcome
 
-One security audit of the frozen codebase, recorded as a managed audit record of type `security` with status `issued`, severity-ranked findings, and a recommendation. The user decides for every finding whether it is fixed or owned. The audit is read-only; the orchestrator records it and owns approval and release closure.
+An evidence-based security audit of the specified code base, with severity-ranked findings and a recommendation. The audit is read-only and never fixes or approves.
 
 ## When to use
 
-- Phase 5, after the user declares the feature freeze.
-- The user asks for a security audit, security review, or security gate at the freeze.
+- Assess the security of the specified code base.
+- The user asks for a security audit or security review.
 
 Do not use this skill for:
 
 - Fixing vulnerabilities or writing code/configuration.
 - Style, accessibility, or general code-quality review (use `code-audit` or `quality-audit`).
-- Delivering milestone work (use `milestone-execution`) or closing a release (use `release-management`).
-- Auditing one milestone; Phase 5 audits the whole frozen codebase.
+- Auditing a scope outside the instruction.
 
 ## Prerequisites
 
-- **managed-records skill (REQUIRED)** — load it before any managed read. All release, milestone, task, requirement, decision, and specification reads go through the management tool.
-- Read access to requirements, Technical specification, decisions, and application source.
+- Read access to source, tests, build files, requirements, Technical specification, and decisions.
+- Read managed records through the matching `manage-*` skills.
 - Available scanners and test commands for the stacks present, when possible.
+
+## Scope
+
+The scope provided in the instruction. When none is given, audit the whole codebase.
 
 ## Constraints
 
 - Read-only: do not modify code, configuration, requirements, tasks, decisions, or status.
 - Never edit managed files directly; read through the matching `manage-*` skills.
-- The orchestrator runs this skill and records the audit (manage-audits). Never create or edit the audit record yourself.
+- Do not create an audit record or any persistent report. Return the report in the response.
 - Never reveal secrets, credentials, tokens, personal data, or exploit-ready payloads. Redact values and give the location.
 - Report only findings traceable to evidence. Mark unverifiable controls as `not verified`, not as passed.
 - Do not invent threats unrelated to the audited scope.
-- Do not ask the user for approval and do not close the release; the orchestrator owns that.
-- Do not create persistent reports. Return the report in the response. Use only project-local `./.tmp/` for transient scanner output and delete it before finishing, including when the audit is blocked.
+- Do not ask for approval and do not fix what you find.
+- Use only project-local `./.tmp/` for transient scanner output and delete it before finishing, including when the audit is blocked.
 
 ## Procedure
 
 ### 1. Establish scope
 
-1. Load `manage-audits`; read the release, its frozen milestones, and tasks through the `manage-*` skills.
-2. Confirm the feature freeze is recorded and every frozen milestone's verification task is `Done`; report any exception.
-3. Read linked requirements and security/privacy NFRs (manage-requirements, manage-nfrs), the Technical specification (manage-tech-specs), UI specifications, and decisions (manage-decisions).
-4. Record the baseline commit, scope boundaries, and anything explicitly out of scope.
-5. Identify cross-feature risks: combinations of features that create a risk no single milestone reveals (combined permissions, shared data flows, chained integrations, cumulative attack surface).
+1. Confirm the scope from the instruction. When none is given, use the whole codebase.
+2. Read the requirements and security/privacy NFRs, the Technical specification, and decisions that apply to the scope.
+3. Record the baseline commit, scope boundaries, and anything explicitly out of scope.
+4. Identify cross-feature risks when the scope includes several features: combinations that create a risk no single feature reveals (combined permissions, shared data flows, chained integrations, cumulative attack surface).
 
 ### 2. Inventory the attack surface
 
-Identify, per application in `apps/`:
+Identify, per application in scope:
 
 - languages, frameworks, and runtime versions;
 - entry points: HTTP endpoints, CLI commands, background jobs, message consumers, deep links, exported Android components, WebView bridges, IPC/FFI;
@@ -118,7 +120,7 @@ Run every check that applies. Use available tools; if a tool is unavailable, rec
 - Flag NFRs with no implementation evidence as gaps.
 
 **Cross-feature risks**
-- Assess risks created by combining the features: privilege composition, shared secrets or sessions, data crossing feature boundaries, and cumulative exposure of entry points.
+- When the scope includes several features, assess risks created by combining them: privilege composition, shared secrets or sessions, data crossing feature boundaries, and cumulative exposure of entry points.
 
 ### 4. Verify
 
@@ -138,16 +140,16 @@ Assign severity:
 
 Decision:
 
-- `findings reported` — any unresolved Blocker or High finding prevents a passing audit.
+- `findings reported` — any unresolved Blocker or High finding.
 - `pass` — no findings, or only Medium/Low findings documented with recommendations.
 
 ### 6. Report
 
-Produce the report in the response and hand it to the orchestrator. The orchestrator records the `AUD` record. Do not change status, close the release, or request approval.
+Produce the report in the response. Do not change status, fix, or approve anything.
 
 ## Output Format
 
-- **Audit target**: release, freeze, baseline commit.
+- **Audit target**: scope and baseline commit.
 - **Scope covered**: applications, components, entry points, requirement IDs, and exclusions.
 - **Method**: checks and scanners run, commands, and limitations.
 - **Findings**: table with severity | finding | evidence | impact | recommendation.
@@ -156,22 +158,20 @@ Produce the report in the response and hand it to the orchestrator. The orchestr
 - **Secrets check**: result and redacted locations.
 - **Dependency and supply-chain check**: result.
 - **Verdict**: `pass` / `findings reported`, with rationale.
-- **Suggested fix or ownership**: for each finding.
+- **Recommendation per finding**.
 - **Open questions**: missing context or unverifiable controls.
-- **Next required action**: orchestrator records the audit and collects the user's fix-or-own decision.
 
 Use `none` when a section does not apply.
 
 ## Completion Checks
 
-- Target scope, freeze, and exclusions stated.
-- Every frozen milestone is complete and verified.
+- Target scope and exclusions stated.
 - All applicable check families attempted or explicitly marked as not applicable/unavailable.
 - Every finding has severity and concrete evidence.
 - Secrets are redacted in the report.
 - Security/privacy NFRs mapped to evidence or reported as gaps.
 - The verdict follows the severity rule; any unresolved Blocker/High is reported as a finding.
-- No file, managed record, status, or release was modified by the auditor.
+- No file, managed record, or status was modified.
 - Temporary artifacts under `./.tmp/` removed.
 
 ## Resume / interruption

@@ -18,7 +18,7 @@ A valid, ordered plan in the managed records: the roadmap, one milestone per enh
 - A `bug` request is ready for planning.
 - The user changes priority, scope, or release composition.
 - A plan defect is reported during execution.
-- An audit finding is chosen for fix, or a release build or deployment fails.
+- A release-audit finding is chosen for fix, or a release build or deployment fails.
 
 Do not use this skill to execute, refine, implement, review, audit, or change task status.
 
@@ -126,7 +126,7 @@ A plan is valid only when:
 - Correct only what the defect requires, revalidate the plan, and report the correction or `no change needed`.
 - Refinement splits that change dependencies, ordinals, or milestone scope return to planning.
 - Reordering or re-scoping an in-progress task requires the user's agreement first.
-- A failed audit, a finding the user chose to fix, a rejected scope, or a failed final build, package, or deployment adds a **fix milestone** to the release: create it with its refinement, development, and verification tasks, scoped only to what the release needs to become releasable. The audit or review that reported the finding defines the fix task's content.
+- A failed release audit, a finding the user chose to fix, a rejected scope, or a failed final build, package, or deployment adds a **fix milestone** to the release: create it with its refinement, development, and verification tasks, scoped only to what the release needs to become releasable. The release audit or review that reported the finding defines the fix task's content.
 - A deployable component reported without its `<component-dir>/scripts/build-package.sh` at packaging gets a task for the owning `*-dev` agent: in the fix milestone, or in the milestone being built. The task asks for the script per `build-package-script`; nothing else is bundled into it.
 
 ## Priority change
